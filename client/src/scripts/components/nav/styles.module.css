@@ -1,0 +1,26 @@
+.main {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  background-color: var(--white-color);
+  height: 46px;
+  border-top: 0.5px solid var(--light-gray-color);
+}
+
+.item {
+  cursor: pointer;
+  flex: 1;
+  display: inline-block;
+  height: 100%;
+  line-height: 46px;
+  text-align: center;
+}
+
+.item:active {
+  background-color: var(--black-active-color);
+}
