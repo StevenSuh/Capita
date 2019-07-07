@@ -16,8 +16,8 @@
   --font-large: 18px;
   --font-x-large: 28px;
 
-  --transition-curve: cubic-bezier(0.8, 0, 0.2, 1);
-  --transition-long-duration: 0.6s;
+  --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-long-duration: 0.5s;
   --transition-duration: 0.2s;
   --transition-short-duration: 0.1s;
 }
@@ -101,6 +101,10 @@ hr {
   background-color: var(--gray-color);
 }
 
+p {
+  line-height: 1.4;
+}
+
 body,
 button,
 h1,
@@ -126,8 +130,12 @@ a {
 }
 
 .transition-group {
-  height: 100%;
   width: 100%;
+}
+
+.container {
+  width: calc(100% - 40px);
+  margin: auto;
 }
 
 .reveal-appear,
@@ -138,7 +146,7 @@ a {
 .reveal-appear-active,
 .reveal-enter-active,
 .reveal-enter-done {
-  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity var(--transition-duration) var(--transition-curve);
   opacity: 1;
 }
 
@@ -150,4 +158,57 @@ a {
 .reveal-exit-active,
 .reveal-exit-done {
   opacity: 0;
+}
+
+.slide-enter {
+  transform: translateX(100%);
+}
+
+.slide-enter-active,
+.slide-enter-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve);
+  transform: translateX(0);
+}
+
+.slide-exit {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.slide-exit-active,
+.slide-exit-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve),
+    left var(--transition-long-duration) var(--transition-curve);
+  left: 0;
+  transform: translateX(-100%);
+}
+
+.transition-group.right > .slide-enter {
+  transform: translateX(-100%);
+}
+
+.transition-group.right > .slide-enter-active,
+.transition-group.right > .slide-enter-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve);
+  transform: translateX(0);
+}
+
+.transition-group.right > .slide-exit {
+  position: absolute;
+  left: unset;
+  right: 50%;
+  top: 0;
+  transform: translateX(50%);
+}
+
+.transition-group.right > .slide-exit-active,
+.transition-group.right > .slide-exit-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve),
+    right var(--transition-long-duration) var(--transition-curve);
+  right: 0;
+  transform: translateX(100%);
 }

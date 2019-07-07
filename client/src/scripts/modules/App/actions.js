@@ -6,5 +6,5 @@ const setLoggedIn = loggedIn => ({
 });
 
 export const checkLoggedIn = () => async dispatch => {
-  dispatch(setLoggedIn(true));
+  dispatch(setLoggedIn(false));
 };

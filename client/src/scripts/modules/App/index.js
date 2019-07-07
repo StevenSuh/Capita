@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import classNames from 'classnames';
 
-import Loading from 'src/scripts/components/loading';
+import IsLoading from 'src/scripts/hoc/isLoading';
 import Nav from 'src/scripts/components/nav';
+import Slideshow from 'src/scripts/components/slideshow';
 
 import styles from './styles.module.css';
 
@@ -12,34 +14,74 @@ import * as actions from './actions';
 import { ROUTES } from 'src/defs';
 import { PROP_LOGGED_IN } from './defs';
 
-const App = props => {
-  useEffect(actions.checkLoggedIn, []);
-
-  if (props.loggedIn) {
+const App = ({ history, loggedIn, onCheckLoggedIn }) => {
+  if (loggedIn) {
     return <Redirect to={ROUTES.APP_DASHBOARD} />;
   }
+
+  const slideshowItems = [
+    (
+      <div>
+        <h6 className={styles.slideshow_item_title}>
+          Centralize your financial life
+        </h6>
+        <p className={styles.slideshow_item_content}>
+          Keep track of your accounts from a single app
+        </p>
+      </div>
+    ),
+    (
+      <div>
+        <h6 className={styles.slideshow_item_title}>
+          Connect accounts and transfer money
+        </h6>
+        <p className={styles.slideshow_item_content}>
+          Connect up to 5 accounts and easily transfer money between them
+        </p>
+      </div>
+    ),
+    (
+      <div>
+        <h6 className={styles.slideshow_item_title}>
+          Understand how you spend your money
+        </h6>
+        <p className={styles.slideshow_item_content}>
+          View your spending by month or categories
+        </p>
+      </div>
+    ),
+  ];
 
   const navItems = [[
     {
       text: 'Log in',
-      onClick: () => props.history.push(ROUTES.LOGIN),
+      onClick: () => history.push(ROUTES.LOGIN),
     },
     {
       text: 'Get started',
-      onClick: () => props.history.push(ROUTES.GET_STARTED),
+      onClick: () => history.push(ROUTES.GET_STARTED),
     },
   ]];
 
   return (
-    <div className={styles.main}>
-      <Helmet>
-        <title>Capita - App</title>
-      </Helmet>
+    <IsLoading init={onCheckLoggedIn} callback={() => {}}>
+      <div>
+        <Helmet>
+          <title>Capita - App</title>
+        </Helmet>
 
-      <Loading />
-
-      <Nav items={navItems} />
-    </div>
+        <div className={styles.main}>
+          <h3 className={styles.title}>
+            CAPITA
+          </h3>
+          <Slideshow
+            className={classNames(styles.slideshow, 'container')}
+            items={slideshowItems}
+          />
+        </div>
+        <Nav items={navItems} />
+      </div>
+    </IsLoading>
   );
 };
 
@@ -49,7 +91,5 @@ export const mapStateToProps = ({ app }) => ({
 
 export default connect(
   mapStateToProps,
-  {
-    onSetLoggedIn: actions.setLoggedIn,
-  },
+  { onCheckLoggedIn: actions.checkLoggedIn },
 )(App);

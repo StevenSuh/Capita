@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import styles from './styles.module.css';
 
 const Nav = props => (
+  <div className={styles.wrapper}>
     <div className={classNames(
       styles.main,
       props.className,
@@ -23,6 +24,7 @@ const Nav = props => (
         </div>
       ))}
     </div>
-  );
+  </div>
+);
 
 export default Nav;

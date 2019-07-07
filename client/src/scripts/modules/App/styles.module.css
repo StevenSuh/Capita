@@ -1,3 +1,33 @@
 .main {
-  width: auto;
+  padding-bottom: 50px;
+  top: 50vh;
+  transform: translateY(-50%);
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.slideshow {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.slideshow_item_title {
+  font-size: var(--font-large);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.slideshow_item_content {
+  font-size: var(--font-medium);
+}
+
+.title,
+.slideshow_item_title,
+.slideshow_item_content {
+  text-align: center;
 }

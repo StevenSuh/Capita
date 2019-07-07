@@ -1,5 +1,15 @@
+.wrapper {
+  position: absolute;
+  left: 0;
+  top: 0;
+  pointer-events: none;
+  height: 100vh;
+  width: 100vw;
+}
+
 .main {
-  position: fixed;
+  pointer-events: auto;
+  position: absolute;
   left: 0;
   bottom: 0;
   width: 100%;
