@@ -1,0 +1,44 @@
+version: '3'
+services:
+  postgres:
+    image: 'postgres:latest'
+    ports:
+      - '5432:5432'
+    volumes:
+      - database_data:/var/lib/postgresql/data
+    logging:
+      driver: none
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3050:80'
+    depends_on:
+      - client
+      - api
+    logging:
+      driver: none
+  api:
+    build:
+      dockerfile: ./server/Dockerfile.dev
+      context: ./
+    volumes:
+      - ./server:/app
+    environment:
+      - DBNAME=capita
+      - DBUSER=stevenesuh
+      - DBHOST=postgres
+      - DBPORT=5432
+      - DBPASS=
+  client:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+volumes:
+  database_data:
+    driver: local

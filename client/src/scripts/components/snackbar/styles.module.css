@@ -1,0 +1,41 @@
+.main {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  width: 100vw;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 17px 20px;
+}
+
+.item.error {
+  background-color: var(--red-color);
+}
+
+.item.info {
+  background-color: var(--blue-color);
+}
+
+.item.success {
+  background-color: var(--green-color);
+}
+
+.message {
+  flex: 1;
+  color: var(--white-color);
+}
+
+.icon {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.icon > * {
+  stroke: var(--white-color);
+}

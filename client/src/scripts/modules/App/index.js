@@ -19,46 +19,13 @@ const App = ({ history, loggedIn, onCheckLoggedIn }) => {
     return <Redirect to={ROUTES.APP_DASHBOARD} />;
   }
 
-  const slideshowItems = [
-    (
-      <div>
-        <h6 className={styles.slideshow_item_title}>
-          Centralize your financial life
-        </h6>
-        <p className={styles.slideshow_item_content}>
-          Keep track of your accounts from a single app
-        </p>
-      </div>
-    ),
-    (
-      <div>
-        <h6 className={styles.slideshow_item_title}>
-          Connect accounts and transfer money
-        </h6>
-        <p className={styles.slideshow_item_content}>
-          Connect up to 5 accounts and easily transfer money between them
-        </p>
-      </div>
-    ),
-    (
-      <div>
-        <h6 className={styles.slideshow_item_title}>
-          Understand how you spend your money
-        </h6>
-        <p className={styles.slideshow_item_content}>
-          View your spending by month or categories
-        </p>
-      </div>
-    ),
-  ];
-
   const navItems = [[
     {
-      text: 'Log in',
+      item: 'Log in',
       onClick: () => history.push(ROUTES.LOGIN),
     },
     {
-      text: 'Get started',
+      item: 'Get started',
       onClick: () => history.push(ROUTES.GET_STARTED),
     },
   ]];
@@ -71,9 +38,9 @@ const App = ({ history, loggedIn, onCheckLoggedIn }) => {
         </Helmet>
 
         <div className={styles.main}>
-          <h3 className={styles.title}>
+          <h1 className={styles.title}>
             CAPITA
-          </h3>
+          </h1>
           <Slideshow
             className={classNames(styles.slideshow, 'container')}
             items={slideshowItems}
@@ -85,8 +52,41 @@ const App = ({ history, loggedIn, onCheckLoggedIn }) => {
   );
 };
 
+const slideshowItems = [
+  (
+    <div>
+      <h6 className={styles.slideshow_item_title}>
+        Centralize your financial life
+      </h6>
+      <p className={styles.slideshow_item_content}>
+        Keep track of your accounts from a single app
+      </p>
+    </div>
+  ),
+  (
+    <div>
+      <h6 className={styles.slideshow_item_title}>
+        Connect accounts and transfer money
+      </h6>
+      <p className={styles.slideshow_item_content}>
+        Connect up to 5 accounts and easily transfer money between them
+      </p>
+    </div>
+  ),
+  (
+    <div>
+      <h6 className={styles.slideshow_item_title}>
+        Understand how you spend your money
+      </h6>
+      <p className={styles.slideshow_item_content}>
+        View your spending by month or categories
+      </p>
+    </div>
+  ),
+];
+
 export const mapStateToProps = ({ app }) => ({
-  loggedIn: app[PROP_LOGGED_IN],
+  loggedIn: app.get(PROP_LOGGED_IN),
 });
 
 export default connect(

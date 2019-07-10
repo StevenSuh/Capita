@@ -1,6 +1,7 @@
 import React from 'react';
 
-const SignUp = () => {
+const SignUp = props => {
+  console.log(props);
   return (
     <div>SignUp</div>
   );

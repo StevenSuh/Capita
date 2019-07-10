@@ -1,6 +1,6 @@
 import { actionTypes } from './defs';
 
-const setLoggedIn = loggedIn => ({
+export const setLoggedIn = loggedIn => ({
   type: actionTypes.onSetLoggedIn,
   value: loggedIn,
 });

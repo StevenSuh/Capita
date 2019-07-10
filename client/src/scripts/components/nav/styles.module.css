@@ -1,15 +1,6 @@
-.wrapper {
-  position: absolute;
-  left: 0;
-  top: 0;
-  pointer-events: none;
-  height: 100vh;
-  width: 100vw;
-}
-
 .main {
   pointer-events: auto;
-  position: absolute;
+  position: fixed;
   left: 0;
   bottom: 0;
   width: 100%;
@@ -25,10 +16,14 @@
 .item {
   cursor: pointer;
   flex: 1;
-  display: inline-block;
   height: 100%;
   line-height: 46px;
   text-align: center;
+}
+
+.item > * {
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .item:active {

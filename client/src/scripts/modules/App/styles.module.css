@@ -1,11 +1,12 @@
 .main {
-  padding-bottom: 50px;
-  top: 50vh;
-  transform: translateY(-50%);
+  padding-top: 37vh;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
 }
 
 .title {
-  font-size: 36px;
+  font-size: var(--font-xx-large);
   font-weight: 700;
   margin-bottom: 10px;
 }

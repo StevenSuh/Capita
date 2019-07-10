@@ -33,6 +33,10 @@ const Slideshow = ({
     }, DURATION);
   }, [currIndex, items.length]);
 
+  useEffect(() => () => {
+    clearTimeout(timeout);
+  }, []);
+
   useEffect(() => {
     if (direction.up || direction.down || direction.left || direction.right) {
       if (direction.left) {

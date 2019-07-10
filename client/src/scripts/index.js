@@ -15,6 +15,7 @@ import Dashboard from 'src/scripts/modules/Dashboard';
 import LandingPage from 'src/scripts/modules/Landing';
 import Login from 'src/scripts/modules/Login';
 import SignUp from 'src/scripts/modules/SignUp';
+import Snackbar from 'src/scripts/components/snackbar';
 
 import { ROUTES } from 'src/defs';
 
@@ -32,17 +33,18 @@ const Wrapper = () =>
               unmountOnExit
             >
               <Switch>
+                <Route exact path={ROUTES.LANDING} component={LandingPage} />
                 <Route exact path={ROUTES.APP} component={App} />
                 <Route exact path={ROUTES.APP_DASHBOARD} component={Dashboard} />
                 <Route exact path={ROUTES.LOGIN} component={Login} />
-                <Route exact path={ROUTES.SIGN_UP} component={SignUp} />
-                <Route exact path={ROUTES.LANDING} component={LandingPage} />
+                <Route exact path={ROUTES.GET_STARTED} component={SignUp} />
                 <Redirect to={ROUTES.LANDING} />
               </Switch>
             </CSSTransition>
           </TransitionGroup>
         )} />
       </Router>
+      <Snackbar />
     </Provider>
   );
 

@@ -14,7 +14,8 @@
   --font-small: 12px;
   --font-x-small: 10px;
   --font-large: 18px;
-  --font-x-large: 28px;
+  --font-x-large: 24px;
+  --font-xx-large: 36px;
 
   --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-long-duration: 0.5s;
@@ -78,11 +79,7 @@ body {
   overflow-x: hidden;
 }
 
-a,
-button {
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
-}
-
+input,
 button {
   background-color: transparent;
   border: none;
@@ -91,6 +88,7 @@ button {
   font-family: Apercu, Arial, Helvetica, sans-serif;
 }
 
+input,
 a:focus,
 button:focus {
   border: none;
@@ -99,10 +97,6 @@ button:focus {
 
 hr {
   background-color: var(--gray-color);
-}
-
-p {
-  line-height: 1.4;
 }
 
 body,
@@ -127,6 +121,16 @@ a {
 * {
   box-sizing: border-box;
   position: relative;
+  line-height: 1.4;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+.click {
+  transition: opacity var(--transition-short-duration) var(--transition-curve);
+}
+
+.click:active {
+  opacity: 0.5;
 }
 
 .transition-group {
@@ -136,6 +140,10 @@ a {
 .container {
   width: calc(100% - 40px);
   margin: auto;
+}
+
+.container.tight {
+  width: calc(100% - 80px);
 }
 
 .reveal-appear,
@@ -211,4 +219,26 @@ a {
     right var(--transition-long-duration) var(--transition-curve);
   right: 0;
   transform: translateX(100%);
+}
+
+.snackbar-appear,
+.snackbar-enter {
+  transform: translateY(-100%);
+}
+
+.snackbar-appear-active,
+.snackbar-enter-active,
+.snackbar-enter-done {
+  transition: transform var(--transition-short-duration) var(--transition-curve);
+  transform: translateY(0);
+}
+
+.snackbar-exit {
+  opacity: 1;
+}
+
+.snackbar-exit-active,
+.snackbar-exit-done {
+  transition: opacity var(--transition-duration) var(--transition-curve);
+  opacity: 0;
 }
