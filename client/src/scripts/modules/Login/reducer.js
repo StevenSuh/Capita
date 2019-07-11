@@ -3,6 +3,7 @@ import Immutable from 'immutable';
 import * as defs from './defs';
 
 export const initialState = Immutable.fromJS({
+  [defs.PROP_LOGIN_ERROR]: '',
   [defs.PROP_EMAIL]: '',
   [defs.PROP_EMAIL_ERROR]: '',
   [defs.PROP_PASSWORD]: '',

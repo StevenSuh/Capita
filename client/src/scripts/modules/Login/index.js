@@ -11,6 +11,7 @@ import * as actions from './actions';
 import { ROUTES } from 'src/defs';
 import { PROP_LOGGED_IN } from 'src/scripts/modules/App/defs';
 import {
+  PROP_LOGIN_ERROR,
   PROP_EMAIL,
   PROP_EMAIL_ERROR,
   PROP_PASSWORD,
@@ -41,6 +42,7 @@ const Login = props => {
         <h1 className={styles.title}>
           Enter your information
         </h1>
+        {props.loginError && <p className={styles.error}>{props.loginError}</p>}
         <form noValidate onSubmit={e => {
           e.preventDefault();
           props.onAttemptLogin();
@@ -48,13 +50,13 @@ const Login = props => {
           <Input
             className={styles.email_input}
             onChange={value => props.onChange(PROP_EMAIL, value)}
-            error={props.emailError}
+            error={props.emailError || Boolean(props.loginError)}
             name="email"
             type="email"
           />
           <Input
             onChange={value => props.onChange(PROP_PASSWORD, value)}
-            error={props.passwordError}
+            error={props.passwordError || Boolean(props.loginError)}
             name="password"
             type="password"
           />
@@ -67,6 +69,7 @@ const Login = props => {
 };
 
 export const mapStateToProps = ({ app, login }) => ({
+  loginError: login.get(PROP_LOGIN_ERROR),
   emailError: login.get(PROP_EMAIL_ERROR),
   passwordError: login.get(PROP_PASSWORD_ERROR),
   isAttemptingLogin: login.get(PROP_IS_ATTEMPTING_LOGIN),

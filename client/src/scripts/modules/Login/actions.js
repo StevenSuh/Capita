@@ -14,22 +14,23 @@ export const attemptLogin = () => async (dispatch, getState) => {
   const password = login.get(defs.PROP_PASSWORD);
   const isAttemptingLogin = login.get(defs.PROP_IS_ATTEMPTING_LOGIN);
 
+  let loginError = '';
+
   if (isAttemptingLogin || !validateLoginForm(dispatch)(email, password)) {
     return;
   }
 
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_LOGIN, true));
+  dispatch(changeField(defs.PROP_LOGIN_ERROR, loginError));
 
   const { error } = await submitLogin(dispatch)(email, password);
-  let loginError = '';
-  
-  if (!error) {
-    dispatch(setLoggedIn(true));
-  } else {
+  if (error) {
     loginError = defs.errorMsgs.mismatch;
+  } else {
+    dispatch(setLoggedIn(true));
   }
 
-  dispatch(changeField(defs.PROP_LOGIN_ERROR), loginError);
+  dispatch(changeField(defs.PROP_LOGIN_ERROR, loginError));
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_LOGIN, false));
 };
 
