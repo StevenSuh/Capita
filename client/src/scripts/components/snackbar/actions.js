@@ -1,4 +1,4 @@
-import { actionTypes, TYPES, TIMEOUT } from './defs';
+import { actionTypes, TIMEOUT } from './defs';
 
 export const addSnackbar = dispatch => (message, type) => {
   const id = Date.now();
@@ -14,8 +14,3 @@ export const removeSnackbar = id => ({
   type: actionTypes.onRemoveSnackbar,
   value: id,
 });
-
-export const catchApiError = dispatch => ({ message }) => {
-  addSnackbar(dispatch)(message, TYPES.ERROR);
-  return { data: { error: message }};
-};

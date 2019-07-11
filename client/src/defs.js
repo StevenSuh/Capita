@@ -9,5 +9,5 @@ export const ROUTES = {
 };
 
 export const API_ROUTES = {
-  LOGIN: '/api/account/login',
+  LOGIN: '/api/user/login',
 };
