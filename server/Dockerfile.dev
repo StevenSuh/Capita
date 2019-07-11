@@ -1,5 +1,7 @@
 FROM golang:latest
 WORKDIR "/app"
 COPY . .
-RUN go build -o main .
-CMD ["./main"]
+ENV GOBIN=$GOPATH/bin
+RUN go get
+RUN go get github.com/pilu/fresh
+CMD ["fresh"]

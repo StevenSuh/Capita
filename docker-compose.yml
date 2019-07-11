@@ -1,13 +1,5 @@
 version: '3'
 services:
-  postgres:
-    image: 'postgres:latest'
-    ports:
-      - '5432:5432'
-    volumes:
-      - database_data:/var/lib/postgresql/data
-    logging:
-      driver: none
   nginx:
     restart: always
     build:
@@ -22,14 +14,14 @@ services:
       driver: none
   api:
     build:
-      dockerfile: ./server/Dockerfile.dev
-      context: ./
+      dockerfile: Dockerfile.dev
+      context: ./server
     volumes:
       - ./server:/app
     environment:
       - DBNAME=capita
       - DBUSER=stevenesuh
-      - DBHOST=postgres
+      - DBHOST=host.docker.internal
       - DBPORT=5432
       - DBPASS=
   client:
@@ -39,6 +31,3 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
-volumes:
-  database_data:
-    driver: local
