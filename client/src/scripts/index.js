@@ -8,16 +8,16 @@ import {
 } from 'react-router-dom';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import store from 'src/scripts/config/setup';
+import store from 'scripts/config/setup';
 
-import App from 'src/scripts/modules/App';
-import Dashboard from 'src/scripts/modules/Dashboard';
-import LandingPage from 'src/scripts/modules/Landing';
-import Login from 'src/scripts/modules/Login';
-import SignUp from 'src/scripts/modules/SignUp';
-import Snackbar from 'src/scripts/components/snackbar';
+import App from 'scripts/modules/App';
+import Dashboard from 'scripts/modules/Dashboard';
+import LandingPage from 'scripts/modules/Landing';
+import Login from 'scripts/modules/Login';
+import SignUp from 'scripts/modules/SignUp';
+import Snackbar from 'scripts/components/snackbar';
 
-import { ROUTES } from 'src/defs';
+import { ROUTES } from 'defs';
 
 const Wrapper = () =>
   (

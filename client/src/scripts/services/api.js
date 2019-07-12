@@ -1,13 +1,24 @@
 import axios from 'axios';
 
-import { addSnackbar } from 'src/scripts/components/snackbar/actions';
+import { addSnackbar } from 'scripts/components/snackbar/actions';
 
-import { API_ROUTES } from 'src/defs';
-import { TYPES } from 'src/scripts/components/snackbar/defs';
+import { API_ROUTES } from 'defs';
+import { TYPES } from 'scripts/components/snackbar/defs';
 
-export const catchApiError = dispatch => ({ message }) => {
+export const catchApiError = dispatch => error => {
+  let message = error.response.data;
+  
+  if (typeof message === 'object') {
+    message = message.msg;
+  } else {
+    error.response.data = {
+      msg: message,
+      error: true,
+    };
+  }
+
   addSnackbar(dispatch)(message, TYPES.ERROR);
-  return { data: { error: message }};
+  return error.response;
 };
 
 export const checkLogin = dispatch => async () => {

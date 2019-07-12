@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import classNames from 'classnames';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import detectDrag from 'src/scripts/hoc/detectDrag';
+import detectDrag from 'scripts/hoc/detectDrag';
 
 import styles from './styles.module.css';
 

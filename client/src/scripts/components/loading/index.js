@@ -1,7 +1,7 @@
 import React from 'react';
 import classNames from 'classnames';
 
-import { ReactComponent as LoadingIcon } from 'src/assets/icons/loading.svg';
+import { ReactComponent as LoadingIcon } from 'assets/icons/loading.svg';
 import styles from './styles.module.css';
 
 const Loading = ({ className, size }) => (

@@ -5,7 +5,7 @@ import classNames from 'classnames';
 
 import * as actions from './actions';
 
-// import { ReactComponent as CloseIcon } from 'src/assets/icons/x.svg';
+// import { ReactComponent as CloseIcon } from 'assets/icons/x.svg';
 import { PROP_SNACKBARS } from './defs';
 import styles from './styles.module.css';
 

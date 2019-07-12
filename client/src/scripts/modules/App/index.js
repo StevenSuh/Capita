@@ -4,14 +4,14 @@ import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import classNames from 'classnames';
 
-import IsLoading from 'src/scripts/hoc/isLoading';
-import Nav from 'src/scripts/components/nav';
-import Slideshow from 'src/scripts/components/slideshow';
+import IsLoading from 'scripts/hoc/isLoading';
+import Nav from 'scripts/components/nav';
+import Slideshow from 'scripts/components/slideshow';
 
 import styles from './styles.module.css';
 
 import * as actions from './actions';
-import { ROUTES } from 'src/defs';
+import { ROUTES } from 'defs';
 import { PROP_LOGGED_IN } from './defs';
 
 const App = ({ history, loggedIn, onCheckLoggedIn }) => {

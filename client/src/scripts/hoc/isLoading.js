@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-import Loading from 'src/scripts/components/loading';
+import Loading from 'scripts/components/loading';
 
 const IsLoadingWrapper = ({ children, init, callback }) => {
   const [isLoading, setIsLoading] = useState(true);

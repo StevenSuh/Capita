@@ -11,5 +11,5 @@ export const actionTypes = {
 
 export const errorMsgs = {
   required: 'This field is required',
-  mismatch: 'Incorrect login information. Please try again',
+  mismatch: 'Your email or password is incorrect',
 };

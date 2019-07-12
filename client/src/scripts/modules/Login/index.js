@@ -2,14 +2,14 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import Input from 'src/scripts/components/input';
-import Loading from 'src/scripts/components/loading';
-import Nav from 'src/scripts/components/nav';
+import Input from 'scripts/components/input';
+import Loading from 'scripts/components/loading';
+import Nav from 'scripts/components/nav';
 
 import * as actions from './actions';
 
-import { ROUTES } from 'src/defs';
-import { PROP_LOGGED_IN } from 'src/scripts/modules/App/defs';
+import { ROUTES } from 'defs';
+import { PROP_LOGGED_IN } from 'scripts/modules/App/defs';
 import {
   PROP_LOGIN_ERROR,
   PROP_EMAIL,

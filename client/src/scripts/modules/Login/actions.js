@@ -1,5 +1,5 @@
-import { setLoggedIn } from 'src/scripts/modules/App/actions';
-import { submitLogin } from 'src/scripts/services/api';
+import { setLoggedIn } from 'scripts/modules/App/actions';
+import { submitLogin } from 'scripts/services/api';
 
 import * as defs from './defs';
 
@@ -21,7 +21,6 @@ export const attemptLogin = () => async (dispatch, getState) => {
   }
 
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_LOGIN, true));
-  dispatch(changeField(defs.PROP_LOGIN_ERROR, loginError));
 
   const { error } = await submitLogin(dispatch)(email, password);
   if (error) {

@@ -10,6 +10,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 
+	api ".."
 	"../../db"
 )
 
@@ -39,16 +40,7 @@ func GetLoginStatus(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]bool)
 	response["status"] = false
 
-	session, err := r.Cookie(SESSION)
-	if err != nil {
-		render.JSON(w, r, response)
-		return
-	}
-
-	user := User{}
-	err = db.Client.Get(&user, "SELECT * FROM users WHERE session=$1;", session)
-
-	if err != nil {
+	if !api.CheckCookie(w, r) {
 		render.JSON(w, r, response)
 		return
 	}
@@ -59,13 +51,16 @@ func GetLoginStatus(w http.ResponseWriter, r *http.Request) {
 
 func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 	var loginInput LoginInput
-	response := make(map[string]bool)
+
+	response := make(map[string]interface{})
 	response["error"] = true
+	response["msg"] = "Invalid login information - Please try again"
 
 	decoder := json.NewDecoder(r.Body)
 	err := decoder.Decode(&loginInput)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
+		render.JSON(w, r, response)
 		return
 	}
 
@@ -82,5 +77,6 @@ func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response["error"] = false
+	response["msg"] = "Login successful"
 	render.JSON(w, r, response)
 }
