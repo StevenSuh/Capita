@@ -24,8 +24,8 @@ func InitDb() {
 	var err error
 
 	credentials := fmt.Sprintf(
-		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config[dbhost], config[dbport], config[dbuser], config[dbpass], config[dbname],
+		"host=%s port=%s user=%s dbname=%s sslmode=disable password=%s",
+		config[dbhost], config[dbport], config[dbuser], config[dbname], config[dbpass],
 	)
 
 	Client, err = sqlx.Connect("postgres", credentials)
