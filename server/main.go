@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -30,9 +31,18 @@ func Routes() *chi.Mux {
 }
 
 func main() {
+	CheckEnv()
+
 	db.InitDb()
 	defer db.Client.Close()
 
 	router := Routes()
 	log.Fatal(http.ListenAndServe(":8080", router))
+}
+
+func CheckEnv() {
+	_, ok := os.LookupEnv("PASSWORD_SALT")
+	if !ok {
+		panic("PASSWORD_SALT missing")
+	}
 }

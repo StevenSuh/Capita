@@ -2,7 +2,6 @@ package db
 
 import (
 	"fmt"
-	"log"
 	"os"
 
 	"github.com/jmoiron/sqlx"
@@ -30,12 +29,12 @@ func InitDb() {
 
 	Client, err = sqlx.Connect("postgres", credentials)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	err = Client.Ping()
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	fmt.Println("Db successfully connected")
@@ -46,27 +45,27 @@ func dbConfig() map[string]string {
 
 	host, ok := os.LookupEnv(dbhost)
 	if !ok {
-		log.Fatalln("DBHOST missing")
+		panic("DBHOST missing")
 	}
 
 	port, ok := os.LookupEnv(dbport)
 	if !ok {
-		log.Fatalln("DBPORT missing")
+		panic("DBPORT missing")
 	}
 
 	user, ok := os.LookupEnv(dbuser)
 	if !ok {
-		log.Fatalln("DBUSER missing")
+		panic("DBUSER missing")
 	}
 
 	password, ok := os.LookupEnv(dbpass)
 	if !ok {
-		log.Fatalln("DBPASS missing")
+		panic("DBPASS missing")
 	}
 
 	name, ok := os.LookupEnv(dbname)
 	if !ok {
-		log.Fatalln("DBNAME missing")
+		panic("DBNAME missing")
 	}
 
 	conf[dbhost] = host

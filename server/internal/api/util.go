@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 
+	"github.com/go-chi/render"
 	"github.com/lib/pq"
 
 	"../db"
@@ -32,4 +33,19 @@ func CheckCookie(_ http.ResponseWriter, r *http.Request) bool {
 	}
 
 	return true
+}
+
+func CheckAuth(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		response := make(map[string]interface{})
+		response["error"] = true
+		response["msg"] = "You need to login to access the page"
+
+		if !CheckCookie(w, r) {
+			render.Status(r, http.StatusUnauthorized)
+			render.JSON(w, r, response)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
 }

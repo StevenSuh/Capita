@@ -24,7 +24,7 @@ services:
       - DBHOST=host.docker.internal
       - DBPORT=5432
       - DBPASS=
-      - PASSWORD_SALT=monkeypp
+      - PASSWORD_SALT=
   client:
     build:
       dockerfile: Dockerfile.dev
