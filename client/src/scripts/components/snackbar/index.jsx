@@ -1,16 +1,16 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
-import classNames from 'classnames';
+import React from "react";
+import { connect } from "react-redux";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
+import classNames from "classnames";
 
-import * as actions from './actions';
+import * as actions from "./actions";
 
 // import { ReactComponent as CloseIcon } from 'assets/icons/x.svg';
-import { PROP_SNACKBARS } from './defs';
-import styles from './styles.module.css';
+import { PROP_SNACKBARS } from "./defs";
+import styles from "./styles.module.css";
 
 const Snackbar = props => (
-  <TransitionGroup className={classNames(styles.main, 'transition-group')}>
+  <TransitionGroup className={classNames(styles.main, "transition-group")}>
     {props.snackbars.reverse().map(({ id, message, type }) => (
       <CSSTransition
         key={id}

@@ -8,8 +8,3 @@ export const PROP_IS_ATTEMPTING_LOGIN = 'is-attempting-login';
 export const actionTypes = {
   onChangeField: 'login/change-field',
 };
-
-export const errorMsgs = {
-  required: 'This field is required',
-  mismatch: 'Your email or password is incorrect',
-};

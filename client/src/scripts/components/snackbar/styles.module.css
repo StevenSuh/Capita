@@ -4,6 +4,7 @@
   top: 0;
   z-index: 1000;
   width: 100vw;
+  height: auto !important;
 }
 
 .item {
@@ -36,6 +37,6 @@
   height: 16px;
 }
 
-.icon > * {
+.icon>* {
   stroke: var(--white-color);
 }

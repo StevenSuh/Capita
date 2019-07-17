@@ -12,7 +12,7 @@ const Nav = props => (
       <div className={styles.row} key={index}>
         {row.map(({ item, onClick }, index) => (
           <div
-            className={styles.item}
+            className={classNames(styles.item, 'hover')}
             onClick={onClick}
             key={index}
             type="button"

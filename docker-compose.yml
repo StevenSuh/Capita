@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   nginx:
     restart: always
@@ -6,7 +6,7 @@ services:
       dockerfile: Dockerfile.dev
       context: ./nginx
     ports:
-      - '3050:80'
+      - "3050:80"
     depends_on:
       - client
       - api
@@ -25,6 +25,9 @@ services:
       - DBPORT=5432
       - DBPASS=
       - PASSWORD_SALT=monkeypp
+      - PLAID_CLIENT_ID=5d0f62f4ea9b600016aca27f
+      - PLAID_SECRET=e150463deed866b40081d6e1791878
+      - PLAID_PUBLIC_KEY=7b7a1d74be67a52e518559eae6dbd5
   client:
     build:
       dockerfile: Dockerfile.dev
@@ -32,3 +35,6 @@ services:
     volumes:
       - /app/node_modules
       - ./client:/app
+    environment:
+      - PLAID_ENV=sandbox
+      - PLAID_PUBLIC_KEY=7b7a1d74be67a52e518559eae6dbd5

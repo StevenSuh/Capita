@@ -1,28 +1,16 @@
 package user
 
 import (
-	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	"github.com/lib/pq"
-	uuid "github.com/satori/go.uuid"
 
 	api ".."
 	"../../db"
 )
-
-type User struct {
-	ID                int            `db:"id" json:"id"`
-	Name              sql.NullString `db:"name" json:"name"`
-	Email             string         `db:"email" json:"email"`
-	Password          string         `db:"password" json:"password"`
-	Session           sql.NullString `db:"session" json:"session"`
-	SessionExpiration pq.NullTime    `db:"session_expiration" json:"sessionExpiration"`
-}
 
 type LoginInput struct {
 	Name     string `json:"name"`
@@ -35,50 +23,54 @@ func Routes() *chi.Mux {
 	router.Get("/login", GetLoginStatus)
 	router.Post("/login", LoginToAccount)
 	router.Post("/register", RegisterAccount)
+	router.Get("/{userID}/accounts", GetConnectedAccounts)
+	router.Get("/{userID}/transactions", GetTransactions)
 
 	return router
 }
 
 func GetLoginStatus(w http.ResponseWriter, r *http.Request) {
-	response := make(map[string]bool)
-	response["status"] = false
+	response := make(map[string]interface{})
+	response["error"] = true
 
-	if !api.CheckCookie(w, r) {
+	user, err := api.CheckCookie(w, r)
+	if err != nil {
 		render.JSON(w, r, response)
 		return
 	}
 
-	response["status"] = true
+	// response["error"] = false
+	response["user"] = user
 	render.JSON(w, r, response)
 }
 
 func LoginToAccount(w http.ResponseWriter, r *http.Request) {
-	var loginInput LoginInput
-
 	response := make(map[string]interface{})
 	response["error"] = true
 	response["msg"] = "Invalid login information - Please try again"
 
 	// turn body into json
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&loginInput)
+	var input LoginInput
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
-		render.Status(r, http.StatusInternalServerError)
+		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, response)
 		return
 	}
 
-	email := loginInput.Email
-	password := loginInput.Password
+	email := input.Email
+	password := input.Password
+
+	// TODO: validation for all input
 	if !ValidatePassword(password) {
-		render.Status(r, http.StatusUnauthorized)
+		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, response)
 		return
 	}
 
 	// retrieving user; check user password
-	user := User{}
-	err = db.Client.Get(&user, "SELECT * FROM users WHERE email=$1;", email)
+	user := api.User{}
+	err = db.Client.Get(&user, SQLSelectByEmail, email)
 	if err != nil {
 		render.Status(r, http.StatusUnauthorized)
 		render.JSON(w, r, response)
@@ -91,64 +83,74 @@ func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// correct credentials; updating user
-	sessionExpiration := time.Now()
-	sessionID := uuid.Must(uuid.NewV4()).String()
-	db.Client.MustExec(`
-		UPDATE users
-		SET session=$1, session_expiration=$2
-		WHERE email=$3;
-	`, sessionID, sessionExpiration, email)
-
-	// success + set cookie
-	sessionCookie := &http.Cookie{
-		Name:     "session",
-		Value:    sessionID,
-		HttpOnly: true,
-		Secure:   false, // TODO: change to true
-		MaxAge:   int(sessionExpiration.Unix()),
-	}
-	http.SetCookie(w, sessionCookie)
-
+	api.SetCookie(user.ID, w, r)
 	response["error"] = false
 	response["msg"] = "Login successful"
 	render.JSON(w, r, response)
 }
 
 func RegisterAccount(w http.ResponseWriter, r *http.Request) {
-	var loginInput LoginInput
-
 	response := make(map[string]interface{})
 	response["error"] = true
 	response["msg"] = "Error occurred while registering account - Please try again"
 
 	// turn body into json
-	decoder := json.NewDecoder(r.Body)
-	err := decoder.Decode(&loginInput)
+	var input LoginInput
+	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
-		render.Status(r, http.StatusInternalServerError)
+		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, response)
 		return
 	}
 
-	name := loginInput.Name
-	email := loginInput.Email
-	password := loginInput.Password
+	name := input.Name
+	email := input.Email
+	password := input.Password
+
+	// TODO: validation for all input
 	if !ValidatePassword(password) {
-		render.Status(r, http.StatusUnauthorized)
+		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, response)
 		return
 	}
 
 	EncryptPassword(&password)
 
-	db.Client.MustExec(`
-		INSERT INTO users
-		(name, email, password)
-		VALUES ($1, $2, $3)
-	`, name, email, password)
+	result := db.Client.MustExec(SQLInsertByNameEmailPassword, name, email, password)
+	userID, _ := result.LastInsertId()
 
+	api.SetCookie(userID, w, r)
 	response["error"] = false
 	response["msg"] = "Registration success"
+	render.JSON(w, r, response)
+}
+
+func GetConnectedAccounts(w http.ResponseWriter, r *http.Request) {
+	// userID := chi.URLParam(r, "userId")
+	response := make(map[string]interface{})
+	response["error"] = false
+	response["accounts"] = []string{}
+
+	render.JSON(w, r, response)
+}
+
+func GetTransactions(w http.ResponseWriter, r *http.Request) {
+	// userID := chi.URLParam(r, "userId")
+	recurring := false
+	response := make(map[string]interface{})
+	response["error"] = false
+	response["transactions"] = []string{}
+
+	keys, ok := r.URL.Query()["recurring"]
+	if ok && len(keys[0]) > 0 {
+		fmt.Println(keys[0])
+		if keys[0] == "true" {
+			recurring = true
+		} else {
+			recurring = false
+		}
+	}
+
+	response["recurring"] = recurring
 	render.JSON(w, r, response)
 }

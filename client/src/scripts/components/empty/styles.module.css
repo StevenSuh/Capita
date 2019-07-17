@@ -1,0 +1,17 @@
+.main {
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-family);
+  padding: 10px 0;
+}
+
+.icon {
+  width: 36px;
+  height: 36px;
+}
+
+.message {
+  font-size: var(--font-medium);
+  font-weight: 500;
+  margin-top: 5px;
+}

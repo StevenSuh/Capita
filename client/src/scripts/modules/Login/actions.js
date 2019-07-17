@@ -1,7 +1,9 @@
 import { setLoggedIn } from 'scripts/modules/App/actions';
 import { submitLogin } from 'scripts/services/api';
 
+import { validateEmail, validatePassword } from 'utils';
 import * as defs from './defs';
+import { ERROR_MSGS } from 'defs';
 
 export const changeField = (field, value) => ({
   type: defs.actionTypes.onChangeField,
@@ -24,7 +26,7 @@ export const attemptLogin = () => async (dispatch, getState) => {
 
   const { error } = await submitLogin(dispatch)(email, password);
   if (error) {
-    loginError = defs.errorMsgs.mismatch;
+    loginError = ERROR_MSGS.mismatch;
   } else {
     dispatch(setLoggedIn(true));
   }
@@ -39,14 +41,20 @@ export const validateLoginForm = dispatch => (email, password) => {
   let error = false;
 
   if (!email) {
-    emailError = defs.errorMsgs.required;
+    emailError = ERROR_MSGS.required;
+    error = true;
+  } else if (!validateEmail(email)) {
+    emailError = ERROR_MSGS.emailInvalid;
     error = true;
   } else {
     emailError = '';
   }
 
   if (!password) {
-    passwordError = defs.errorMsgs.required;
+    passwordError = ERROR_MSGS.required;
+    error = true;
+  } else if (!validatePassword(password)) {
+    passwordError = ERROR_MSGS.passwordInvalid;
     error = true;
   } else {
     passwordError = '';

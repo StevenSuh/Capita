@@ -16,6 +16,8 @@
   --font-large: 18px;
   --font-x-large: 24px;
   --font-xx-large: 36px;
+  --font-family: Apercu, Arial, Helvetica, sans-serif;
+  --font-family-mono: Apercu Mono, Apercu, Arial, Helvetica, sans-serif;
 
   --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-long-duration: 0.5s;
@@ -70,9 +72,10 @@ html,
 #root {
   font-size: var(--font-medium);
   color: var(--black-color);
-  font-family: Apercu, Arial, Helvetica, sans-serif;
+  font-family: var(--font-family);
   position: relative;
   width: 100%;
+  height: 100vh;
 }
 
 body {
@@ -85,7 +88,7 @@ button {
   border: none;
   font-size: var(--font-medium);
   color: var(--black-color);
-  font-family: Apercu, Arial, Helvetica, sans-serif;
+  font-family: var(--font-family);
 }
 
 input,
@@ -122,7 +125,7 @@ a {
   box-sizing: border-box;
   position: relative;
   line-height: 1.4;
-  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
 .click {
@@ -133,8 +136,17 @@ a {
   opacity: 0.5;
 }
 
+.hover {
+  transition: color var(--transition-short-duration) var(--transition-curve);
+}
+
+.hover:hover {
+  color: var(--blue-color);
+}
+
 .transition-group {
   width: 100%;
+  height: 100%;
 }
 
 .container {
@@ -195,17 +207,17 @@ a {
   transform: translateX(-100%);
 }
 
-.transition-group.right > .slide-enter {
+.transition-group.right>.slide-enter {
   transform: translateX(-100%);
 }
 
-.transition-group.right > .slide-enter-active,
-.transition-group.right > .slide-enter-done {
+.transition-group.right>.slide-enter-active,
+.transition-group.right>.slide-enter-done {
   transition: transform var(--transition-long-duration) var(--transition-curve);
   transform: translateX(0);
 }
 
-.transition-group.right > .slide-exit {
+.transition-group.right>.slide-exit {
   position: absolute;
   left: unset;
   right: 50%;
@@ -213,8 +225,8 @@ a {
   transform: translateX(50%);
 }
 
-.transition-group.right > .slide-exit-active,
-.transition-group.right > .slide-exit-done {
+.transition-group.right>.slide-exit-active,
+.transition-group.right>.slide-exit-done {
   transition: transform var(--transition-long-duration) var(--transition-curve),
     right var(--transition-long-duration) var(--transition-curve);
   right: 0;
