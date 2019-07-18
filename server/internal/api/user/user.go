@@ -32,29 +32,28 @@ func Routes() *chi.Mux {
 func GetLoginStatus(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	response["error"] = true
+	defer render.JSON(w, r, response)
 
 	user, err := api.CheckCookie(w, r)
 	if err != nil {
-		render.JSON(w, r, response)
 		return
 	}
 
 	// response["error"] = false
 	response["user"] = user
-	render.JSON(w, r, response)
 }
 
 func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	response["error"] = true
 	response["msg"] = "Invalid login information - Please try again"
+	defer render.JSON(w, r, response)
 
 	// turn body into json
 	var input LoginInput
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
-		render.JSON(w, r, response)
 		return
 	}
 
@@ -64,7 +63,6 @@ func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 	// TODO: validation for all input
 	if !ValidatePassword(password) {
 		render.Status(r, http.StatusBadRequest)
-		render.JSON(w, r, response)
 		return
 	}
 
@@ -73,33 +71,31 @@ func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 	err = db.Client.Get(&user, SQLSelectByEmail, email)
 	if err != nil {
 		render.Status(r, http.StatusUnauthorized)
-		render.JSON(w, r, response)
 		return
 	}
 
 	if !ConfirmPassword(user.Password, password) {
 		render.Status(r, http.StatusUnauthorized)
-		render.JSON(w, r, response)
 		return
 	}
 
 	api.SetCookie(user.ID, w, r)
 	response["error"] = false
 	response["msg"] = "Login successful"
-	render.JSON(w, r, response)
+	response["user"] = user
 }
 
 func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	response["error"] = true
 	response["msg"] = "Error occurred while registering account - Please try again"
+	defer render.JSON(w, r, response)
 
 	// turn body into json
 	var input LoginInput
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
-		render.JSON(w, r, response)
 		return
 	}
 
@@ -110,7 +106,6 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 	// TODO: validation for all input
 	if !ValidatePassword(password) {
 		render.Status(r, http.StatusBadRequest)
-		render.JSON(w, r, response)
 		return
 	}
 
@@ -119,10 +114,17 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 	result := db.Client.MustExec(SQLInsertByNameEmailPassword, name, email, password)
 	userID, _ := result.LastInsertId()
 
+	user := api.User{}
+	err = db.Client.Get(&user, SQLSelectByID, userID)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		return
+	}
+
 	api.SetCookie(userID, w, r)
 	response["error"] = false
 	response["msg"] = "Registration success"
-	render.JSON(w, r, response)
+	response["user"] = user
 }
 
 func GetConnectedAccounts(w http.ResponseWriter, r *http.Request) {
@@ -130,8 +132,7 @@ func GetConnectedAccounts(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	response["error"] = false
 	response["accounts"] = []string{}
-
-	render.JSON(w, r, response)
+	defer render.JSON(w, r, response)
 }
 
 func GetTransactions(w http.ResponseWriter, r *http.Request) {
@@ -140,6 +141,7 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	response["error"] = false
 	response["transactions"] = []string{}
+	defer render.JSON(w, r, response)
 
 	keys, ok := r.URL.Query()["recurring"]
 	if ok && len(keys[0]) > 0 {
@@ -152,5 +154,4 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	}
 
 	response["recurring"] = recurring
-	render.JSON(w, r, response)
 }

@@ -25,9 +25,11 @@ services:
       - DBPORT=5432
       - DBPASS=
       - PASSWORD_SALT=monkeypp
+      - PLAID_ENV=development
       - PLAID_CLIENT_ID=5d0f62f4ea9b600016aca27f
-      - PLAID_SECRET=e150463deed866b40081d6e1791878
+      - PLAID_SECRET=a205d7ba390ddde25027d76157aaf5
       - PLAID_PUBLIC_KEY=7b7a1d74be67a52e518559eae6dbd5
+      - PLAID_COUNTRY_CODES=US
   client:
     build:
       dockerfile: Dockerfile.dev
@@ -36,5 +38,5 @@ services:
       - /app/node_modules
       - ./client:/app
     environment:
-      - PLAID_ENV=sandbox
-      - PLAID_PUBLIC_KEY=7b7a1d74be67a52e518559eae6dbd5
+      - REACT_APP_PLAID_ENV=development
+      - REACT_APP_PLAID_PUBLIC_KEY=7b7a1d74be67a52e518559eae6dbd5

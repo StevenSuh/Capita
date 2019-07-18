@@ -10,8 +10,9 @@ import * as accountsActions from "scripts/modules/Accounts/actions";
 import { PROP_ACCOUNTS } from "scripts/modules/Accounts/defs";
 import { PLAID_OPTIONS } from "defs";
 import styles from "./styles.module.css";
+import { PROP_USER } from "scripts/modules/App/defs";
 
-const ConnectedAccounts = ({ accounts, onGetConnectedAccounts }) => {
+const ConnectedAccounts = ({ accounts, onGetConnectedAccounts, user }) => {
   return (
     <IsLoading init={onGetConnectedAccounts}>
       <div className={styles.main}>
@@ -27,13 +28,18 @@ const ConnectedAccounts = ({ accounts, onGetConnectedAccounts }) => {
             className={styles.empty}
             message={
               <PlaidLink
-                className={classNames(styles.plaidLink, "hover")}
+                className={classNames("click")}
                 style={{}}
                 onExit={() => {}}
                 onSuccess={(token, metadata) => console.log(token, metadata)}
+                user={{
+                  legalName: user.name,
+                  emailAddress: user.email,
+                }}
                 {...PLAID_OPTIONS}
               >
-                Connect an account to get started
+                <span className={styles.plaidLink}>Connect</span>
+                {" an account to get started"}
               </PlaidLink>
             }
           />
@@ -43,8 +49,9 @@ const ConnectedAccounts = ({ accounts, onGetConnectedAccounts }) => {
   );
 };
 
-export const mapStateToProps = ({ accounts }) => ({
+export const mapStateToProps = ({ app, accounts }) => ({
   accounts: accounts.get(PROP_ACCOUNTS).toJS(),
+  user: app.get(PROP_USER).toJS(),
 });
 
 export default connect(

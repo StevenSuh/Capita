@@ -46,11 +46,10 @@ export const submitLogin = dispatch => async (email, password) => {
 
 export const submitRegister = dispatch => async (name, email, password) => {
   const res = await axios.post(API_ROUTES.REGISTER, {
-      name,
-      email,
-      password
-    })
-    .catch(catchApiError(dispatch));
+    name,
+    email,
+    password,
+  }).catch(catchApiError(dispatch));
 
   return res.data;
 };
@@ -58,6 +57,22 @@ export const submitRegister = dispatch => async (name, email, password) => {
 export const getConnectedAccounts = dispatch => async id => {
   const res = await axios.get(API_ROUTES.CONNECTED_ACCOUNTS.replace(':userId', id))
     .catch(catchApiError(dispatch));
+
+  return res.data;
+};
+
+export const getAccessToken = dispatch => async (
+  publicToken,
+  accounts,
+  institution,
+  linkSessionId,
+) => {
+  const res = await axios.post(API_ROUTES.PLAID.GET_ACCESS_TOKEN, {
+    publicToken,
+    accounts,
+    institution,
+    linkSessionId,
+  }).catch(catchApiError(dispatch));
 
   return res.data;
 };

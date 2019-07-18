@@ -50,18 +50,26 @@ const App = ({ history, loggedIn }) => {
 const slideshowItems = [
   <div>
     <h6 className={styles.slideshow_item_title}>
-      Centralize your financial life
+      Minimalistic financial tracker
     </h6>
     <p className={styles.slideshow_item_content}>
-      Keep track of your accounts from a single app
+      Focus on where your money is going
     </p>
   </div>,
   <div>
     <h6 className={styles.slideshow_item_title}>
-      Connect accounts and transfer money
+      Centralize your financial life
     </h6>
     <p className={styles.slideshow_item_content}>
-      Connect up to 5 accounts and easily transfer money between them
+      Keep track of your bank accounts and transactions
+    </p>
+  </div>,
+  <div>
+    <h6 className={styles.slideshow_item_title}>
+      Connect banks and transfer money
+    </h6>
+    <p className={styles.slideshow_item_content}>
+      Connect up to 3 banks and easily transfer money between them
     </p>
   </div>,
   <div>
@@ -69,7 +77,7 @@ const slideshowItems = [
       Understand how you spend your money
     </h6>
     <p className={styles.slideshow_item_content}>
-      View your spending by month or categories
+      View your spending by month and customized categories
     </p>
   </div>,
 ];

@@ -8,7 +8,7 @@ import (
 
 type User struct {
 	ID                int64          `db:"id" json:"id"`
-	Name              sql.NullString `db:"name" json:"name"`
+	Name              string         `db:"name" json:"name"`
 	Email             string         `db:"email" json:"email"`
 	Password          string         `db:"password" json:"-"`
 	Session           sql.NullString `db:"session" json:"-"`

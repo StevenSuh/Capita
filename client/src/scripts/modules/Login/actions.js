@@ -1,17 +1,30 @@
-import { setLoggedIn } from 'scripts/modules/App/actions';
-import { submitLogin } from 'scripts/services/api';
+import {
+  setLoggedIn,
+  setUser
+} from 'scripts/modules/App/actions';
+import {
+  submitLogin
+} from 'scripts/services/api';
 
-import { validateEmail, validatePassword } from 'utils';
+import {
+  validateEmail,
+  validatePassword
+} from 'utils';
 import * as defs from './defs';
-import { ERROR_MSGS } from 'defs';
+import {
+  ERROR_MSGS
+} from 'defs';
 
 export const changeField = (field, value) => ({
   type: defs.actionTypes.onChangeField,
-  field, value,
+  field,
+  value,
 });
 
 export const attemptLogin = () => async (dispatch, getState) => {
-  const { login } = getState();
+  const {
+    login
+  } = getState();
   const email = login.get(defs.PROP_EMAIL);
   const password = login.get(defs.PROP_PASSWORD);
   const isAttemptingLogin = login.get(defs.PROP_IS_ATTEMPTING_LOGIN);
@@ -24,10 +37,14 @@ export const attemptLogin = () => async (dispatch, getState) => {
 
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_LOGIN, true));
 
-  const { error } = await submitLogin(dispatch)(email, password);
+  const {
+    error,
+    user,
+  } = await submitLogin(dispatch)(email, password);
   if (error) {
     loginError = ERROR_MSGS.mismatch;
   } else {
+    dispatch(setUser(user));
     dispatch(setLoggedIn(true));
   }
 

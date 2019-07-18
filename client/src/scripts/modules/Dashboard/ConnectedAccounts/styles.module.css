@@ -4,4 +4,7 @@
   padding: 20px 0 40px;
 }
 
-.plaidLink {}
+.plaidLink {
+  color: var(--blue-color);
+  font-weight: 500;
+}

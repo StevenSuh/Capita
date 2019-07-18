@@ -1,17 +1,30 @@
-import { setLoggedIn } from 'scripts/modules/App/actions';
-import { submitRegister } from 'scripts/services/api';
+import {
+  setLoggedIn,
+  setUser
+} from 'scripts/modules/App/actions';
+import {
+  submitRegister
+} from 'scripts/services/api';
 
-import { validateEmail, validatePassword } from 'utils';
+import {
+  validateEmail,
+  validatePassword
+} from 'utils';
 import * as defs from './defs';
-import { ERROR_MSGS } from 'defs';
+import {
+  ERROR_MSGS
+} from 'defs';
 
 export const changeField = (field, value) => ({
   type: defs.actionTypes.onChangeField,
-  field, value,
+  field,
+  value,
 });
 
 export const attemptRegister = () => async (dispatch, getState) => {
-  const { getStarted } = getState();
+  const {
+    getStarted
+  } = getState();
   const name = getStarted.get(defs.PROP_NAME);
   const email = getStarted.get(defs.PROP_EMAIL);
   const password = getStarted.get(defs.PROP_PASSWORD);
@@ -31,8 +44,12 @@ export const attemptRegister = () => async (dispatch, getState) => {
 
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_REGISTER, true));
 
-  const { error } = await submitRegister(dispatch)(name, email, password);
+  const {
+    error,
+    user,
+  } = await submitRegister(dispatch)(name, email, password);
   if (!error) {
+    dispatch(setUser(user));
     dispatch(setLoggedIn(true));
   }
 

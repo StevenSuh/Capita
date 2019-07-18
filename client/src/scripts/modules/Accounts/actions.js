@@ -1,5 +1,6 @@
 import {
-  getConnectedAccounts as getConnectedAccountsApi
+  getAccessToken,
+  getConnectedAccounts as getConnectedAccountsApi,
 } from "scripts/services/api";
 import * as defs from "./defs";
 
@@ -39,4 +40,14 @@ export const getConnectedAccounts = (force = false) => async (dispatch, getState
   }
 
   dispatch(setAccounts(accounts));
+};
+
+export const exchangePublicToken = (
+  publicToken, {
+    accounts,
+    institution,
+    link_session_id: linkSessionId,
+  },
+) => async dispatch => {
+  await getAccessToken(dispatch)(publicToken, accounts, institution, linkSessionId);
 };

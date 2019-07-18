@@ -86,9 +86,10 @@ input,
 button {
   background-color: transparent;
   border: none;
-  font-size: var(--font-medium);
-  color: var(--black-color);
-  font-family: var(--font-family);
+  font-size: inherit;
+  color: inherit;
+  font-family: inherit;
+  font-weight: inherit;
 }
 
 input,
