@@ -18,25 +18,33 @@ type User struct {
 	UpdatedAt         time.Time      `db:"updated_at" json:"updatedAt"`
 }
 
-type PlaidInstitutionLink struct {
-	ID              int64          `db:"id" json:"id"`
-	UserID          int64          `db:"user_id" json:"userId"`
-	AccessToken     string         `db:"access_token" json:"accessToken"`
-	LinkItemID      string         `db:"link_item_id" json:"linkItemId"`
-	LinkSessionID   string         `db:"link_session_id" json:"linkSessionId"`
-	InstitutionID   string         `db:"institution_id" json:"institutionId"`
-	InstitutionName string         `db:"institution_name" json:"institutionName"`
-	InstitutionURL  sql.NullString `db:"institution_url" json:"institutionUrl"`
-	InstitutionLogo sql.NullString `db:"institution_logo" json:"institutionLogo"`
-	CreatedAt       time.Time      `db:"created_at" json:"createdAt"`
-	UpdatedAt       time.Time      `db:"updated_at" json:"updatedAt"`
+type Profile struct {
+	ID        int64     `db:"id" json:"id"`
+	UserID    int64     `db:"user_id" json:"userId"`
+	Name      string    `db:"name" json:"name"`
+	CreatedAt time.Time `db:"created_at" json:"createdAt"`
+	UpdatedAt time.Time `db:"updated_at" json:"updatedAt"`
+}
+
+type InstitutionLink struct {
+	ID                 int64          `db:"id" json:"id"`
+	UserID             int64          `db:"user_id" json:"userId"`
+	AccessToken        string         `db:"access_token" json:"accessToken"`
+	PlaidItemID        string         `db:"plaid_item_id" json:"plaidItemId"`
+	LinkSessionID      string         `db:"link_session_id" json:"linkSessionId"`
+	PlaidInstitutionID string         `db:"institution_id" json:"institutionId"`
+	InstitutionName    string         `db:"institution_name" json:"institutionName"`
+	InstitutionURL     sql.NullString `db:"institution_url" json:"institutionUrl"`
+	InstitutionLogo    sql.NullString `db:"institution_logo" json:"institutionLogo"`
+	CreatedAt          time.Time      `db:"created_at" json:"createdAt"`
+	UpdatedAt          time.Time      `db:"updated_at" json:"updatedAt"`
 }
 
 type Account struct {
 	ID                            int64          `db:"id" json:"id"`
 	UserID                        int64          `db:"user_id" json:"userId"`
-	PlaidInstitutionLinkID        int64          `db:"plaid_institution_link_id" json:"plaidInstitutionLinkId"`
-	LinkItemID                    string         `db:"link_item_id" json:"linkItemId"`
+	ProfileIDs                    []int64        `db:"profile_ids" json:"profileIds"`
+	InstitutionLinkID             int64          `db:"institution_link_id" json:"institutionLinkId"`
 	PlaidAccountID                string         `db:"plaid_account_id" json:"plaidAccountId"`
 	Mask                          string         `db:"mask" json:"mask"`
 	Name                          string         `db:"name" json:"name"`
@@ -49,12 +57,35 @@ type Account struct {
 	BalanceLimit                  sql.NullInt64  `db:"balance_limit" json:"balanceLimit"`
 	BalanceISOCurrencyCode        sql.NullString `db:"balance_iso_currency_code" json:"balanceISOCurrencyCode"`
 	BalanceUnofficialCurrencyCode sql.NullString `db:"balance_unofficial_currency_code" json:"balanceUnofficialCurrencyCode"`
-	InstitutionID                 string         `db:"institution_id" json:"institutionId"`
+	PlaidInstitutionID            string         `db:"institution_id" json:"institutionId"`
 	InstitutionName               string         `db:"institution_name" json:"institutionName"`
 	InstitutionURL                sql.NullString `db:"institution_url" json:"institutionUrl"`
 	InstitutionLogo               sql.NullString `db:"institution_logo" json:"institutionLogo"`
 	CreatedAt                     time.Time      `db:"created_at" json:"createdAt"`
 	UpdatedAt                     time.Time      `db:"updated_at" json:"updatedAt"`
+}
+
+// TODO
+type Transaction struct {
+	ID                     int64 `db:"id" json:"id"`
+	UserID                 int64 `db:"user_id" json:"userId"`
+	AccountID              int64 `db:"account_id" json:"accountId"`
+	TransactionCategoryIDs []int64
+}
+
+// TODO
+// Custom category
+// May overlap BaseTransactionCategory multiple times
+type TransactionCategory struct {
+	ID                         int64   `db:"id" json:"id"`
+	UserID                     int64   `db:"user_id" json:"userId"`
+	BaseTransactionCategoryIDs []int64 `db:"base_transaction_category_ids" json:"baseTransactionCategoryIds"`
+}
+
+// TODO
+// Dining, travel, transportation, housing ...
+type BaseTransactionCategory struct {
+	ID int64 `db:"id" json:"id"`
 }
 
 const (
