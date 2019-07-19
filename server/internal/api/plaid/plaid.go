@@ -11,19 +11,6 @@ import (
 	"github.com/plaid/plaid-go/plaid"
 )
 
-var clientOptions = plaid.ClientOptions{
-	ClientID:    os.Getenv("PLAID_CLIENT_ID"),
-	Secret:      os.Getenv("PLAID_SECRET"),
-	PublicKey:   os.Getenv("PLAID_PUBLIC_KEY"),
-	Environment: getPlaidEnv(),
-	HTTPClient:  &http.Client{},
-}
-
-var client, _ = plaid.NewClient(clientOptions)
-
-var accessToken string
-var itemID string
-
 type PlaidLinkInput struct {
 	PublicToken   string               `json:"publicToken"`
 	Accounts      []PlaidLinkAccount   `json:"accounts"`
@@ -43,6 +30,19 @@ type PlaidLinkInstitution struct {
 	Name          string `json:"name"`
 	InstitutionID string `json:"institution_id"`
 }
+
+var clientOptions = plaid.ClientOptions{
+	ClientID:    os.Getenv("PLAID_CLIENT_ID"),
+	Secret:      os.Getenv("PLAID_SECRET"),
+	PublicKey:   os.Getenv("PLAID_PUBLIC_KEY"),
+	Environment: getPlaidEnv(),
+	HTTPClient:  &http.Client{},
+}
+
+var client, _ = plaid.NewClient(clientOptions)
+
+var accessToken string
+var itemID string
 
 func getPlaidEnv() (plaidEnv plaid.Environment) {
 	fmt.Println("Plaid:", os.Getenv("PLAID_ENV"))
