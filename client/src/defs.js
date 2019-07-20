@@ -13,11 +13,13 @@ export const API_ROUTES = {
   REGISTER: '/api/user/register',
   CONNECTED_ACCOUNTS: '/api/user/:userId/accounts',
   PLAID: {
-    WEBHOOK: '/webhook',
+    GET_ACCESS_TOKEN: '/api/plaid/get_access_token',
+    WEBHOOK: '/api/plaid/webhook',
   },
 };
 
 export const ERROR_MSGS = {
+  default: 'An error has occurred - please try again later',
   required: 'This field is required',
   mismatch: 'Your email or password is incorrect',
   emailInvalid: 'Email address is invalid',

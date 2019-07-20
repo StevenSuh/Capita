@@ -111,8 +111,12 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 
 	EncryptPassword(&password)
 
-	result := db.Client.MustExec(SQLInsertByNameEmailPassword, name, email, password)
-	userID, _ := result.LastInsertId()
+	var userID int64
+	err = db.Client.QueryRow(SQLInsertByNameEmailPassword, name, email, password).Scan(&userID)
+	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		return
+	}
 
 	user := api.User{}
 	err = db.Client.Get(&user, SQLSelectByID, userID)

@@ -12,7 +12,12 @@ import { PLAID_OPTIONS } from "defs";
 import styles from "./styles.module.css";
 import { PROP_USER } from "scripts/modules/App/defs";
 
-const ConnectedAccounts = ({ accounts, onGetConnectedAccounts, user }) => {
+const ConnectedAccounts = ({
+  accounts,
+  onExchangePublicToken,
+  onGetConnectedAccounts,
+  user,
+}) => {
   return (
     <IsLoading init={onGetConnectedAccounts}>
       <div className={styles.main}>
@@ -27,20 +32,22 @@ const ConnectedAccounts = ({ accounts, onGetConnectedAccounts, user }) => {
           <Empty
             className={styles.empty}
             message={
-              <PlaidLink
-                className={classNames("click")}
-                style={{}}
-                onExit={() => {}}
-                onSuccess={(token, metadata) => console.log(token, metadata)}
-                user={{
-                  legalName: user.name,
-                  emailAddress: user.email,
-                }}
-                {...PLAID_OPTIONS}
-              >
-                <span className={styles.plaidLink}>Connect</span>
-                {" an account to get started"}
-              </PlaidLink>
+              <div>
+                <div>No accounts linked</div>
+                <PlaidLink
+                  className={classNames("click")}
+                  style={{}}
+                  onExit={() => {}}
+                  onSuccess={onExchangePublicToken}
+                  user={{
+                    legalName: user.name,
+                    emailAddress: user.email,
+                  }}
+                  {...PLAID_OPTIONS}
+                >
+                  <div className={styles.plaidLink}>Add an account +</div>
+                </PlaidLink>
+              </div>
             }
           />
         )}
@@ -57,6 +64,7 @@ export const mapStateToProps = ({ app, accounts }) => ({
 export default connect(
   mapStateToProps,
   {
+    onExchangePublicToken: accountsActions.exchangePublicToken,
     onGetConnectedAccounts: accountsActions.getConnectedAccounts,
   },
 )(ConnectedAccounts);

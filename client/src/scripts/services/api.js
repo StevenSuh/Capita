@@ -5,14 +5,19 @@ import {
 } from 'scripts/components/snackbar/actions';
 
 import {
-  API_ROUTES
+  API_ROUTES,
+  ERROR_MSGS,
 } from 'defs';
 import {
   TYPES
 } from 'scripts/components/snackbar/defs';
 
 export const catchApiError = dispatch => error => {
-  let message = error.response.data;
+  if (!error.response) {
+    error.response = {};
+  }
+
+  let message = error.response.data || ERROR_MSGS.default;
 
   if (typeof message === 'object') {
     message = message.msg;

@@ -43,11 +43,11 @@ export const getConnectedAccounts = (force = false) => async (dispatch, getState
 };
 
 export const exchangePublicToken = (
-  publicToken, {
+  publicToken = '', {
     accounts,
     institution,
     link_session_id: linkSessionId,
-  },
+  } = {},
 ) => async dispatch => {
   await getAccessToken(dispatch)(publicToken, accounts, institution, linkSessionId);
 };

@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE OR REPLACE FUNCTION upd_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
-  NEW.changetimestamp = NOW();
+  NEW.updated_at = NOW();
   RETURN NEW;
 END;
 $$ LANGUAGE 'plpgsql';
