@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   user_id integer REFERENCES users ON DELETE CASCADE NOT NULL,
   institution_link_id integer REFERENCES institution_links ON DELETE CASCADE NOT NULL,
   plaid_account_id varchar(255) NOT NULL,
+  active boolean NOT NULL DEFAULT true,
   mask varchar(255) NOT NULL,
   name varchar(255) NOT NULL,
   official_name varchar(255),
@@ -17,6 +18,14 @@ CREATE TABLE IF NOT EXISTS accounts (
   balance_limit decimal,
   balance_iso_currency_code varchar(255),
   balance_unofficial_currency_code varchar(255),
+  apy decimal,
+  withdrawal_limit integer,
+  minimum_balance decimal,
+  notification_enabled boolean NOT NULL DEFAULT true,
+  transaction_alert_enabled boolean NOT NULL DEFAULT true,
+  withdrawal_limit_alert_enabled boolean NOT NULL DEFAULT true,
+  minimum_balance_alert_enabled boolean NOT NULL DEFAULT true,
+  credit_limit_alert_enabled boolean NOT NULL DEFAULT true,
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW()
 );

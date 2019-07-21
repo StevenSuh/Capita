@@ -8,6 +8,11 @@ CREATE TABLE IF NOT EXISTS users (
   password varchar(255) NOT NULL,
   session varchar(255),
   session_expiration timestamp,
+  notification_enabled boolean NOT NULL DEFAULT true,
+  transaction_alert_enabled boolean NOT NULL DEFAULT true,
+  withdrawal_limit_alert_enabled boolean NOT NULL DEFAULT true,
+  minimum_balance_alert_enabled boolean NOT NULL DEFAULT true,
+  credit_limit_alert_enabled boolean NOT NULL DEFAULT true,
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW()
 );
