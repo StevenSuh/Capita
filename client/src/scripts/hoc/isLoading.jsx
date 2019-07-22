@@ -51,7 +51,7 @@ const IsLoadingWrapper = ({
             </div>
           </div>
         ) : (
-          children
+          <div>{children}</div>
         )}
       </CSSTransition>
     </TransitionGroup>

@@ -1,10 +1,5 @@
-.main {}
-
-.empty {
-  padding: 20px 0 40px;
-}
-
 .plaidLink {
   color: var(--blue-color);
   font-weight: 500;
+  margin-top: 5px;
 }

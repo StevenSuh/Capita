@@ -2,16 +2,17 @@
   width: 100%;
   text-align: center;
   font-family: var(--font-family);
-  padding: 10px 0;
+  padding: 20px 0 30px;
 }
 
-.icon {
+.main > svg {
   width: 36px;
   height: 36px;
 }
 
-.icon>* {
+.main > svg > * {
   stroke: var(--gray-color);
+  stroke-width: 1.5px;
 }
 
 .message {

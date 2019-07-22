@@ -1,5 +1,4 @@
 import React from "react";
-import classNames from "classnames";
 import { connect } from "react-redux";
 import { Helmet } from "react-helmet";
 import { Redirect } from "react-router-dom";
@@ -27,8 +26,9 @@ const Dashboard = ({ loggedIn }) => {
 
       <Header title="CAPITA" />
 
-      <div className={classNames(styles.content, "container")}>
+      <div className={styles.content}>
         <ConnectedAccounts />
+        <div className="hr" />
         <RecurringExpenses />
         <ActionTabs />
       </div>

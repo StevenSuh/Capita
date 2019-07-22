@@ -1,0 +1,57 @@
+.main {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bg {
+  cursor: pointer;
+}
+
+.bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--black-color);
+  opacity: 0;
+  transition: opacity var(--transition-short-duration) var(--transition-curve);
+}
+
+.bg:active::before {
+  opacity: 0.1;
+}
+
+.border {
+  border-top: 0.5px solid var(--light-gray-color);
+  padding: 15px 0;
+}
+
+.border:last-child {
+  border-bottom: 0.5px solid var(--light-gray-color);
+}
+
+.title {
+  font-weight: 500;
+}
+
+.subtitle {
+  color: var(--gray-color);
+  font-size: var(--font-small);
+}
+
+.icon {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+}
+
+.icon > * {
+  stroke-width: 1.5px;
+}
+
+.lock > * {
+  stroke-width: 1.5px;
+}

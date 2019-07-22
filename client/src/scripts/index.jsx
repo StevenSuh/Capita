@@ -6,6 +6,7 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
+import { LastLocationProvider } from "react-router-last-location";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import store from "scripts/config/setup";
@@ -13,36 +14,38 @@ import history from "scripts/config/history";
 
 import IsLoading from "scripts/hoc/isLoading";
 
+import Accounts from "scripts/modules/Accounts";
 import App from "scripts/modules/App";
 import Dashboard from "scripts/modules/Dashboard";
 import LandingPage from "scripts/modules/Landing";
 import Login from "scripts/modules/Login";
 import GetStarted from "scripts/modules/Get-Started";
 import Snackbar from "scripts/components/snackbar";
+import Spending from "scripts/modules/Spending";
+import Transactions from "scripts/modules/Transactions";
+import Transfer from "scripts/modules/Transfer";
 
 import { ROUTES } from "defs";
 
 const Wrapper = () => (
   <Provider store={store}>
     <Router history={history} basename={process.env.PUBLIC_URL}>
-      <Route
-        render={({ location }) => (
-          <TransitionGroup className="transition-group">
-            <CSSTransition
-              appear
-              classNames="reveal"
-              key={`${location.key}-main`}
-              timeout={{ enter: 200, exit: 0 }}
-              unmountOnExit
-            >
-              <Switch>
-                <Route exact path={ROUTES.LANDING} component={LandingPage} />
-                <Route
-                  path={ROUTES.APP}
-                  render={() => (
-                    // check if logged in
+      <LastLocationProvider>
+        <Route
+          render={({ location }) => (
+            <TransitionGroup className="transition-group">
+              <CSSTransition
+                appear
+                classNames="reveal"
+                key={`${location.key}-main`}
+                timeout={{ enter: 200, exit: 0 }}
+                unmountOnExit
+              >
+                <Switch>
+                  <Route exact path={ROUTES.LANDING} component={LandingPage} />
+                  <Route path={ROUTES.APP}>
                     <IsLoading>
-                      <div>
+                      <Switch>
                         <Route exact path={ROUTES.APP} component={App} />
                         <Route
                           exact
@@ -55,16 +58,37 @@ const Wrapper = () => (
                           path={ROUTES.GET_STARTED}
                           component={GetStarted}
                         />
-                      </div>
+                        <Route
+                          exact
+                          path={ROUTES.ACCOUNTS}
+                          component={Accounts}
+                        />
+                        <Route
+                          exact
+                          path={ROUTES.TRANSFER}
+                          component={Transfer}
+                        />
+                        <Route
+                          exact
+                          path={ROUTES.TRANSACTIONS}
+                          component={Transactions}
+                        />
+                        <Route
+                          exact
+                          path={ROUTES.SPENDING}
+                          component={Spending}
+                        />
+                        <Redirect to={ROUTES.APP} />
+                      </Switch>
                     </IsLoading>
-                  )}
-                />
-                <Redirect to={ROUTES.LANDING} />
-              </Switch>
-            </CSSTransition>
-          </TransitionGroup>
-        )}
-      />
+                  </Route>
+                  <Redirect to={ROUTES.LANDING} />
+                </Switch>
+              </CSSTransition>
+            </TransitionGroup>
+          )}
+        />
+      </LastLocationProvider>
     </Router>
     <Snackbar />
   </Provider>

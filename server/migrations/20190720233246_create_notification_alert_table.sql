@@ -1,14 +1,5 @@
 -- +goose Up
 -- +goose StatementBegin
-type NotificationAlert struct {
-	ID        int64     `db:"id" json:"id"`
-	UserID    int64     `db:"user_id" json:"userId"`
-	ProfileID int64     `db:"profile_id" json:"profileId"`
-	Content   string    `db:"content" json:"content"`
-	Type      string    `db:"string" json:"string"`
-	CreatedAt time.Time `db:"created_at" json:"createdAt"`
-}
-
 SELECT 'up SQL query';
 CREATE TABLE IF NOT EXISTS notification_alerts (
   id serial PRIMARY KEY,

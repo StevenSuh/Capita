@@ -8,9 +8,11 @@ import Empty from "scripts/components/empty";
 
 import * as accountsActions from "scripts/modules/Accounts/actions";
 import { PROP_ACCOUNTS } from "scripts/modules/Accounts/defs";
-import { PLAID_OPTIONS } from "defs";
-import styles from "./styles.module.css";
 import { PROP_USER } from "scripts/modules/App/defs";
+import { PLAID_OPTIONS } from "defs";
+
+import { ReactComponent as CardIcon } from "assets/icons/credit-card.svg";
+import styles from "./styles.module.css";
 
 const ConnectedAccounts = ({
   accounts,
@@ -20,7 +22,7 @@ const ConnectedAccounts = ({
 }) => {
   return (
     <IsLoading init={onGetConnectedAccounts}>
-      <div className={styles.main}>
+      <div className={classNames(styles.main, "container")}>
         {accounts.length ? (
           accounts.map((account, index) => (
             <div key={index}>
@@ -30,7 +32,7 @@ const ConnectedAccounts = ({
           ))
         ) : (
           <Empty
-            className={styles.empty}
+            icon={<CardIcon className={styles.icon} />}
             message={
               <div>
                 <div>No accounts linked</div>
