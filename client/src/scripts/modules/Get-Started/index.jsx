@@ -1,12 +1,15 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import classNames from "classnames";
+import { withLastLocation } from "react-router-last-location";
 
 import Input from "scripts/components/input";
 import Loading from "scripts/components/loading";
 import Nav from "scripts/components/nav";
 
 import * as actions from "./actions";
+import * as utils from "utils";
 
 import { ROUTES } from "defs";
 import { PROP_LOGGED_IN } from "scripts/modules/App/defs";
@@ -19,8 +22,10 @@ import {
   PROP_PASSWORD_ERROR,
   PROP_CONFIRM_PASSWORD,
   PROP_CONFIRM_PASSWORD_ERROR,
-  PROP_IS_ATTEMPTING_REGISTER
+  PROP_IS_ATTEMPTING_REGISTER,
 } from "./defs";
+
+import { ReactComponent as ArrowRightIcon } from "assets/icons/arrow-right.svg";
 import styles from "./styles.module.css";
 
 const GetStarted = props => {
@@ -32,15 +37,26 @@ const GetStarted = props => {
     [
       {
         item: props.isAttemptingRegister ? <Loading size="small" /> : "Submit",
-        onClick: props.isAttemptingRegister ? null : props.onAttemptRegister
-      }
-    ]
+        onClick: props.isAttemptingRegister ? null : props.onAttemptRegister,
+      },
+    ],
   ];
 
   return (
     <div className={styles.main}>
       <div className="container tight">
-        <h1 className={styles.title}>Enter your information</h1>
+        <div className={styles.header}>
+          <ArrowRightIcon
+            className={classNames(styles.icon, "back-btn", "hover", "click")}
+            onClick={utils.goBack(
+              props.history,
+              ROUTES.APP,
+              props.lastLocation,
+            )}
+          />
+          <h1 className={styles.title}>Enter your information</h1>
+          <div className={styles.item} />
+        </div>
         <form
           noValidate
           onSubmit={e => {
@@ -89,13 +105,13 @@ export const mapStateToProps = ({ app, getStarted }) => ({
   passwordError: getStarted.get(PROP_PASSWORD_ERROR),
   confirmPasswordError: getStarted.get(PROP_CONFIRM_PASSWORD_ERROR),
   isAttemptingRegister: getStarted.get(PROP_IS_ATTEMPTING_REGISTER),
-  loggedIn: app.get(PROP_LOGGED_IN)
+  loggedIn: app.get(PROP_LOGGED_IN),
 });
 
 export default connect(
   mapStateToProps,
   {
     onAttemptRegister: actions.attemptRegister,
-    onChange: actions.changeField
-  }
-)(GetStarted);
+    onChange: actions.changeField,
+  },
+)(withLastLocation(GetStarted));

@@ -30,7 +30,24 @@ const RecurringExpenses = ({ recurringExpenses, onGetRecurringExpenses }) => {
 };
 
 export const mapStateToProps = ({ transactions }) => ({
-  recurringExpenses: transactions.get(PROP_RECURRING_EXPENSES).toJS(),
+  recurringExpenses: transactions.get(PROP_RECURRING_EXPENSES).toJS() || [
+    {
+      id: 1,
+      userId: 1,
+      accountId: 1,
+      plaidTransactionId: "transaction-1",
+      transactionType: "place",
+      name: "Apple Store - Mac",
+      amount: 1299.99,
+      ISOCurrencyCode: "USD",
+      unofficialCurrencyCode: null,
+      date: "2019-07-22",
+      pending: false,
+      recurring: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+  ],
 });
 
 export default connect(

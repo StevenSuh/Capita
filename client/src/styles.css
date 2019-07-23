@@ -145,16 +145,31 @@ a {
 }
 
 .hover {
-  transition: color var(--transition-short-duration) var(--transition-curve);
+  transition: color var(--transition-short-duration) var(--transition-curve),
+    stroke var(--transition-short-duration) var(--transition-curve);
 }
 
 .hover:hover {
   color: var(--blue-color);
 }
 
+.hover:hover > * {
+  stroke: var(--blue-color);
+}
+
+.hover.click {
+  transition: opacity var(--transition-short-duration) var(--transition-curve),
+    color var(--transition-short-duration) var(--transition-curve),
+    stroke var(--transition-short-duration) var(--transition-curve);
+}
+
 .transition-group {
   width: 100%;
   height: 100%;
+}
+
+.back-btn {
+  transform: rotate(180deg);
 }
 
 .container {

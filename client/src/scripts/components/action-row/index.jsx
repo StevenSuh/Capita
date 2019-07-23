@@ -8,6 +8,7 @@ import styles from "./styles.module.css";
 const ActionRow = ({
   title,
   subtitle,
+  IconTag = ArrowRightIcon,
   border = true,
   locked = false,
   onClick = () => {},
@@ -24,7 +25,7 @@ const ActionRow = ({
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </div>
         {!locked ? (
-          <ArrowRightIcon
+          <IconTag
             className={classNames(styles.icon, "hover", "click")}
             onClick={onClick}
           />

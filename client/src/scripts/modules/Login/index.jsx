@@ -1,12 +1,15 @@
 import React from "react";
 import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
+import classNames from "classnames";
+import { withLastLocation } from "react-router-last-location";
 
 import Input from "scripts/components/input";
 import Loading from "scripts/components/loading";
 import Nav from "scripts/components/nav";
 
 import * as actions from "./actions";
+import * as utils from "utils";
 
 import { ROUTES } from "defs";
 import { PROP_LOGGED_IN } from "scripts/modules/App/defs";
@@ -16,8 +19,10 @@ import {
   PROP_EMAIL_ERROR,
   PROP_PASSWORD,
   PROP_PASSWORD_ERROR,
-  PROP_IS_ATTEMPTING_LOGIN
+  PROP_IS_ATTEMPTING_LOGIN,
 } from "./defs";
+
+import { ReactComponent as ArrowRightIcon } from "assets/icons/arrow-right.svg";
 import styles from "./styles.module.css";
 
 const Login = props => {
@@ -29,19 +34,30 @@ const Login = props => {
     [
       {
         item: "Forgot password",
-        onClick: () => props.history.push(ROUTES.FORGOT_PASSWORD)
+        onClick: () => props.history.push(ROUTES.FORGOT_PASSWORD),
       },
       {
         item: props.isAttemptingLogin ? <Loading size="small" /> : "Submit",
-        onClick: props.isAttemptingLogin ? null : props.onAttemptLogin
-      }
-    ]
+        onClick: props.isAttemptingLogin ? null : props.onAttemptLogin,
+      },
+    ],
   ];
 
   return (
     <div className={styles.main}>
       <div className="container tight">
-        <h1 className={styles.title}>Log in to continue</h1>
+        <div className={styles.header}>
+          <ArrowRightIcon
+            className={classNames(styles.icon, "back-btn", "hover", "click")}
+            onClick={utils.goBack(
+              props.history,
+              ROUTES.APP,
+              props.lastLocation,
+            )}
+          />
+          <h1 className={styles.title}>Log in to continue</h1>
+          <div className={styles.item} />
+        </div>
         {props.loginError && <p className={styles.error}>{props.loginError}</p>}
         <form
           noValidate
@@ -76,13 +92,13 @@ export const mapStateToProps = ({ app, login }) => ({
   emailError: login.get(PROP_EMAIL_ERROR),
   passwordError: login.get(PROP_PASSWORD_ERROR),
   isAttemptingLogin: login.get(PROP_IS_ATTEMPTING_LOGIN),
-  loggedIn: app.get(PROP_LOGGED_IN)
+  loggedIn: app.get(PROP_LOGGED_IN),
 });
 
 export default connect(
   mapStateToProps,
   {
     onAttemptLogin: actions.attemptLogin,
-    onChange: actions.changeField
-  }
-)(Login);
+    onChange: actions.changeField,
+  },
+)(withLastLocation(Login));

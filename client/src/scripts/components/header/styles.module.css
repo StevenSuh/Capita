@@ -10,15 +10,19 @@
   text-align: center;
 }
 
-.center>h1 {
+.center > h1 {
   font-size: var(--font-large);
   font-weight: 700;
 }
 
-.center>h4 {
+.center > h4 {
   font-size: var(--font-medium);
   line-height: var(--font-medium);
   font-weight: 500;
   margin-top: 2px;
   margin-bottom: -5px;
+}
+
+.item {
+  width: 18px;
 }
