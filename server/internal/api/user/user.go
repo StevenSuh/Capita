@@ -2,8 +2,8 @@ package user
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
@@ -148,21 +148,42 @@ func GetConnectedAccounts(w http.ResponseWriter, r *http.Request) {
 
 func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	// userID := chi.URLParam(r, "userId")
-	recurring := false
 	response := make(map[string]interface{})
 	response["error"] = false
-	response["transactions"] = []string{}
+	response["transactions"] = []api.Transaction{}
 	defer render.JSON(w, r, response)
 
+	recurring := false
 	keys, ok := r.URL.Query()["recurring"]
 	if ok && len(keys[0]) > 0 {
-		fmt.Println(keys[0])
-		if keys[0] == "true" {
-			recurring = true
-		} else {
-			recurring = false
+		recurring = keys[0] == "true"
+	}
+
+	limit := api.DefaultLimit
+	keys, ok = r.URL.Query()["limit"]
+	if ok || len(keys[0]) > 0 {
+		newLimit, err := strconv.Atoi(keys[0])
+		if err != nil {
+			response["msg"] = "Invalid limit parameter"
+			render.Status(r, http.StatusBadRequest)
+			return
 		}
+		limit = newLimit
+	}
+
+	offset := api.DefaultOffset
+	keys, ok = r.URL.Query()["offset"]
+	if ok && len(keys[0]) > 0 {
+		newOffset, err := strconv.Atoi(keys[0])
+		if err != nil {
+			response["msg"] = "Invalid offset parameter"
+			render.Status(r, http.StatusBadRequest)
+			return
+		}
+		offset = newOffset
 	}
 
 	response["recurring"] = recurring
+	response["limit"] = limit
+	response["offset"] = offset
 }

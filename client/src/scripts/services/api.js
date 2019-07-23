@@ -78,13 +78,15 @@ export const getAccessToken = dispatch => async (
 export const getTransactions = dispatch => async (
   userId,
   recurring = false,
+  limit = 50,
+  offset = 0,
 ) => {
   const res = await axios
     .get(
       `${API_ROUTES.TRANSACTIONS.replace(
         ":userId",
         userId,
-      )}?recurring=${recurring}`,
+      )}?recurring=${recurring}&limit=${limit}&offset=${offset}`,
     )
     .catch(catchApiError(dispatch));
   return res.data;
