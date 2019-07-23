@@ -5,6 +5,7 @@
 
 .dots {
   display: flex;
+  align-items: center;
   align-content: center;
   position: fixed;
   bottom: calc(-50vh + 50% + 86px);

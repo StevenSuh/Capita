@@ -1,18 +1,15 @@
-import React from 'react';
-import classNames from 'classnames';
+import React from "react";
+import classNames from "classnames";
 
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
 const Nav = props => (
-  <div className={classNames(
-    styles.main,
-    props.className,
-  )}>
+  <div className={classNames(styles.main, props.className)}>
     {props.items.map((row, index) => (
       <div className={styles.row} key={index}>
         {row.map(({ item, onClick }, index) => (
           <div
-            className={classNames(styles.item, 'hover')}
+            className={classNames(styles.item, "hover", "click-bg")}
             onClick={onClick}
             key={index}
             type="button"

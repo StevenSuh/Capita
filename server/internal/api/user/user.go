@@ -111,6 +111,14 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 
 	EncryptPassword(&password)
 
+	user := api.User{}
+	err = db.Client.Get(&user, SQLSelectByEmail, email)
+	if err == nil {
+		response["msg"] = "An account with this email already exists"
+		render.Status(r, http.StatusBadRequest)
+		return
+	}
+
 	var userID int64
 	err = db.Client.QueryRow(SQLInsertByNameEmailPassword, name, email, password).Scan(&userID)
 	if err != nil {
@@ -118,7 +126,6 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user := api.User{}
 	err = db.Client.Get(&user, SQLSelectByID, userID)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)

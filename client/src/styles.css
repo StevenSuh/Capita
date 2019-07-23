@@ -13,7 +13,9 @@
   --font-medium: 14px;
   --font-small: 12px;
   --font-x-small: 10px;
+  --font-medium-large: 16px;
   --font-large: 18px;
+  --font-medium-x-large: 22px;
   --font-x-large: 24px;
   --font-xx-large: 36px;
   --font-family: Apercu, Arial, Helvetica, sans-serif;
@@ -82,6 +84,10 @@ body {
   overflow-x: hidden;
 }
 
+body.overflow {
+  overflow: hidden;
+}
+
 input,
 button {
   background-color: transparent;
@@ -136,7 +142,12 @@ a {
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
+svg > * {
+  stroke: var(--black-color);
+}
+
 .click {
+  cursor: pointer;
   transition: opacity var(--transition-short-duration) var(--transition-curve);
 }
 
@@ -144,23 +155,32 @@ a {
   opacity: 0.5;
 }
 
-.hover {
-  transition: color var(--transition-short-duration) var(--transition-curve),
-    stroke var(--transition-short-duration) var(--transition-curve);
+.click-bg {
+  cursor: pointer;
 }
 
-.hover:hover {
-  color: var(--blue-color);
+.click-bg::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background-color: var(--black-color);
+  opacity: 0;
+  transition: opacity var(--transition-short-duration) var(--transition-curve);
 }
 
-.hover:hover > * {
-  stroke: var(--blue-color);
+.click-bg:active::before {
+  opacity: 0.1;
 }
 
-.hover.click {
-  transition: opacity var(--transition-short-duration) var(--transition-curve),
-    color var(--transition-short-duration) var(--transition-curve),
-    stroke var(--transition-short-duration) var(--transition-curve);
+.red {
+  color: var(--red-color);
+}
+
+.red > * {
+  stroke: var(--red-color);
 }
 
 .transition-group {

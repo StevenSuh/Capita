@@ -15,6 +15,7 @@ import history from "scripts/config/history";
 import IsLoading from "scripts/hoc/isLoading";
 
 import Accounts from "scripts/modules/Accounts";
+import AccountItem from "scripts/modules/AccountItem";
 import App from "scripts/modules/App";
 import Dashboard from "scripts/modules/Dashboard";
 import LandingPage from "scripts/modules/Landing";
@@ -23,6 +24,7 @@ import GetStarted from "scripts/modules/Get-Started";
 import Snackbar from "scripts/components/snackbar";
 import Spending from "scripts/modules/Spending";
 import Transactions from "scripts/modules/Transactions";
+import TransactionItem from "scripts/modules/TransactionItem";
 import Transfer from "scripts/modules/Transfer";
 
 import { ROUTES } from "defs";
@@ -64,6 +66,10 @@ const Wrapper = () => (
                           component={Accounts}
                         />
                         <Route
+                          path={ROUTES.ACCOUNT_ITEM}
+                          component={AccountItem}
+                        />
+                        <Route
                           exact
                           path={ROUTES.TRANSFER}
                           component={Transfer}
@@ -72,6 +78,10 @@ const Wrapper = () => (
                           exact
                           path={ROUTES.TRANSACTIONS}
                           component={Transactions}
+                        />
+                        <Route
+                          path={ROUTES.TRANSACTION_ITEM}
+                          component={TransactionItem}
                         />
                         <Route
                           exact

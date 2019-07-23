@@ -26,6 +26,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   withdrawal_limit_alert_enabled boolean NOT NULL DEFAULT true,
   minimum_balance_alert_enabled boolean NOT NULL DEFAULT true,
   credit_limit_alert_enabled boolean NOT NULL DEFAULT true,
+  institution_logo varchar(255),
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW()
 );

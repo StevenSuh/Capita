@@ -25,19 +25,3 @@
   top: 50%;
   transform: translateY(-50%);
 }
-
-.item::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: var(--black-color);
-  opacity: 0;
-  transition: opacity var(--transition-short-duration) var(--transition-curve);
-}
-
-.item:active::before {
-  opacity: 0.1;
-}

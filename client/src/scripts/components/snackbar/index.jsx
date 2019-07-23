@@ -30,11 +30,9 @@ const Snackbar = props => (
   </TransitionGroup>
 );
 
-export const mapStateToProps = ({ snackbar }) => {
-  return {
-    snackbars: snackbar.get(PROP_SNACKBARS).toJS(),
-  };
-};
+export const mapStateToProps = ({ snackbar }) => ({
+  snackbars: snackbar.get(PROP_SNACKBARS).toJS(),
+});
 
 export default connect(
   mapStateToProps,

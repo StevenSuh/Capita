@@ -1,5 +1,27 @@
+.main {
+  padding: 15px 0;
+}
+
 .plaidLink {
   color: var(--blue-color);
   font-weight: 500;
   margin-top: 5px;
+}
+
+.institution_logo {
+  width: 30px;
+  height: 30px;
+  vertical-align: middle;
+  margin-right: 15px;
+}
+
+.balance {
+  font-size: var(--font-large);
+  font-weight: 500;
+}
+
+.account_title {
+  font-weight: 400;
+  font-size: var(--font-medium);
+  text-transform: capitalize;
 }

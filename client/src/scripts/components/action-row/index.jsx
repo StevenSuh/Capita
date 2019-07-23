@@ -2,36 +2,44 @@ import React from "react";
 import classNames from "classnames";
 
 import { ReactComponent as ArrowRightIcon } from "assets/icons/arrow-right.svg";
-import { ReactComponent as LockIcon } from "assets/icons/lock.svg";
 import styles from "./styles.module.css";
 
 const ActionRow = ({
+  left = false,
   title,
   subtitle,
-  IconTag = ArrowRightIcon,
+  titleClassName,
   border = true,
-  locked = false,
-  onClick = () => {},
+  rightItem = (
+    <ArrowRightIcon className={classNames(styles.icon, "hover", "click")} />
+  ),
+  onRightClick = () => {},
+  leftItem,
+  onLeftClick = () => {},
   onMainClick,
 }) => {
   return (
     <div
-      className={classNames(onMainClick && styles.bg, border && styles.border)}
+      className={classNames(
+        onMainClick && !border && "click",
+        border && "click-bg",
+        border && styles.border,
+      )}
       onClick={onMainClick ? onMainClick : () => {}}
     >
-      <div className={classNames(styles.main, "container")}>
-        <div className={styles.titles}>
-          <h4 className={styles.title}>{title}</h4>
+      <div
+        className={classNames(
+          styles.main,
+          "container",
+          !border && styles.margin_bottom,
+        )}
+      >
+        {leftItem && <div onClick={onLeftClick}>{leftItem}</div>}
+        <div className={classNames(styles.titles, left && styles.left)}>
+          <h4 className={classNames(styles.title, titleClassName)}>{title}</h4>
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </div>
-        {!locked ? (
-          <IconTag
-            className={classNames(styles.icon, "hover", "click")}
-            onClick={onClick}
-          />
-        ) : (
-          <LockIcon className={classNames(styles.icon, styles.lock)} />
-        )}
+        {rightItem && <div onClick={onRightClick}>{rightItem}</div>}
       </div>
     </div>
   );

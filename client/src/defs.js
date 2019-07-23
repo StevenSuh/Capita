@@ -6,9 +6,14 @@ export const ROUTES = {
   GET_STARTED: "/app/get-started",
   FORGOT_PASSWORD: "/app/forgot-password",
   ACCOUNTS: "/app/accounts",
+  ACCOUNT_ITEM: "/app/accounts/:account_id",
   TRANSFER: "/app/transfer",
   TRANSACTIONS: "/app/transactions",
+  TRANSACTION_ITEM: "/app/transactions/:transaction_id",
   SPENDING: "/app/spending",
+  NOTIFICATIONS: "/app/notifications",
+  USER_INFORMATION: "/app/information",
+  SUPPORT: "/app/support",
 };
 
 export const API_ROUTES = {
@@ -22,6 +27,11 @@ export const API_ROUTES = {
   },
 };
 
+export const MODAL_NAMES = {
+  OPTIONS: "options",
+  CONFIRM_ACCOUNT_DELETE: "confirm-account-delete",
+};
+
 export const ERROR_MSGS = {
   default: "An error has occurred - please try again later",
   required: "This field is required",
@@ -32,10 +42,6 @@ export const ERROR_MSGS = {
   passwordMismatch: "Password is incorrect",
 };
 
-export const EMAIL_REGEX = `^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$`;
-
-export const PASSWORD_REGEX = `^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*@!#%&()^~{}])[0-9a-zA-Z*@!#%&()^~{}]{8,}$`;
-
 console.log("Plaid:", process.env.REACT_APP_PLAID_ENV);
 
 export const PLAID_OPTIONS = {
@@ -44,4 +50,13 @@ export const PLAID_OPTIONS = {
   product: ["auth", "transactions"],
   publicKey: process.env.REACT_APP_PLAID_PUBLIC_KEY,
   // webhook: API_ROUTES.PLAID.WEBHOOK,
+};
+
+export const EMAIL_REGEX = `^(([^<>()\\[\\]\\\\.,;:\\s@"]+(\\.[^<>()\\[\\]\\\\.,;:\\s@"]+)*)|(".+"))@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$`;
+
+export const PASSWORD_REGEX = `^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[*@!#%&()^~{}])[0-9a-zA-Z*@!#%&()^~{}]{8,}$`;
+
+export const CURRENCY_CODES = {
+  USD: "$",
+  EUR: "€",
 };

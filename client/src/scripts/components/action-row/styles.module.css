@@ -4,42 +4,32 @@
   align-items: center;
 }
 
-.bg {
-  cursor: pointer;
-}
-
-.bg::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 100%;
-  background-color: var(--black-color);
-  opacity: 0;
-  transition: opacity var(--transition-short-duration) var(--transition-curve);
-}
-
-.bg:active::before {
-  opacity: 0.1;
+.margin_bottom {
+  margin-bottom: 15px !important;
 }
 
 .border {
   border-top: 0.5px solid var(--light-gray-color);
-  padding: 15px 0;
+  padding: 20px 0;
 }
 
 .border:last-child {
   border-bottom: 0.5px solid var(--light-gray-color);
 }
 
+.left {
+  flex: 1;
+}
+
 .title {
   font-weight: 500;
+  font-size: var(--font-medium-large);
 }
 
 .subtitle {
   color: var(--gray-color);
   font-size: var(--font-small);
+  font-weight: 300;
 }
 
 .icon {

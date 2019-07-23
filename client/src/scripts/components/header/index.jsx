@@ -4,8 +4,8 @@ import classNames from "classnames";
 import styles from "./styles.module.css";
 
 const Header = ({
-  leftItem = <div />,
-  rightItem = <div />,
+  leftItem = <div className={styles.item} />,
+  rightItem = <div className={styles.item} />,
   title,
   subtitle,
 }) => {

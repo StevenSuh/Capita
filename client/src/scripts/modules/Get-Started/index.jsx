@@ -36,6 +36,10 @@ const GetStarted = props => {
   const navItems = [
     [
       {
+        item: "Back",
+        onClick: utils.goBack(props.history, ROUTES.APP, props.lastLocation),
+      },
+      {
         item: props.isAttemptingRegister ? <Loading size="small" /> : "Submit",
         onClick: props.isAttemptingRegister ? null : props.onAttemptRegister,
       },
