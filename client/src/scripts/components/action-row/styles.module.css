@@ -31,17 +31,3 @@
   font-size: var(--font-small);
   font-weight: 300;
 }
-
-.icon {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-}
-
-.icon > * {
-  stroke-width: 1.5px;
-}
-
-.lock > * {
-  stroke-width: 1.5px;
-}

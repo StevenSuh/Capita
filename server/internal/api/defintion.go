@@ -79,6 +79,7 @@ type Account struct {
 	WithdrawalLimitAlertEnabled   bool            `db:"withdrawal_limit_alert_enabled" json:"withdrawalLimitAlertEnabled"`
 	MinimumBalanceAlertEnabled    bool            `db:"minimum_balance_alert_enabled" json:"minimumBalanceAlertEnabled"`
 	CreditLimitAlertEnabled       bool            `db:"credit_limit_alert_enabled" json:"creditLimitAlertEnabled"`
+	InstitutionName               string          `db:"institution_name" json:"institutionName"`
 	InstitutionLogo               sql.NullString  `db:"institution_logo" json:"institutionLogo"`
 	CreatedAt                     time.Time       `db:"created_at" json:"createdAt"`
 	UpdatedAt                     time.Time       `db:"updated_at" json:"updatedAt"`

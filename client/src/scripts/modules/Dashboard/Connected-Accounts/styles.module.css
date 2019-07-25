@@ -2,6 +2,10 @@
   padding: 15px 0;
 }
 
+.empty {
+  padding: 20px 0 30px;
+}
+
 .plaidLink {
   color: var(--blue-color);
   font-weight: 500;
@@ -16,7 +20,7 @@
 }
 
 .balance {
-  font-size: var(--font-large);
+  font-size: var(--font-medium-large);
   font-weight: 500;
 }
 

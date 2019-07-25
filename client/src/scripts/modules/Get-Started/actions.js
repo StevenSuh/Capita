@@ -1,19 +1,9 @@
-import {
-  setLoggedIn,
-  setUser
-} from 'scripts/modules/App/actions';
-import {
-  submitRegister
-} from 'scripts/services/api';
+import { setLoggedIn, setUser } from "scripts/modules/App/actions";
+import { submitRegister } from "scripts/services/api";
 
-import {
-  validateEmail,
-  validatePassword
-} from 'utils';
-import * as defs from './defs';
-import {
-  ERROR_MSGS
-} from 'defs';
+import { validateEmail, validatePassword } from "utils";
+import * as defs from "./defs";
+import { ERROR_MSGS } from "defs";
 
 export const changeField = (field, value) => ({
   type: defs.actionTypes.onChangeField,
@@ -22,9 +12,7 @@ export const changeField = (field, value) => ({
 });
 
 export const attemptRegister = () => async (dispatch, getState) => {
-  const {
-    getStarted
-  } = getState();
+  const { getStarted } = getState();
   const name = getStarted.get(defs.PROP_NAME);
   const email = getStarted.get(defs.PROP_EMAIL);
   const password = getStarted.get(defs.PROP_PASSWORD);
@@ -33,26 +21,17 @@ export const attemptRegister = () => async (dispatch, getState) => {
 
   if (
     isAttemptingRegister ||
-    !validateRegisterForm(dispatch)(
-      name,
-      email,
-      password,
-      confirmPassword,
-    )) {
+    !validateRegisterForm(dispatch)(name, email, password, confirmPassword)
+  ) {
     return;
   }
 
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_REGISTER, true));
-
-  const {
-    error,
-    user,
-  } = await submitRegister(dispatch)(name, email, password);
+  const { error, user } = await submitRegister(dispatch)(name, email, password);
   if (!error) {
     dispatch(setUser(user));
     dispatch(setLoggedIn(true));
   }
-
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_REGISTER, false));
 };
 
@@ -62,17 +41,17 @@ export const validateRegisterForm = dispatch => (
   password,
   confirmPassword,
 ) => {
-  let nameError = '';
-  let emailError = '';
-  let passwordError = '';
-  let confirmPasswordError = '';
+  let nameError = "";
+  let emailError = "";
+  let passwordError = "";
+  let confirmPasswordError = "";
   let error = false;
 
   if (!name) {
     nameError = ERROR_MSGS.required;
     error = true;
   } else {
-    nameError = '';
+    nameError = "";
   }
 
   if (!email) {
@@ -82,7 +61,7 @@ export const validateRegisterForm = dispatch => (
     emailError = ERROR_MSGS.emailInvalid;
     error = true;
   } else {
-    emailError = '';
+    emailError = "";
   }
 
   if (!password) {
@@ -92,11 +71,11 @@ export const validateRegisterForm = dispatch => (
     passwordError = ERROR_MSGS.passwordInvalid;
     error = true;
   } else {
-    passwordError = '';
+    passwordError = "";
   }
 
   if (passwordError) {
-    confirmPasswordError = '';
+    confirmPasswordError = "";
   } else if (!confirmPassword) {
     confirmPasswordError = ERROR_MSGS.required;
     error = true;
@@ -104,7 +83,7 @@ export const validateRegisterForm = dispatch => (
     confirmPasswordError = ERROR_MSGS.passwordMismatch;
     error = true;
   } else {
-    confirmPasswordError = '';
+    confirmPasswordError = "";
   }
 
   dispatch(changeField(defs.PROP_NAME_ERROR, nameError));

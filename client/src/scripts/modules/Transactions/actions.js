@@ -17,48 +17,26 @@ export const deleteTransaction = transactionId => ({
   value: transactionId,
 });
 
-export const setRecurringExpenses = recurringExpenses => ({
-  type: defs.actionTypes.onSetRecurringExpenses,
-  value: recurringExpenses,
-});
-
-export const getRecurringExpenses = (force = false) => async (
-  dispatch,
-  getState,
-) => {
-  const { app: appReducer, transactions: transactionsReducer } = getState();
-  if (!force) {
-    const existingRecurringExpenses = transactionsReducer.get(
-      defs.PROP_RECURRING_EXPENSES,
-    );
-    if (existingRecurringExpenses.size > 0) {
-      return;
-    }
-  }
-
-  const userId = appReducer.getIn([PROP_USER, "id"]);
-  const { error, expenses } = await getTransactionsApi(dispatch)(userId, true);
-  if (error) {
-    return;
-  }
-
-  dispatch(setRecurringExpenses(expenses));
-};
-
-export const getTransactions = (force = false) => async (
+export const getTransactions = (force = false, limit, offset) => async (
   dispatch,
   getState,
 ) => {
   const { app: appReducer, transactions: transactionReducer } = getState();
   if (!force) {
-    const existingTransactions = transactionReducer.get(defs.PROP_TRANSACTIONS);
+    const existingTransactions = transactionReducer
+      .get(defs.PROP_TRANSACTIONS)
+      .toJS();
     if (existingTransactions.size > 0) {
       return;
     }
   }
 
   const userId = appReducer.getIn([PROP_USER, "id"]);
-  const { error, transactions } = await getTransactionsApi(dispatch)(userId);
+  const { error, transactions } = await getTransactionsApi(dispatch)(
+    userId,
+    limit,
+    offset,
+  );
   if (error) {
     return;
   }

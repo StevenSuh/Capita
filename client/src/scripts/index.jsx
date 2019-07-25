@@ -1,11 +1,6 @@
 import React from "react";
 import { Provider } from "react-redux";
-import {
-  BrowserRouter as Router,
-  Redirect,
-  Route,
-  Switch,
-} from "react-router-dom";
+import { Router, Redirect, Route, Switch } from "react-router-dom";
 import { LastLocationProvider } from "react-router-last-location";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
@@ -17,15 +12,18 @@ import IsLoading from "scripts/hoc/isLoading";
 import Accounts from "scripts/modules/Accounts";
 import AccountItem from "scripts/modules/AccountItem";
 import App from "scripts/modules/App";
+import AppNotifications from "scripts/modules/Notifications/App";
 import Dashboard from "scripts/modules/Dashboard";
 import LandingPage from "scripts/modules/Landing";
 import Login from "scripts/modules/Login";
 import GetStarted from "scripts/modules/Get-Started";
 import Snackbar from "scripts/components/snackbar";
 import Spending from "scripts/modules/Spending";
+import Support from "scripts/modules/Support";
 import Transactions from "scripts/modules/Transactions";
-import TransactionItem from "scripts/modules/TransactionItem";
+import TransactionItem from "scripts/modules/Transaction-Item";
 import Transfer from "scripts/modules/Transfer";
+import UserInformation from "scripts/modules/Information/User";
 
 import { ROUTES } from "defs";
 
@@ -88,7 +86,22 @@ const Wrapper = () => (
                           path={ROUTES.SPENDING}
                           component={Spending}
                         />
-                        <Redirect to={ROUTES.APP} />
+                        <Route
+                          exact
+                          path={ROUTES.APP_NOTIFICATIONS}
+                          component={AppNotifications}
+                        />
+                        <Route
+                          exact
+                          path={ROUTES.USER_INFORMATION}
+                          component={UserInformation}
+                        />
+                        <Route
+                          exact
+                          path={ROUTES.SUPPORT}
+                          component={Support}
+                        />
+                        <Redirect to={ROUTES.APP_DASHBOARD} />
                       </Switch>
                     </IsLoading>
                   </Route>

@@ -58,14 +58,14 @@ export const getConnectedAccounts = dispatch => async userId => {
   return res.data;
 };
 
-export const getAccessToken = dispatch => async (
+export const createInstitutionLink = dispatch => async (
   publicToken,
   accounts,
   institution,
   linkSessionId,
 ) => {
   const res = await axios
-    .post(API_ROUTES.PLAID.GET_ACCESS_TOKEN, {
+    .post(API_ROUTES.PLAID.CREATE_INSTITUTION_LINK, {
       publicToken,
       accounts,
       institution,
@@ -75,9 +75,15 @@ export const getAccessToken = dispatch => async (
   return res.data;
 };
 
+export const deleteInstitutionLink = dispatch => async institutionLinkId => {
+  const res = await axios
+    .post(API_ROUTES.PLAID.DELETE_INSTITUTION_LINK, { institutionLinkId })
+    .catch(catchApiError(dispatch));
+  return res.data;
+};
+
 export const getTransactions = dispatch => async (
   userId,
-  recurring = false,
   limit = 50,
   offset = 0,
 ) => {
@@ -86,7 +92,7 @@ export const getTransactions = dispatch => async (
       `${API_ROUTES.TRANSACTIONS.replace(
         ":userId",
         userId,
-      )}?recurring=${recurring}&limit=${limit}&offset=${offset}`,
+      )}?limit=${limit}&offset=${offset}`,
     )
     .catch(catchApiError(dispatch));
   return res.data;

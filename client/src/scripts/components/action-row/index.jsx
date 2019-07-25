@@ -10,9 +10,7 @@ const ActionRow = ({
   subtitle,
   titleClassName,
   border = true,
-  rightItem = (
-    <ArrowRightIcon className={classNames(styles.icon, "hover", "click")} />
-  ),
+  rightItem = <ArrowRightIcon className="click" />,
   onRightClick = () => {},
   leftItem,
   onLeftClick = () => {},

@@ -59,14 +59,14 @@ func getPlaidEnv() (plaidEnv plaid.Environment) {
 
 func Routes() *chi.Mux {
 	router := chi.NewRouter()
-	router.Post("/get_access_token", GetAccessToken)
+	router.Post("/create_institution_link", CreateInstitutionLink)
 	router.Get("/auth", GetAuth)
 	router.Get("/accounts", GetAccounts)
 
 	return router
 }
 
-func GetAccessToken(w http.ResponseWriter, r *http.Request) {
+func CreateInstitutionLink(w http.ResponseWriter, r *http.Request) {
 	response := make(map[string]interface{})
 	response["error"] = true
 	defer render.JSON(w, r, response)

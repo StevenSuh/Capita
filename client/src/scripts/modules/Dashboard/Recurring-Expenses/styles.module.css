@@ -1,5 +1,5 @@
 .main {
-  padding: 25px 0;
+  padding: 25px 0 15px;
 }
 
 .titles {
@@ -28,21 +28,24 @@
 .items {
   display: flex;
   align-items: center;
-  padding: 10px 0;
+  padding: 20px 0;
   overflow-x: scroll;
+}
+
+.items::-webkit-scrollbar {
+  display: none;
 }
 
 .item {
   cursor: pointer;
-  box-shadow: 0 1px 5px rgba(68, 68, 68, 0.05);
+  box-shadow: 0 0px 0px rgba(68, 68, 68, 0);
   border: 0.5px solid var(--light-gray-color);
   border-radius: 3px;
   padding: 10px 15px;
   width: 120px;
   height: 85px;
   margin-right: 10px;
-  transition: box-shadow var(--transition-short-duration)
-    var(--transition-curve);
+  transition: box-shadow var(--transition-duration) var(--transition-curve);
 }
 
 .item:first-child {
@@ -78,6 +81,6 @@
 .viewIcon {
   cursor: pointer;
   min-width: 50px;
-  height: 18px;
+  height: var(--icon-size);
   padding-right: 20px;
 }

@@ -1,17 +1,17 @@
 export const ROUTES = {
   LANDING: "/",
   APP: "/app",
-  APP_DASHBOARD: "/app/main",
   LOGIN: "/app/login",
   GET_STARTED: "/app/get-started",
   FORGOT_PASSWORD: "/app/forgot-password",
+  APP_DASHBOARD: "/app/main",
   ACCOUNTS: "/app/accounts",
   ACCOUNT_ITEM: "/app/accounts/:account_id",
   TRANSFER: "/app/transfer",
   TRANSACTIONS: "/app/transactions",
   TRANSACTION_ITEM: "/app/transactions/:transaction_id",
   SPENDING: "/app/spending",
-  NOTIFICATIONS: "/app/notifications",
+  APP_NOTIFICATIONS: "/app/notifications",
   USER_INFORMATION: "/app/information",
   SUPPORT: "/app/support",
 };
@@ -22,14 +22,16 @@ export const API_ROUTES = {
   CONNECTED_ACCOUNTS: "/api/user/:userId/accounts",
   TRANSACTIONS: "/api/user/:userId/transactions",
   PLAID: {
-    GET_ACCESS_TOKEN: "/api/plaid/get_access_token",
+    CREATE_INSTITUTION_LINK: "/api/plaid/create_institution_link",
+    DELETE_INSTITUTION_LINK: "/api/plaid/delete_institution_link",
     WEBHOOK: "/api/plaid/webhook",
   },
 };
 
 export const MODAL_NAMES = {
   OPTIONS: "options",
-  CONFIRM_ACCOUNT_DELETE: "confirm-account-delete",
+  CONFIRM_CAPITA_ACCOUNT_DELETE: "confirm-capita-account-delete",
+  CONFIRM_LINK_DELETE: "confirm-link-delete",
 };
 
 export const ERROR_MSGS = {

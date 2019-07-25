@@ -31,14 +31,9 @@
 }
 
 .icon {
-  width: 18px;
-  height: 18px;
-}
-
-.icon > * {
-  stroke: var(--black-color);
+  cursor: pointer;
 }
 
 .item {
-  width: 18px;
+  width: var(--icon-size);
 }

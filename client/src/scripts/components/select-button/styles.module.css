@@ -1,0 +1,51 @@
+.select_wrapper {
+  pointer-events: none;
+  height: 20px;
+  width: 0px;
+  opacity: 0;
+  transition: opacity var(--transition-duration) var(--transition-curve),
+    width var(--transition-duration) var(--transition-curve);
+  will-change: width;
+}
+
+.select_wrapper.show {
+  pointer-events: auto;
+  opacity: 1;
+  width: 20px;
+}
+
+.select {
+  cursor: pointer;
+  background-color: var(--white-color);
+  border: 2px solid var(--black-color);
+  border-radius: var(--icon-size);
+  height: 20px;
+  width: 20px;
+  transition: background-color var(--transition-short-duration)
+      var(--transition-curve),
+    border-color var(--transition-short-duration) var(--transition-curve);
+}
+
+.select.multiple {
+  border-radius: 0px;
+}
+
+.select.active {
+  border-color: var(--blue-color);
+  background-color: var(--blue-color);
+}
+
+.icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  width: 14px;
+  height: 14px;
+}
+
+.icon > * {
+  stroke-width: 3px;
+  stroke: var(--white-color);
+}

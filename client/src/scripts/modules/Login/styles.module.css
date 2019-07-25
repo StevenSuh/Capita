@@ -30,15 +30,6 @@
   margin-bottom: 15px;
 }
 
-.icon {
-  width: 18px;
-  height: 18px;
-}
-
-.icon > * {
-  stroke: var(--black-color);
-}
-
 .item {
-  width: 18px;
+  width: var(--icon-size);
 }

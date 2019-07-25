@@ -3,19 +3,19 @@
   justify-content: space-between;
   align-items: center;
   align-content: center;
-  height: 66px;
+  height: var(--header-height);
 }
 
 .center {
   text-align: center;
 }
 
-.center > h1 {
+.title {
   font-size: var(--font-medium-x-large);
   font-weight: 700;
 }
 
-.center > h4 {
+.subtitle {
   font-size: var(--font-medium);
   line-height: var(--font-medium);
   font-weight: 500;
@@ -24,5 +24,5 @@
 }
 
 .item {
-  width: 18px;
+  width: var(--icon-size);
 }

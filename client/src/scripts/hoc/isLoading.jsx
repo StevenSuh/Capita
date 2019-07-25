@@ -13,9 +13,11 @@ const IsLoadingWrapper = ({
   callback = () => {},
   loggedIn,
   onCheckLoggedIn,
+  onRedirectByStatus,
 }) => {
   if (!init) {
     init = onCheckLoggedIn;
+    callback = onRedirectByStatus;
   }
 
   const [isLoading, setIsLoading] = useState(!loggedIn);
@@ -66,5 +68,6 @@ export default connect(
   mapStateToProps,
   {
     onCheckLoggedIn: appActions.checkLoggedIn,
+    onRedirectByStatus: appActions.redirectByStatus,
   },
 )(IsLoadingWrapper);

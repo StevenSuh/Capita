@@ -33,10 +33,8 @@
 
 .icon {
   cursor: pointer;
-  width: 16px;
-  height: 16px;
 }
 
-.icon>* {
+.icon > * {
   stroke: var(--white-color);
 }
