@@ -1,0 +1,105 @@
+.main {
+}
+
+.transactions {
+}
+
+.transaction {
+}
+
+.hr {
+  border-top: 0.5px solid var(--light-gray-color);
+  height: 0px;
+  width: 100%;
+  margin-top: 14px;
+  margin-bottom: 20px;
+}
+
+.year {
+  font-size: var(--font-large);
+  font-weight: 700;
+  /* margin-bottom: 10px; */
+}
+
+.month {
+  font-size: var(--font-medium-large);
+  font-weight: 700;
+  /* margin-bottom: 10px; */
+}
+
+.day {
+  font-size: var(--font-medium-large);
+  font-weight: 500;
+}
+
+.day.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.day.placeholder {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.name {
+  font-size: var(--font-small);
+  margin-left: 20px;
+}
+
+.amount {
+  font-size: var(--font-medium);
+  font-weight: 500;
+}
+
+.highlight::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 25px;
+  width: calc(100% - 20px);
+  height: 100%;
+  transition: background-color var(--transition-short-duration)
+    var(--transition-curve);
+}
+
+.highlight.active::before {
+  background-color: var(--light-blue-color);
+}
+
+.left_side {
+  display: flex;
+  align-items: center;
+  align-content: center;
+}
+
+.select {
+  width: 30px !important;
+  transition-delay: var(--transition-duration), 0s;
+}
+
+.total {
+  flex: 2;
+  border-right: 0.5px solid var(--light-gray-color);
+}
+
+.total_amount {
+  font-size: var(--font-large);
+  font-weight: 700;
+  justify-content: center;
+  transition: color var(--transition-short-duration) var(--transition-curve);
+}
+
+.positive {
+  color: var(--green-color);
+}
+
+.neutral {
+  color: var(--gray-color);
+}
+
+.negative {
+  color: var(--red-color);
+}

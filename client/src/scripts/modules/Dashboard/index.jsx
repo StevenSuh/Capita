@@ -5,7 +5,7 @@ import { Redirect } from "react-router-dom";
 import classNames from "classnames";
 
 import Header from "scripts/components/header";
-import ActionTabs from "./ActionTabs";
+import ActionTabs from "./Action-Tabs";
 import ConnectedAccounts from "./Connected-Accounts";
 import Modal from "scripts/components/modal";
 import RecurringExpenses from "./Recurring-Expenses";

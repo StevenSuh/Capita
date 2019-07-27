@@ -5,7 +5,6 @@ import {
 } from "scripts/services/api";
 import { PROP_USER } from "scripts/modules/App/defs";
 import * as defs from "./defs";
-import { TimeoutError } from "rxjs";
 
 export const setAccounts = accounts => ({
   type: defs.actionTypes.onSetAccounts,

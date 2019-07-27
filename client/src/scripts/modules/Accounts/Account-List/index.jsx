@@ -33,8 +33,13 @@ const AccountList = ({
       {accounts.length ? (
         accounts.map((account, index) => (
           <ActionRow
+            alignLeft={true}
             border={false}
-            left={true}
+            className={classNames({
+              [styles.highlight]: true,
+              [styles.active]:
+                selectedAccount.institutionLinkId === account.institutionLinkId,
+            })}
             title={`${account.subtype} - ${account.mask}`}
             titleClassName={styles.account_title}
             key={index}

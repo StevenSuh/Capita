@@ -27,6 +27,9 @@
 }
 
 .select.multiple {
+  height: 16px;
+  width: 16px;
+  top: 2px;
   border-radius: 0px;
 }
 

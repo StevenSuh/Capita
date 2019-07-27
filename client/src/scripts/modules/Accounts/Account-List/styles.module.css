@@ -63,3 +63,18 @@
   width: 30px !important;
   transition-delay: var(--transition-duration), 0s;
 }
+
+.highlight::before {
+  content: "";
+  position: absolute;
+  top: 0px;
+  left: 45px;
+  width: calc(100% - 60px);
+  height: 100%;
+  transition: background-color var(--transition-short-duration)
+    var(--transition-curve);
+}
+
+.highlight.active::before {
+  background-color: var(--light-blue-color);
+}

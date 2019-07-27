@@ -24,16 +24,16 @@ class Nav extends React.Component {
       <div className={classNames(styles.main, props.className)}>
         {props.items.reverse().map((row, index) => (
           <div className={styles.row} key={index}>
-            {row.map(({ disabled, item, onClick }, index) => (
+            {row.map(({ className, disabled, item, onClick }, index) => (
               <div
                 className={classNames(
                   styles.item,
                   disabled && styles.disabled,
                   disabled && "disabled",
-                  !disabled && "hover",
-                  !disabled && "click-bg",
+                  !disabled && onClick && "click-bg",
+                  className,
                 )}
-                onClick={onClick}
+                onClick={onClick ? onClick : () => {}}
                 key={index}
                 type="button"
               >

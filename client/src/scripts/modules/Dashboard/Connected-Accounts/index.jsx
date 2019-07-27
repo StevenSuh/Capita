@@ -42,8 +42,8 @@ const ConnectedAccounts = ({
               index,
             ) => (
               <ActionRow
+                alignLeft={true}
                 border={false}
-                left={true}
                 title={`${subtype} - ${mask}`}
                 titleClassName={styles.account_title}
                 key={index}

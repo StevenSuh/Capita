@@ -17,9 +17,14 @@ export const convertAmountToCurrency = (amount, currencyCode) => {
   if (typeof amount !== "number") {
     throw new Error(`Invalid number: ${amount}`);
   }
-  const currency = CURRENCY_CODES[currencyCode] || "$";
-  return `${currency}${Number(amount.toFixed(2)).toLocaleString()}`;
+  const currency = getCurrency(currencyCode);
+  return `${currency}${amount
+    .toFixed(2)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 };
+
+export const getCurrency = (currencyCode = "USD") =>
+  CURRENCY_CODES[currencyCode];
 
 export const formatShortDate = date => moment(date).format("MMM D");
 export const formatLongDate = date => moment(date).format("MMMM D, YYYY");

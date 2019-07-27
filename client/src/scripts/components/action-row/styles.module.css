@@ -5,7 +5,8 @@
 }
 
 .margin_bottom {
-  margin-bottom: 15px !important;
+  padding: 5px 0;
+  margin-bottom: 5px !important;
 }
 
 .border {
@@ -30,4 +31,5 @@
   color: var(--gray-color);
   font-size: var(--font-small);
   font-weight: 300;
+  margin-top: 2px;
 }

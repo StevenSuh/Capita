@@ -36,7 +36,7 @@ const App = ({ history, loggedIn }) => {
         <title> Capita </title>
       </Helmet>
       <div className={styles.main}>
-        <h1 className={styles.title}>CAPITA </h1>
+        <h1 className={styles.title}>CAPITA</h1>
         <Slideshow
           className={classNames(styles.slideshow, "container")}
           items={slideshowItems}

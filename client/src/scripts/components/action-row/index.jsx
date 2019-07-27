@@ -5,7 +5,9 @@ import { ReactComponent as ArrowRightIcon } from "assets/icons/arrow-right.svg";
 import styles from "./styles.module.css";
 
 const ActionRow = ({
-  left = false,
+  alignLeft = false,
+  className,
+  container = true,
   title,
   subtitle,
   titleClassName,
@@ -22,18 +24,19 @@ const ActionRow = ({
         onMainClick && !border && "click",
         border && "click-bg",
         border && styles.border,
+        className,
       )}
       onClick={onMainClick ? onMainClick : () => {}}
     >
       <div
         className={classNames(
           styles.main,
-          "container",
+          container && "container",
           !border && styles.margin_bottom,
         )}
       >
         {leftItem && <div onClick={onLeftClick}>{leftItem}</div>}
-        <div className={classNames(styles.titles, left && styles.left)}>
+        <div className={classNames(styles.titles, alignLeft && styles.left)}>
           <h4 className={classNames(styles.title, titleClassName)}>{title}</h4>
           {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
         </div>

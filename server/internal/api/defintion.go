@@ -69,7 +69,7 @@ type Account struct {
 	BalanceAvailable              sql.NullFloat64 `db:"balance_available" json:"balanceAvailable"`
 	BalanceCurrent                sql.NullFloat64 `db:"balance_current" json:"balanceCurrent"`
 	BalanceLimit                  sql.NullFloat64 `db:"balance_limit" json:"balanceLimit"`
-	BalanceISOCurrencyCode        sql.NullString  `db:"balance_iso_currency_code" json:"balanceISOCurrencyCode"`
+	BalanceIsoCurrencyCode        sql.NullString  `db:"balance_iso_currency_code" json:"balanceIsoCurrencyCode"`
 	BalanceUnofficialCurrencyCode sql.NullString  `db:"balance_unofficial_currency_code" json:"balanceUnofficialCurrencyCode"`
 	APY                           sql.NullFloat64 `db:"apy" json:"apy"`
 	WithdrawalLimit               sql.NullInt64   `db:"withdrawal_limit" json:"withdrawalLimit"`
@@ -121,7 +121,7 @@ type Transaction struct {
 	TransactionType        string         `db:"transaction_type" json:"transactionType"`
 	Name                   string         `db:"name" json:"name"`
 	Amount                 float64        `db:"amount" json:"amount"`
-	ISOCurrencyCode        sql.NullString `db:"iso_currency_code" json:"ISOCurrencyCode"`
+	IsoCurrencyCode        sql.NullString `db:"iso_currency_code" json:"IsoCurrencyCode"`
 	UnofficialCurrencyCode sql.NullString `db:"unofficial_currency_code" json:"unofficialCurrencyCode"`
 	Date                   string         `db:"date" json:"date"`
 	Pending                bool           `db:"pending" json:"pending"`

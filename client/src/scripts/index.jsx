@@ -10,7 +10,7 @@ import history from "scripts/config/history";
 import IsLoading from "scripts/hoc/isLoading";
 
 import Accounts from "scripts/modules/Accounts";
-import AccountItem from "scripts/modules/AccountItem";
+import AccountItem from "scripts/modules/Account-Item";
 import App from "scripts/modules/App";
 import AppNotifications from "scripts/modules/Notifications/App";
 import Dashboard from "scripts/modules/Dashboard";

@@ -1,0 +1,7 @@
+.main {
+}
+
+.title {
+  font-size: var(--font-large);
+  font-weight: 500;
+}
