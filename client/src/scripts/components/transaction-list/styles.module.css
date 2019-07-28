@@ -28,6 +28,7 @@
 }
 
 .day {
+  line-height: 1em;
   font-size: var(--font-medium-large);
   font-weight: 500;
 }
@@ -45,6 +46,7 @@
 }
 
 .name {
+  font-weight: 400;
   font-size: var(--font-small);
   margin-left: 20px;
 }
@@ -81,14 +83,16 @@
 }
 
 .total {
-  flex: 2;
   border-right: 0.5px solid var(--light-gray-color);
+  font-weight: 500;
+  flex: 2;
 }
 
 .total_amount {
   font-size: var(--font-large);
   font-weight: 700;
   justify-content: center;
+  margin: 0 20px;
   transition: color var(--transition-short-duration) var(--transition-curve);
 }
 
@@ -102,4 +106,26 @@
 
 .negative {
   color: var(--red-color);
+}
+
+.accordion {
+  vertical-align: middle;
+  transition: transform var(--transition-duration) var(--transition-curve),
+    opacity var(--transition-short-duration) var(--transition-curve) !important;
+}
+
+.rotate {
+  transform: rotate(180deg);
+}
+
+.row.hidden {
+  display: none;
+}
+
+.count {
+  color: var(--gray-color);
+  font-size: var(--font-small);
+  font-weight: 400;
+  margin-left: 5px;
+  vertical-align: middle;
 }

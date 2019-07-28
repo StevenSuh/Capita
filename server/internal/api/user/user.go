@@ -153,34 +153,22 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	response["transactions"] = []api.Transaction{}
 	defer render.JSON(w, r, response)
 
-	recurring := false
-	keys, ok := r.URL.Query()["recurring"]
-	if ok && len(keys[0]) > 0 {
-		recurring = keys[0] == "true"
-	}
+	query := r.URL.Query()
 
+	recurring := query.Get("recurring") == "true"
 	limit := api.DefaultLimit
-	keys, ok = r.URL.Query()["limit"]
-	if ok || len(keys[0]) > 0 {
-		newLimit, err := strconv.Atoi(keys[0])
-		if err != nil {
-			response["msg"] = "Invalid limit parameter"
-			render.Status(r, http.StatusBadRequest)
-			return
+	if query.Get("limit") != "" {
+		parsed, err := strconv.Atoi(query.Get("limit"))
+		if err == nil {
+			limit = parsed
 		}
-		limit = newLimit
 	}
-
 	offset := api.DefaultOffset
-	keys, ok = r.URL.Query()["offset"]
-	if ok && len(keys[0]) > 0 {
-		newOffset, err := strconv.Atoi(keys[0])
-		if err != nil {
-			response["msg"] = "Invalid offset parameter"
-			render.Status(r, http.StatusBadRequest)
-			return
+	if query.Get("offset") != "" {
+		parsed, err := strconv.Atoi(query.Get("offset"))
+		if err == nil {
+			offset = parsed
 		}
-		offset = newOffset
 	}
 
 	response["recurring"] = recurring

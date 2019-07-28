@@ -17,12 +17,14 @@
   --font-large: 18px;
   --font-medium-x-large: 22px;
   --font-x-large: 24px;
+  --font-medium-xx-large: 28px;
   --font-xx-large: 36px;
   --font-family: Apercu, Arial, Helvetica, sans-serif;
   --font-family-mono: Apercu Mono, Apercu, Arial, Helvetica, sans-serif;
 
   --transition-curve: cubic-bezier(0.4, 0, 0.2, 1);
   --transition-long-duration: 0.5s;
+  --transition-mid-duration: 0.3s;
   --transition-duration: 0.2s;
   --transition-short-duration: 0.1s;
 
@@ -91,6 +93,9 @@ html,
 
 body {
   overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body.overflow {

@@ -20,10 +20,20 @@ class TransactionList extends React.Component {
   constructor(props) {
     super(props);
 
+    const transactionGroup = {};
+    const selectedTransactionGroup = {};
+
+    setupTransactionGroup(
+      this.props.transactions,
+      transactionGroup,
+      selectedTransactionGroup,
+    );
+
     this.state = {
       isSelecting: false,
-      transactionGroup: {},
-      selectedTransactionGroup: {},
+      transactionGroup,
+      selectedTransactionGroup,
+      closeGroup: {},
     };
   }
 
@@ -53,7 +63,7 @@ class TransactionList extends React.Component {
     const totalAmount = this.getTotalAmount();
     return [
       {
-        item: "Total =",
+        item: "Total",
         className: styles.total,
       },
       {
@@ -78,6 +88,9 @@ class TransactionList extends React.Component {
 
     for (let year in selectedTransactionGroup) {
       for (let month in selectedTransactionGroup[year]) {
+        if (month === "count") {
+          continue;
+        }
         for (let key in selectedTransactionGroup[year][month]) {
           if (key === "count" || !selectedTransactionGroup[year][month][key]) {
             continue;
@@ -104,7 +117,6 @@ class TransactionList extends React.Component {
     }
 
     this.setState({
-      ...this.state,
       isSelecting,
       selectedTransactionGroup,
       transactionGroup,
@@ -127,10 +139,7 @@ class TransactionList extends React.Component {
       ? null
       : transaction;
 
-    this.setState({
-      ...this.state,
-      selectedTransactionGroup,
-    });
+    this.setState({ selectedTransactionGroup });
   };
 
   onSelectYear = year => {
@@ -142,6 +151,9 @@ class TransactionList extends React.Component {
       selectedTransactionGroup[year] = { count: 0 };
 
       for (let month in groupYear) {
+        if (month === "count") {
+          continue;
+        }
         selectedTransactionGroup[year][month] = { count: 0 };
       }
     } else {
@@ -162,7 +174,7 @@ class TransactionList extends React.Component {
       selectedTransactionGroup[year].count = groupYear.count;
     }
 
-    this.setState({ ...this.state, selectedTransactionGroup });
+    this.setState({ selectedTransactionGroup });
   };
 
   onSelectMonth = (year, month) => {
@@ -173,7 +185,7 @@ class TransactionList extends React.Component {
       transactionGroup[year][month].count
     ) {
       selectedTransactionGroup[year].count -=
-        selectedTransactionGroup[year][month].count;
+        selectedTransactionGroup[year][month].count || 0;
       selectedTransactionGroup[year][month] = { count: 0 };
     } else {
       const groupMonth = transactionGroup[year][month];
@@ -188,12 +200,32 @@ class TransactionList extends React.Component {
       }
       selectedTransactionGroup[year][month].count = groupMonth.count;
     }
-    this.setState({ ...this.state, selectedTransactionGroup });
+    this.setState({ selectedTransactionGroup });
+  };
+
+  onToggleGroup = (year, month) => {
+    const { closeGroup } = this.state;
+    const show =
+      (closeGroup[year] && closeGroup[year].close) ||
+      (closeGroup[year] &&
+        closeGroup[year][month] &&
+        closeGroup[year][month].close);
+
+    closeGroup[year] = closeGroup[year] || {};
+    if (month) {
+      closeGroup[year][month] = closeGroup[year][month] || {};
+      closeGroup[year][month].close = !show;
+    } else {
+      closeGroup[year].close = !show;
+    }
+
+    this.setState({ closeGroup });
   };
 
   render() {
     const { history, transactions } = this.props;
     const {
+      closeGroup,
       isSelecting,
       selectedTransactionGroup: selected,
       transactionGroup,
@@ -202,132 +234,179 @@ class TransactionList extends React.Component {
     return (
       <div className={styles.main}>
         <div className={styles.transactions}>
-          {transactions.map((transaction, index) => {
-            const dateDiff = isNewDateTransaction(transactions, index);
-            const date = moment(transaction.date);
-            const year = date.year();
-            const month = date.month();
+          {transactions
+            .sort((a, b) => b.date - a.date)
+            .map((transaction, index) => {
+              const dateDiff = isNewDateTransaction(transactions, index);
+              const date = moment(transaction.date);
+              const year = date.year();
+              const month = date.month();
 
-            selected[year] = selected[year] || {};
-            selected[year][month] = selected[year][month] || {};
-            transactionGroup[year] = transactionGroup[year] || {};
-            transactionGroup[year][month] = transactionGroup[year][month] || {};
+              selected[year] = selected[year] || {};
+              selected[year][month] = selected[year][month] || {};
+              transactionGroup[year] = transactionGroup[year] || {};
+              transactionGroup[year][month] =
+                transactionGroup[year][month] || {};
 
-            const showYear =
-              isSelecting &&
-              selected[year].count === transactionGroup[year].count;
-            const showMonth =
-              isSelecting &&
-              selected[year][month].count ===
-                transactionGroup[year][month].count;
-            const showDay =
-              isSelecting && selected[year][month][transaction.id];
+              closeGroup[year] = closeGroup[year] || {};
+              closeGroup[year][month] = closeGroup[year][month] || {};
 
-            return (
-              <div className={styles.transaction} key={index}>
-                {index !== 0 && dateDiff === defs.DATE_DIFF_ALL && (
-                  <hr className={styles.hr} />
-                )}
-                {dateDiff === defs.DATE_DIFF_ALL && (
-                  <ActionRow
-                    alignLeft={true}
-                    border={false}
-                    className={classNames({
-                      [styles.highlight]: true,
-                      [styles.active]: showYear,
-                    })}
-                    container={false}
-                    title={year}
-                    titleClassName={styles.year}
-                    leftItem={
-                      <SelectButton
-                        className={classNames(isSelecting && styles.select)}
-                        active={showYear}
-                        multiple={true}
-                        show={isSelecting}
-                        onClick={() => this.onSelectYear(year)}
-                      />
-                    }
-                    rightItem={<ChevronDownIcon className="click" />}
-                  />
-                )}
-                {dateDiff >= defs.DATE_DIFF_MONTH && (
-                  <ActionRow
-                    alignLeft={true}
-                    border={false}
-                    className={classNames({
-                      [styles.highlight]: true,
-                      [styles.active]: showMonth,
-                    })}
-                    container={false}
-                    title={date.format("MMMM")}
-                    titleClassName={styles.month}
-                    leftItem={
-                      <SelectButton
-                        className={classNames(isSelecting && styles.select)}
-                        active={showMonth}
-                        multiple={true}
-                        show={isSelecting}
-                        onClick={() => this.onSelectMonth(year, month)}
-                      />
-                    }
-                    rightItem={<ChevronDownIcon className="click" />}
-                  />
-                )}
-                <ActionRow
-                  alignLeft={true}
-                  border={false}
-                  className={classNames({
-                    [styles.highlight]: true,
-                    [styles.active]: showDay,
-                  })}
-                  container={false}
-                  title={transaction.name}
-                  titleClassName={styles.name}
-                  leftItem={
-                    <div className={styles.left_side}>
-                      <SelectButton
-                        className={classNames(isSelecting && styles.select)}
-                        active={showDay}
-                        multiple={true}
-                        show={isSelecting}
-                        onClick={() => this.onSelectTransaction(transaction)}
-                      />
-                      <div className={styles.date_wrapper}>
-                        <p className={classNames(styles.day, styles.hidden)}>
-                          22
+              const yearCount = transactionGroup[year].count;
+              const monthCount = transactionGroup[year][month].count;
+
+              const showYear =
+                isSelecting && selected[year].count === yearCount;
+              const showMonth =
+                isSelecting && selected[year][month].count === monthCount;
+              const showDay =
+                isSelecting && selected[year][month][transaction.id];
+
+              return (
+                <div className={styles.transaction} key={index}>
+                  {index !== 0 && dateDiff === defs.DATE_DIFF_ALL && (
+                    <hr className={styles.hr} />
+                  )}
+                  {dateDiff === defs.DATE_DIFF_ALL && (
+                    <ActionRow
+                      alignLeft={true}
+                      border={false}
+                      className={classNames({
+                        [styles.highlight]: true,
+                        [styles.active]: showYear,
+                      })}
+                      container={false}
+                      title={
+                        <p>
+                          {year}{" "}
+                          <span className={styles.count}>
+                            {closeGroup[year].close
+                              ? `${yearCount} transactions`
+                              : ""}
+                          </span>
                         </p>
-                        <p
+                      }
+                      titleClassName={styles.year}
+                      leftItem={
+                        <SelectButton
+                          className={classNames(isSelecting && styles.select)}
+                          active={showYear}
+                          multiple={true}
+                          show={isSelecting}
+                          onClick={() => this.onSelectYear(year)}
+                        />
+                      }
+                      rightItem={
+                        <ChevronDownIcon
                           className={classNames(
-                            styles.day,
-                            styles.placeholder,
-                            dateDiff === defs.DATE_DIFF_NONE && styles.hidden,
+                            styles.accordion,
+                            closeGroup[year].close && styles.rotate,
+                            "click",
                           )}
-                        >
-                          {date.date()}
+                          onClick={() => this.onToggleGroup(year)}
+                        />
+                      }
+                    />
+                  )}
+                  {dateDiff >= defs.DATE_DIFF_MONTH && (
+                    <ActionRow
+                      alignLeft={true}
+                      border={false}
+                      className={classNames({
+                        [styles.highlight]: true,
+                        [styles.row]: true,
+                        [styles.active]: showMonth,
+                        [styles.hidden]: closeGroup[year].close,
+                      })}
+                      container={false}
+                      title={
+                        <p>
+                          {date.format("MMMM")}{" "}
+                          <span className={styles.count}>
+                            {closeGroup[year][month].close
+                              ? `${monthCount} transactions`
+                              : ""}
+                          </span>
                         </p>
+                      }
+                      titleClassName={styles.month}
+                      leftItem={
+                        <SelectButton
+                          className={classNames(isSelecting && styles.select)}
+                          active={showMonth}
+                          multiple={true}
+                          show={isSelecting}
+                          onClick={() => this.onSelectMonth(year, month)}
+                        />
+                      }
+                      rightItem={
+                        <ChevronDownIcon
+                          className={classNames(
+                            styles.accordion,
+                            closeGroup[year][month].close && styles.rotate,
+                            "click",
+                          )}
+                          onClick={() => this.onToggleGroup(year, month)}
+                        />
+                      }
+                    />
+                  )}
+                  <ActionRow
+                    alignLeft={true}
+                    border={false}
+                    className={classNames({
+                      [styles.highlight]: true,
+                      [styles.row]: true,
+                      [styles.active]: showDay,
+                      [styles.hidden]:
+                        closeGroup[year].close || closeGroup[year][month].close,
+                    })}
+                    container={false}
+                    title={transaction.name}
+                    titleClassName={styles.name}
+                    leftItem={
+                      <div className={styles.left_side}>
+                        <SelectButton
+                          className={classNames(isSelecting && styles.select)}
+                          active={showDay}
+                          multiple={true}
+                          show={isSelecting}
+                          onClick={() => this.onSelectTransaction(transaction)}
+                        />
+                        <div className={styles.date_wrapper}>
+                          <p className={classNames(styles.day, styles.hidden)}>
+                            22
+                          </p>
+                          <p
+                            className={classNames(
+                              styles.day,
+                              styles.placeholder,
+                              dateDiff === defs.DATE_DIFF_NONE && styles.hidden,
+                            )}
+                          >
+                            {date.date()}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  }
-                  rightItem={
-                    <p className={styles.amount}>
-                      {utils.convertAmountToCurrency(transaction.amount)}
-                    </p>
-                  }
-                  onMainClick={
-                    !isSelecting &&
-                    (() =>
-                      history.push(
-                        ROUTES.TRANSACTION_ITEM.replace(
-                          ":transaction_id",
-                          transaction.id,
-                        ),
-                      ))
-                  }
-                />
-              </div>
-            );
-          })}
+                    }
+                    rightItem={
+                      <p className={styles.amount}>
+                        {utils.convertAmountToCurrency(transaction.amount)}
+                      </p>
+                    }
+                    onMainClick={
+                      !isSelecting &&
+                      (() =>
+                        history.push(
+                          ROUTES.TRANSACTION_ITEM.replace(
+                            ":transaction_id",
+                            transaction.id,
+                          ),
+                        ))
+                    }
+                  />
+                </div>
+              );
+            })}
         </div>
         <Nav items={this.getNavItems()} />
       </div>

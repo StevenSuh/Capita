@@ -26,7 +26,7 @@ const ConnectedAccounts = ({
   user,
 }) => {
   return (
-    <IsLoading init={onGetConnectedAccounts}>
+    <IsLoading className={styles.isLoading} init={onGetConnectedAccounts}>
       <div className={styles.main}>
         {accounts.length ? (
           accounts.map(

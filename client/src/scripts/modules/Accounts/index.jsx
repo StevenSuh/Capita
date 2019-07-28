@@ -90,75 +90,78 @@ const Accounts = ({
   }
 
   return (
-    <IsLoading init={onGetConnectedAccounts}>
-      <div className={styles.main}>
-        <Header
-          leftItem={
-            <ArrowRightIcon
-              className={classNames(styles.icon, "back-btn", "click")}
-              onClick={goBack}
-            />
-          }
-          title="Accounts"
-          titleClassName={styles.title}
-        />
-        <AccountList />
-        <PlaidLink
-          className={classNames(
-            styles.plaidBtn,
-            accounts.length && styles.marginTop,
-            "click",
-          )}
-          style={{}}
-          onExit={() => {}}
-          onLoad={utils.cleanupPlaidIframe}
-          onSuccess={onExchangePublicToken}
-          user={{
-            legalName: user.name,
-            emailAddress: user.email,
-          }}
-          {...PLAID_OPTIONS}
-        >
-          <div className={styles.plaidLink}>Link an account +</div>
-        </PlaidLink>
-        <Nav items={navItems} />
-        <Modal modalName={MODAL_NAMES.CONFIRM_LINK_DELETE}>
-          <Header
-            rightItem={
-              <CloseIcon
-                className={"click"}
-                onClick={() => onCloseModal(MODAL_NAMES.CONFIRM_LINK_DELETE)}
-              />
-            }
-            title="Confirm deleting link"
-            titleClassName={modalStyles.header}
+    <div>
+      <Header
+        leftItem={
+          <ArrowRightIcon
+            className={classNames(styles.icon, "back-btn", "click")}
+            onClick={goBack}
           />
-          <div className="container">
-            <p className={modalStyles.p}>
-              This action on <strong>{selectedAccount.institutionName}</strong>{" "}
-              cannot be undone. This action will remove all associated data.
-            </p>
-            <div className={modalStyles.action_btns}>
-              <button
-                className={classNames(modalStyles.cancel, "click")}
-                onClick={() => onCloseModal(MODAL_NAMES.CONFIRM_LINK_DELETE)}
-              >
-                Cancel
-              </button>
-              <button
-                className={classNames(modalStyles.confirm, "red", "click")}
-                onClick={() => {
-                  onDeleteInstitutionLink();
-                  onCloseModal(MODAL_NAMES.CONFIRM_LINK_DELETE);
-                }}
-              >
-                Confirm
-              </button>
+        }
+        title="Accounts"
+        titleClassName={styles.title}
+      />
+      <IsLoading className={styles.isLoading} init={onGetConnectedAccounts}>
+        <div className={styles.main}>
+          <AccountList />
+          <PlaidLink
+            className={classNames(
+              styles.plaidBtn,
+              accounts.length && styles.marginTop,
+              "click",
+            )}
+            style={{}}
+            onExit={() => {}}
+            onLoad={utils.cleanupPlaidIframe}
+            onSuccess={onExchangePublicToken}
+            user={{
+              legalName: user.name,
+              emailAddress: user.email,
+            }}
+            {...PLAID_OPTIONS}
+          >
+            <div className={styles.plaidLink}>Link an account +</div>
+          </PlaidLink>
+          <Nav items={navItems} />
+          <Modal modalName={MODAL_NAMES.CONFIRM_LINK_DELETE}>
+            <Header
+              rightItem={
+                <CloseIcon
+                  className={"click"}
+                  onClick={() => onCloseModal(MODAL_NAMES.CONFIRM_LINK_DELETE)}
+                />
+              }
+              title="Confirm deleting link"
+              titleClassName={modalStyles.header}
+            />
+            <div className="container">
+              <p className={modalStyles.p}>
+                This action on{" "}
+                <strong>{selectedAccount.institutionName}</strong> cannot be
+                undone. This action will remove all associated data.
+              </p>
+              <div className={modalStyles.action_btns}>
+                <button
+                  className={classNames(modalStyles.cancel, "click")}
+                  onClick={() => onCloseModal(MODAL_NAMES.CONFIRM_LINK_DELETE)}
+                >
+                  Cancel
+                </button>
+                <button
+                  className={classNames(modalStyles.confirm, "red", "click")}
+                  onClick={() => {
+                    onDeleteInstitutionLink();
+                    onCloseModal(MODAL_NAMES.CONFIRM_LINK_DELETE);
+                  }}
+                >
+                  Confirm
+                </button>
+              </div>
             </div>
-          </div>
-        </Modal>
-      </div>
-    </IsLoading>
+          </Modal>
+        </div>
+      </IsLoading>
+    </div>
   );
 };
 

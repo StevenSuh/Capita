@@ -1,8 +1,9 @@
 import axios from "axios";
+import queryString from "query-string";
 
 import { addSnackbar } from "scripts/components/snackbar/actions";
 
-import { API_ROUTES, ERROR_MSGS } from "defs";
+import { API_ROUTES, DEFAULT_PAGE_LIMIT, ERROR_MSGS } from "defs";
 import { TYPES } from "scripts/components/snackbar/defs";
 
 export const catchApiError = dispatch => error => {
@@ -84,16 +85,11 @@ export const deleteInstitutionLink = dispatch => async institutionLinkId => {
 
 export const getTransactions = dispatch => async (
   userId,
-  limit = 50,
-  offset = 0,
+  { limit = DEFAULT_PAGE_LIMIT, offset = 0, ...params },
 ) => {
+  const search = queryString.stringify({ ...params, limit, offset });
   const res = await axios
-    .get(
-      `${API_ROUTES.TRANSACTIONS.replace(
-        ":userId",
-        userId,
-      )}?limit=${limit}&offset=${offset}`,
-    )
+    .get(API_ROUTES.TRANSACTIONS.replace(":userId", userId) + "?" + search)
     .catch(catchApiError(dispatch));
   return res.data;
 };

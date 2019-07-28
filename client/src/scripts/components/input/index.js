@@ -1,7 +1,7 @@
-import React from 'react';
-import classNames from 'classnames';
+import React from "react";
+import classNames from "classnames";
 
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
 class Input extends React.Component {
   constructor(props) {
@@ -9,47 +9,44 @@ class Input extends React.Component {
 
     this.state = {
       focused: false,
-      value: '',
+      value: "",
     };
   }
 
   onInputChange = e => {
-    const {
-      onChange = () => {},
-    } = this.props;
+    const { onChange = () => {} } = this.props;
     const { value } = e.target;
 
-    this.setState({ ...this.state, value });
+    this.setState({ value });
     onChange(value);
-  }
+  };
 
   onInputFocus = () => {
-    this.setState({ ...this.state, focused: true });
-  }
+    this.setState({ focused: true });
+  };
 
   onInputBlur = () => {
-    this.setState({ ...this.state, focused: false });
-  }
+    this.setState({ focused: false });
+  };
 
   render() {
-    const {
-      className = '',
-      error = '',
-      name,
-      type = "text",
-    } = this.props;
-    
+    const { className = "", error = "", name, type = "text" } = this.props;
+
     return (
-      <div className={classNames({
-        [styles.wrapper]: true,
-        [className]: true,
-        [styles.hidden]: type === 'submit',
-      })}>
-        <div className={classNames({
-          [styles.main]: true,
-          [styles.active]: this.state.focused || this.state.value.length > 0,
-          [styles.error]: this.props.error,
-        })}>
+      <div
+        className={classNames({
+          [styles.wrapper]: true,
+          [className]: true,
+          [styles.hidden]: type === "submit",
+        })}
+      >
+        <div
+          className={classNames({
+            [styles.main]: true,
+            [styles.active]: this.state.focused || this.state.value.length > 0,
+            [styles.error]: this.props.error,
+          })}
+        >
           <input
             className={styles.input}
             onChange={this.onInputChange}
@@ -60,11 +57,14 @@ class Input extends React.Component {
             type={type}
           />
           {name && (
-            <span className={classNames({
-              [styles.label]: true,
-              [styles.active]: this.state.focused || this.state.value.length > 0,
-              [styles.error]: this.props.error,
-            })}>
+            <span
+              className={classNames({
+                [styles.label]: true,
+                [styles.active]:
+                  this.state.focused || this.state.value.length > 0,
+                [styles.error]: this.props.error,
+              })}
+            >
               {name}
             </span>
           )}

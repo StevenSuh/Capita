@@ -1,6 +1,6 @@
-import React from 'react';
+import React from "react";
 
-const DetectDragHoc = (WrappedComponent) => (distance = 50) => {
+const DetectDragHoc = WrappedComponent => (distance = 50) => {
   class DetectDrag extends React.Component {
     constructor(props) {
       super(props);
@@ -14,13 +14,13 @@ const DetectDragHoc = (WrappedComponent) => (distance = 50) => {
     }
 
     componentDidMount() {
-      document.addEventListener('mouseup', this.onEndDrag);
-      document.addEventListener('touchend', this.onEndDrag);
+      document.addEventListener("mouseup", this.onEndDrag);
+      document.addEventListener("touchend", this.onEndDrag);
     }
 
     componentWillUnmount() {
-      document.removeEventListener('mouseup', this.onEndDrag);
-      document.removeEventListener('touchend', this.onEndDrag);
+      document.removeEventListener("mouseup", this.onEndDrag);
+      document.removeEventListener("touchend", this.onEndDrag);
     }
 
     onStartDrag = e => {
@@ -40,7 +40,7 @@ const DetectDragHoc = (WrappedComponent) => (distance = 50) => {
         x: pageX,
         y: pageY,
       });
-    }
+    };
 
     onEndDrag = e => {
       if (!this.state.dragging) {
@@ -59,7 +59,7 @@ const DetectDragHoc = (WrappedComponent) => (distance = 50) => {
 
       const xDiff = pageX - this.state.x;
       const yDiff = pageY - this.state.y;
-      
+
       const direction = {
         up: yDiff < -distance,
         down: yDiff > distance,
@@ -73,18 +73,15 @@ const DetectDragHoc = (WrappedComponent) => (distance = 50) => {
         x: 0,
         y: 0,
       });
-    }
+    };
 
     render() {
       return (
-        <div
-          onMouseDown={this.onStartDrag}
-          onTouchStart={this.onStartDrag}
-        >
+        <div onMouseDown={this.onStartDrag} onTouchStart={this.onStartDrag}>
           <WrappedComponent
             {...this.props}
             direction={this.state.direction}
-            resetDirection={() => this.setState({ ...this.state, direction: {} })}
+            resetDirection={() => this.setState({ direction: {} })}
           />
         </div>
       );

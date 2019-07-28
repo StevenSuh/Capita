@@ -9,7 +9,7 @@ import Empty from "scripts/components/empty";
 import * as utils from "utils";
 
 import * as transactionActions from "scripts/modules/Transactions/actions";
-import { PROP_TRANSACTIONS } from "scripts/modules/Transactions/defs";
+import { PROP_RECURRING_TRANSACTIONS } from "scripts/modules/Transactions/defs";
 import { ROUTES } from "defs";
 
 import { ReactComponent as ArrowRightIcon } from "assets/icons/arrow-right.svg";
@@ -18,10 +18,10 @@ import styles from "./styles.module.css";
 const RecurringExpenses = ({
   history,
   recurringExpenses,
-  onGetTransactions,
+  onGetRecurringTransactions,
 }) => {
   return (
-    <IsLoading init={onGetTransactions}>
+    <IsLoading className={styles.isLoading} init={onGetRecurringTransactions}>
       <div className={classNames(styles.main, "container")}>
         <div className={styles.titles}>
           <h4 className={styles.title}>Recurring expenses</h4>
@@ -77,97 +77,14 @@ const RecurringExpenses = ({
 
 export const mapStateToProps = ({ transactions }) => ({
   recurringExpenses: transactions
-    .get(PROP_TRANSACTIONS)
+    .get(PROP_RECURRING_TRANSACTIONS)
     .toJS()
-    .filter(item => item.recurring)
     .slice(0, 10),
-  // recurringExpenses: [
-  //   {
-  //     id: 1,
-  //     userId: 1,
-  //     accountId: 1,
-  //     plaidTransactionId: "transaction-1",
-  //     transactionType: "place",
-  //     name: "Apple Store - Mac",
-  //     amount: 1299.99,
-  //     IsoCurrencyCode: "USD",
-  //     unofficialCurrencyCode: null,
-  //     date: "2019-07-22",
-  //     pending: false,
-  //     recurring: true,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   },
-  //   {
-  //     id: 1,
-  //     userId: 1,
-  //     accountId: 1,
-  //     plaidTransactionId: "transaction-1",
-  //     transactionType: "place",
-  //     name: "Apple Store - Mac",
-  //     amount: 1299.99,
-  //     IsoCurrencyCode: "USD",
-  //     unofficialCurrencyCode: null,
-  //     date: "2019-07-22",
-  //     pending: false,
-  //     recurring: true,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   },
-  //   {
-  //     id: 1,
-  //     userId: 1,
-  //     accountId: 1,
-  //     plaidTransactionId: "transaction-1",
-  //     transactionType: "place",
-  //     name: "Apple Store - Mac",
-  //     amount: 1299.99,
-  //     IsoCurrencyCode: "USD",
-  //     unofficialCurrencyCode: null,
-  //     date: "2019-07-22",
-  //     pending: false,
-  //     recurring: true,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   },
-  //   {
-  //     id: 1,
-  //     userId: 1,
-  //     accountId: 1,
-  //     plaidTransactionId: "transaction-1",
-  //     transactionType: "place",
-  //     name: "Apple Store - Mac",
-  //     amount: 1299.99,
-  //     IsoCurrencyCode: "USD",
-  //     unofficialCurrencyCode: null,
-  //     date: "2019-07-22",
-  //     pending: false,
-  //     recurring: true,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   },
-  //   {
-  //     id: 1,
-  //     userId: 1,
-  //     accountId: 1,
-  //     plaidTransactionId: "transaction-1",
-  //     transactionType: "place",
-  //     name: "Apple Store - Mac",
-  //     amount: 1299.99,
-  //     IsoCurrencyCode: "USD",
-  //     unofficialCurrencyCode: null,
-  //     date: "2019-07-22",
-  //     pending: false,
-  //     recurring: true,
-  //     createdAt: new Date(),
-  //     updatedAt: new Date(),
-  //   },
-  // ],
 });
 
 export default connect(
   mapStateToProps,
   {
-    onGetTransactions: transactionActions.getTransactions,
+    onGetRecurringTransactions: transactionActions.getRecurringTransactions,
   },
 )(withRouter(RecurringExpenses));

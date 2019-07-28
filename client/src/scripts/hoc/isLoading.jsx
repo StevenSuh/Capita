@@ -5,13 +5,12 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import Loading from "scripts/components/loading";
 
 import * as appActions from "scripts/modules/App/actions";
-import { PROP_LOGGED_IN } from "scripts/modules/App/defs";
 
 const IsLoadingWrapper = ({
+  className,
   children,
   init,
   callback = () => {},
-  loggedIn,
   onCheckLoggedIn,
   onRedirectByStatus,
 }) => {
@@ -20,7 +19,7 @@ const IsLoadingWrapper = ({
     callback = onRedirectByStatus;
   }
 
-  const [isLoading, setIsLoading] = useState(!loggedIn);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (isLoading) {
@@ -41,16 +40,18 @@ const IsLoadingWrapper = ({
         unmountOnExit
       >
         {isLoading ? (
-          <div style={{ width: "100%", height: "100%" }}>
-            <div
-              style={{
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-              }}
-            >
-              <Loading size="large" />
-            </div>
+          <div
+            className={className}
+            style={{
+              width: "100%",
+              height: "100%",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              alignContent: "center",
+            }}
+          >
+            <Loading size="large" />
           </div>
         ) : (
           <div>{children}</div>
@@ -60,12 +61,8 @@ const IsLoadingWrapper = ({
   );
 };
 
-export const mapStateToProps = ({ app }) => ({
-  loggedIn: app.get(PROP_LOGGED_IN),
-});
-
 export default connect(
-  mapStateToProps,
+  null,
   {
     onCheckLoggedIn: appActions.checkLoggedIn,
     onRedirectByStatus: appActions.redirectByStatus,

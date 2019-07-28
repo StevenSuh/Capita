@@ -5,3 +5,8 @@
   font-size: var(--font-large);
   font-weight: 500;
 }
+
+.isLoading {
+  width: 100vw !important;
+  height: calc(100vh - var(--header-height)) !important;
+}

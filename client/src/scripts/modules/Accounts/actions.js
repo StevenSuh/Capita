@@ -43,7 +43,7 @@ export const getConnectedAccounts = (force = false) => async (
   const { app: appReducer, accounts: accountReducer } = getState();
   if (!force) {
     const existingAccounts = accountReducer.get(defs.PROP_ACCOUNTS).toJS();
-    if (existingAccounts.size > 0) {
+    if (existingAccounts.length > 0) {
       return;
     }
   }

@@ -4,22 +4,45 @@ import classNames from "classnames";
 import { withLastLocation } from "react-router-last-location";
 
 import Header from "scripts/components/header";
+import IsLoading from "scripts/hoc/isLoading";
 import TransactionList from "scripts/components/transaction-list";
 
 import * as utils from "utils";
 import { ROUTES } from "defs";
+import * as actions from "./actions";
 import { PROP_TRANSACTIONS } from "./defs";
 
 import { ReactComponent as ArrowRightIcon } from "assets/icons/arrow-right.svg";
 import styles from "./styles.module.css";
 
-const Transactions = ({ history, lastLocation, transactions }) => {
+const Transactions = ({
+  history,
+  lastLocation,
+  location: { search },
+  onGetTransactions,
+  onGetRecurringTransactions,
+  onGetAccountTransactions,
+  transactions,
+}) => {
+  const params = new URLSearchParams(search);
+  const recurring = params.get("recurring") === "true";
+  const accountId = params.get("accountId");
+
+  let initFn = onGetTransactions;
+
+  if (recurring) {
+    initFn = onGetRecurringTransactions;
+  }
+  if (accountId) {
+    initFn = onGetAccountTransactions;
+  }
+
   const goBack = () => {
     utils.goBack(history, ROUTES.APP_DASHBOARD, lastLocation)();
   };
 
   return (
-    <div className={styles.main}>
+    <div>
       <Header
         leftItem={
           <ArrowRightIcon
@@ -30,9 +53,13 @@ const Transactions = ({ history, lastLocation, transactions }) => {
         title="Transactions"
         titleClassName={styles.title}
       />
-      <div className={classNames(styles.content, "container")}>
-        <TransactionList transactions={transactions} />
-      </div>
+      <IsLoading className={styles.isLoading} init={initFn}>
+        <div className={styles.main}>
+          <div className={classNames(styles.content, "container")}>
+            <TransactionList goBack={goBack} transactions={transactions} />
+          </div>
+        </div>
+      </IsLoading>
     </div>
   );
 };
@@ -43,5 +70,9 @@ export const mapStateToProps = ({ transactions }) => ({
 
 export default connect(
   mapStateToProps,
-  {},
+  {
+    onGetTransactions: actions.getTransactions,
+    onGetRecurringTransactions: actions.getRecurringTransactions,
+    onGetAccountTransactions: actions.getAccountTransactions,
+  },
 )(withLastLocation(Transactions));

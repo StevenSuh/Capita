@@ -29,3 +29,7 @@
   font-size: var(--font-medium);
   text-transform: capitalize;
 }
+
+.isLoading {
+  padding: 50px 0;
+}

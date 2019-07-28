@@ -70,6 +70,8 @@ export const initialState = Immutable.fromJS({
       updatedAt: new Date(),
     },
   ],
+  [defs.PROP_RECURRING_TRANSACTIONS]: [],
+  [defs.PROP_ACCOUNT_TRANSACTIONS]: {},
 });
 
 export default (state = initialState, action) => {
@@ -95,6 +97,18 @@ export default (state = initialState, action) => {
         return state;
       }
       return state.set(defs.PROP_TRANSACTIONS, transactions.delete(index));
+    }
+    case defs.actionTypes.onSetRecurringTransactions: {
+      return state.set(
+        defs.PROP_RECURRING_TRANSACTIONS,
+        Immutable.fromJS(action.value),
+      );
+    }
+    case defs.actionTypes.onSetAccountTransactions: {
+      return state.setIn(
+        [defs.PROP_ACCOUNT_TRANSACTIONS, ...action.query],
+        Immutable.fromJS(action.value),
+      );
     }
     default: {
       return state;

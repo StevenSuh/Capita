@@ -64,3 +64,8 @@
   width: 30px !important;
   transition-delay: var(--transition-duration), 0s;
 }
+
+.isLoading {
+  width: 100vw !important;
+  height: calc(100vh - var(--header-height)) !important;
+}

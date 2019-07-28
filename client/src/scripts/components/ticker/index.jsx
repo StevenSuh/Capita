@@ -10,7 +10,7 @@ class Ticker extends React.Component {
 
     this.state = {
       index: [],
-      currAmount: this.props.amount,
+      currAmounts: [this.props.amount, 0],
       height: 0,
     };
 
@@ -22,26 +22,26 @@ class Ticker extends React.Component {
     this.setState({ height });
   }
 
-  componentDidUpdate(prevProps) {
-    const { amount } = this.props;
-
-    if (prevProps.amount !== amount) {
-      this.setState({ currAmount: prevProps.amount });
-
+  static getDerivedStateFromProps({ amount }, { currAmounts }) {
+    if (currAmounts[0] !== amount) {
       // force CSS repaint trick
       const els = document.getElementsByClassName(styles.number_wrapper);
       for (let i = 0; i < els.length; i++) {
         void els[i].offsetHeight;
       }
+      return {
+        currAmounts: [amount, currAmounts[0]],
+      };
     }
+    return null;
   }
 
   render() {
     const { amount: rawAmount, className } = this.props;
-    const { currAmount: rawCurrAmount } = this.state;
+    const { currAmounts: rawCurrAmounts } = this.state;
 
     const amount = utils.convertAmountToCurrency(rawAmount);
-    const currAmount = utils.convertAmountToCurrency(rawCurrAmount);
+    const currAmount = utils.convertAmountToCurrency(rawCurrAmounts[1]);
     const indexDiff = amount.length - currAmount.length;
 
     return (
@@ -63,7 +63,7 @@ class Ticker extends React.Component {
           const diff = !currIsEmpty ? newNumber - currNumber : newNumber;
           const number = currNumber + 10;
           const range = [];
-          const totalTranslate = this.state.height * diff * (diff < 0 ? 1 : -1);
+          const totalTranslate = this.state.height * diff;
 
           if (diff < 0) {
             for (let i = number - 10; i < number; i++) {

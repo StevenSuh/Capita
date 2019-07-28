@@ -17,7 +17,7 @@
 .select {
   cursor: pointer;
   background-color: var(--white-color);
-  border: 2px solid var(--black-color);
+  border: 1px solid var(--black-color);
   border-radius: var(--icon-size);
   height: 20px;
   width: 20px;

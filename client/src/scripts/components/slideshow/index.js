@@ -1,10 +1,10 @@
-import React from 'react';
-import classNames from 'classnames';
-import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import React from "react";
+import classNames from "classnames";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-import detectDrag from 'scripts/hoc/detectDrag';
+import detectDrag from "scripts/hoc/detectDrag";
 
-import styles from './styles.module.css';
+import styles from "./styles.module.css";
 
 const DURATION = 5000;
 let timeout = null;
@@ -46,7 +46,6 @@ class Slideshow extends React.Component {
           dir.left ? 1 : -1,
         );
         this.setState({
-          ...this.state,
           currIndex: newIndex,
           slideRight: dir.right,
         });
@@ -74,7 +73,6 @@ class Slideshow extends React.Component {
         return;
       }
       this.setState({
-        ...this.state,
         currIndex: newIndex,
         slideRight: false,
       });
@@ -84,15 +82,17 @@ class Slideshow extends React.Component {
   render() {
     const { className, items } = this.props;
     const { currIndex, slideRight } = this.state;
-    
+
     return (
       <div className={classNames(styles.main)}>
-        <TransitionGroup className={classNames(
-          "transition-group",
-          "slideshow",
-          slideRight && "right",
-          className,
-        )}>
+        <TransitionGroup
+          className={classNames(
+            "transition-group",
+            "slideshow",
+            slideRight && "right",
+            className,
+          )}
+        >
           <CSSTransition
             appear
             classNames="slide"
