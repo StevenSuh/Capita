@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS accounts (
   credit_limit_alert_enabled boolean NOT NULL DEFAULT true,
   institution_name varchar(255) NOT NULL,
   institution_logo varchar(255),
+  manually_created boolean NOT NULL DEFAULT false,
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW()
 );

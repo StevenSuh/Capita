@@ -9,8 +9,9 @@ const ActionRow = ({
   className,
   container = true,
   title,
-  subtitle,
   titleClassName,
+  subtitle,
+  subtitleClassName,
   border = true,
   rightItem = <ArrowRightIcon className="click" />,
   onRightClick = () => {},
@@ -38,7 +39,11 @@ const ActionRow = ({
         {leftItem && <div onClick={onLeftClick}>{leftItem}</div>}
         <div className={classNames(styles.titles, alignLeft && styles.left)}>
           <h4 className={classNames(styles.title, titleClassName)}>{title}</h4>
-          {subtitle && <p className={styles.subtitle}>{subtitle}</p>}
+          {subtitle && (
+            <p className={classNames(styles.subtitle, subtitleClassName)}>
+              {subtitle}
+            </p>
+          )}
         </div>
         {rightItem && <div onClick={onRightClick}>{rightItem}</div>}
       </div>

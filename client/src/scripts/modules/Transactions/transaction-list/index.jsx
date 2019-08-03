@@ -2,6 +2,7 @@ import React from "react";
 import moment from "moment";
 import classNames from "classnames";
 import { withRouter } from "react-router-dom";
+import queryString from "query-string";
 
 import ActionRow from "scripts/components/action-row";
 import Nav from "scripts/components/nav";
@@ -9,7 +10,11 @@ import SelectButton from "scripts/components/select-button";
 import Ticker from "scripts/components/ticker";
 
 import * as utils from "utils";
-import { isNewDateTransaction, setupTransactionGroup } from "./utils";
+import {
+  isNewDateTransaction,
+  setupTransactionGroup,
+  flattenTransactionIds,
+} from "./utils";
 import { ROUTES } from "defs";
 import * as defs from "./defs";
 
@@ -42,7 +47,7 @@ class TransactionList extends React.Component {
     const navItems = [
       [
         {
-          item: isSelecting ? "Cancel" : "Calculate",
+          item: isSelecting ? "Cancel" : "Select items",
           onClick: () => this.onSetIsSelecting(!isSelecting),
         },
         {
@@ -61,11 +66,18 @@ class TransactionList extends React.Component {
 
   getCalculateItem = () => {
     const totalAmount = this.getTotalAmount();
+    const { history } = this.props;
+    const { selectedTransactionGroup: group } = this.state;
+    let hasMoreThanOne = false;
+
+    for (let year in group) {
+      if (group[year].count > 0) {
+        hasMoreThanOne = true;
+        break;
+      }
+    }
+
     return [
-      {
-        item: "Total",
-        className: styles.total,
-      },
       {
         item: (
           <Ticker
@@ -78,6 +90,25 @@ class TransactionList extends React.Component {
             )}
           />
         ),
+      },
+      {
+        item: "Edit items",
+        className: styles.total,
+        disabled: !hasMoreThanOne,
+        onClick: () => {
+          if (!hasMoreThanOne) {
+            return;
+          }
+
+          history.push(
+            ROUTES.EDIT_TRANSACTION +
+              "?" +
+              queryString.stringify(
+                { id: flattenTransactionIds(group) },
+                { arrayFormat: "comma" },
+              ),
+          );
+        },
       },
     ];
   };
@@ -261,6 +292,14 @@ class TransactionList extends React.Component {
               const showDay =
                 isSelecting && selected[year][month][transaction.id];
 
+              const onClick = () =>
+                history.push(
+                  ROUTES.TRANSACTION_ITEM.replace(
+                    ":transaction_id",
+                    transaction.id,
+                  ),
+                );
+
               return (
                 <div className={styles.transaction} key={index}>
                   {index !== 0 && dateDiff === defs.DATE_DIFF_ALL && (
@@ -363,6 +402,8 @@ class TransactionList extends React.Component {
                     container={false}
                     title={transaction.name}
                     titleClassName={styles.name}
+                    subtitle={transaction.pending ? "Pending" : ""}
+                    subtitleClassName={styles.subname}
                     leftItem={
                       <div className={styles.left_side}>
                         <SelectButton
@@ -393,16 +434,7 @@ class TransactionList extends React.Component {
                         {utils.convertAmountToCurrency(transaction.amount)}
                       </p>
                     }
-                    onMainClick={
-                      !isSelecting &&
-                      (() =>
-                        history.push(
-                          ROUTES.TRANSACTION_ITEM.replace(
-                            ":transaction_id",
-                            transaction.id,
-                          ),
-                        ))
-                    }
+                    onMainClick={!isSelecting && onClick}
                   />
                 </div>
               );

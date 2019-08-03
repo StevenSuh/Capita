@@ -44,3 +44,23 @@ export const setupTransactionGroup = (transactions, group, selectedGroup) =>
     group[year][month].count++;
     group[year][month][transaction.id] = transaction;
   });
+
+export const flattenTransactionIds = transactionGroup => {
+  const ids = [];
+
+  for (let year in transactionGroup) {
+    for (let month in transactionGroup[year]) {
+      if (month === "count") {
+        continue;
+      }
+      for (let id in transactionGroup[year][month]) {
+        if (id === "count") {
+          continue;
+        }
+        ids.push(id);
+      }
+    }
+  }
+
+  return ids;
+};

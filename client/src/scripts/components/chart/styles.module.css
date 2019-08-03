@@ -1,10 +1,16 @@
+.main {
+  max-width: 800px;
+  margin: auto;
+}
+
 .line {
   position: absolute;
   top: 0;
   left: 0;
   height: 100%;
   width: 2px;
-  background-color: var(--blue-color);
+  border-radius: 2px;
+  background-color: var(--black-color);
   display: none;
 }
 

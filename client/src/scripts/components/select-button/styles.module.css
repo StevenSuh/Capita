@@ -6,12 +6,14 @@
   transition: opacity var(--transition-duration) var(--transition-curve),
     width var(--transition-duration) var(--transition-curve);
   will-change: width;
+  transition-delay: 0s, var(--transition-duration);
 }
 
 .select_wrapper.show {
   pointer-events: auto;
   opacity: 1;
   width: 20px;
+  transition-delay: var(--transition-duration), 0s;
 }
 
 .select {

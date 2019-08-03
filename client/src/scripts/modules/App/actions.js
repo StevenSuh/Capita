@@ -29,13 +29,14 @@ export const checkLoggedIn = () => async (dispatch, getState) => {
   }
 
   const { error, user } = await checkLogin(dispatch)();
+  dispatch(setChecked(true));
+
   if (error) {
     return;
   }
 
   dispatch(setUser(user));
   dispatch(setLoggedIn(true));
-  dispatch(setChecked(true));
 };
 
 export const redirectByStatus = () => (_, getState) => {

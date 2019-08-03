@@ -52,6 +52,18 @@
   opacity: 1;
 }
 
+.content.full {
+  bottom: unset;
+  top: 0;
+  left: 0;
+  right: unset;
+  width: 100vw;
+  height: 100vh;
+  opacity: 1;
+  transform: none;
+  transition: opacity var(--transition-duration) var(--transition-curve);
+}
+
 .content.open {
   transition-delay: var(--transition-duration);
   opacity: 1;
@@ -72,6 +84,10 @@
   height: 100vh;
   opacity: 0;
   transition: opacity var(--transition-duration) var(--transition-curve);
+}
+
+.bg.full {
+  display: none !important;
 }
 
 .bg.open {

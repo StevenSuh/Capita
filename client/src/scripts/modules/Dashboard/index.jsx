@@ -29,13 +29,13 @@ const Dashboard = ({ loggedIn, history, onOpenModal, onCloseModal }) => {
       </Helmet>
 
       <Header
+        title="CAPITA"
         rightItem={
           <MoreIcon
             className={classNames(styles.icon, "click")}
             onClick={() => onOpenModal(MODAL_NAMES.OPTIONS)}
           />
         }
-        title="CAPITA"
       />
 
       <div className={styles.content}>

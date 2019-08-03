@@ -15,7 +15,7 @@ export const initialState = Immutable.fromJS({
       amount: 1299.99,
       isoCurrencyCode: "USD",
       unofficialCurrencyCode: null,
-      date: "2019-07-25",
+      date: "2019-08-02",
       pending: true,
       recurring: false,
       createdAt: new Date(),
@@ -31,7 +31,7 @@ export const initialState = Immutable.fromJS({
       amount: 299.99,
       isoCurrencyCode: "USD",
       unofficialCurrencyCode: null,
-      date: "2019-07-20",
+      date: "2019-08-01",
       pending: false,
       recurring: false,
       createdAt: new Date(),
@@ -47,7 +47,7 @@ export const initialState = Immutable.fromJS({
       amount: 102.04,
       isoCurrencyCode: "USD",
       unofficialCurrencyCode: null,
-      date: "2019-06-20",
+      date: "2019-08-01",
       pending: false,
       recurring: false,
       createdAt: new Date(),
@@ -70,8 +70,6 @@ export const initialState = Immutable.fromJS({
       updatedAt: new Date(),
     },
   ],
-  [defs.PROP_RECURRING_TRANSACTIONS]: [],
-  [defs.PROP_ACCOUNT_TRANSACTIONS]: {},
 });
 
 export default (state = initialState, action) => {
@@ -97,18 +95,6 @@ export default (state = initialState, action) => {
         return state;
       }
       return state.set(defs.PROP_TRANSACTIONS, transactions.delete(index));
-    }
-    case defs.actionTypes.onSetRecurringTransactions: {
-      return state.set(
-        defs.PROP_RECURRING_TRANSACTIONS,
-        Immutable.fromJS(action.value),
-      );
-    }
-    case defs.actionTypes.onSetAccountTransactions: {
-      return state.setIn(
-        [defs.PROP_ACCOUNT_TRANSACTIONS, ...action.query],
-        Immutable.fromJS(action.value),
-      );
     }
     default: {
       return state;

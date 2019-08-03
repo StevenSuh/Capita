@@ -1,9 +1,13 @@
+.wrapper {
+  margin: auto;
+}
+
 .main {
   font-size: var(--font-large);
   font-family: var(--font-family-mono);
   letter-spacing: -1px;
-  display: flex;
-  overflow-y: hidden;
+  display: inline-flex;
+  overflow: hidden;
   padding: 2px 0;
 }
 

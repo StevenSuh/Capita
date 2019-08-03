@@ -81,6 +81,7 @@ type Account struct {
 	CreditLimitAlertEnabled       bool            `db:"credit_limit_alert_enabled" json:"creditLimitAlertEnabled"`
 	InstitutionName               string          `db:"institution_name" json:"institutionName"`
 	InstitutionLogo               sql.NullString  `db:"institution_logo" json:"institutionLogo"`
+	ManuallyCreated               bool            `db:"manually_created" json:"manuallyCreated"`
 	CreatedAt                     time.Time       `db:"created_at" json:"createdAt"`
 	UpdatedAt                     time.Time       `db:"updated_at" json:"updatedAt"`
 }
@@ -126,6 +127,7 @@ type Transaction struct {
 	Date                   string         `db:"date" json:"date"`
 	Pending                bool           `db:"pending" json:"pending"`
 	Recurring              bool           `db:"recurring" json:"recurring"`
+	ManuallyCreated        bool           `db:"manually_created" json:"manuallyCreated"`
 	CreatedAt              time.Time      `db:"created_at" json:"createdAt"`
 	UpdatedAt              time.Time      `db:"updated_at" json:"updatedAt"`
 }

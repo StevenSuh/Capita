@@ -12,15 +12,18 @@ export const getDaysInMonth = (year, month) => {
   }
 
   const formattedMonth = `0${date.month() + 1}`.slice(-2);
-  const formattedDays = [];
+  const firstDay = `${year}-${formattedMonth}-00`;
+  const formattedDays = [firstDay];
+
   for (let i = 0; i < totalDays; i++) {
-    formattedDays.push(`${year}-${formattedMonth}-${i}`);
+    const formattedDay = `0${i + 1}`.slice(-2);
+    formattedDays.push(`${year}-${formattedMonth}-${formattedDay}`);
   }
 
   return formattedDays;
 };
 
-export const normalizeTransactions = (transactions, year, month, days) => {
+export const filterTransactions = (transactions, year, month, days) => {
   const filtered = transactions.filter(({ date }) => {
     const curr = moment(date);
     return curr.year() === year && curr.month() === month;
@@ -28,15 +31,29 @@ export const normalizeTransactions = (transactions, year, month, days) => {
 
   let amount = 0;
   let index = 0;
-  const normalized = [];
+  const amounts = [];
+  const monthTransactions = [];
+  const adjustedDays = [];
 
   days.forEach(day => {
-    if (index < filtered.length && filtered[index].date === day) {
-      amount += filtered[index].amount;
-      index++;
+    let itemFound = false;
+
+    while (index < filtered.length && filtered[index].date === day) {
+      monthTransactions.push(filtered[index]);
+      amount += filtered[index++].amount;
+
+      adjustedDays.push(day);
+      amounts.push(amount);
+      itemFound = true;
     }
-    normalized.push(amount);
+
+    if (!itemFound) {
+      adjustedDays.push(day);
+      amounts.push(amount);
+    }
   });
 
-  return normalized;
+  console.log(amounts, adjustedDays);
+
+  return [monthTransactions, amounts, adjustedDays];
 };

@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   date varchar(255) NOT NULL,
   pending boolean NOT NULL,
   recurring boolean NOT NULL DEFAULT false,
+  manually_created boolean NOT NULL DEFAULT false,
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW()
 );

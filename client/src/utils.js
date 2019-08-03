@@ -17,8 +17,15 @@ export const convertAmountToCurrency = (amount, currencyCode) => {
   if (typeof amount !== "number") {
     throw new Error(`Invalid number: ${amount}`);
   }
+
   const currency = getCurrency(currencyCode);
-  return `${currency}${amount
+  const isNegative = amount < 0;
+
+  if (isNegative) {
+    amount = amount * -1;
+  }
+
+  return `${isNegative ? "-" : ""}${currency}${amount
     .toFixed(2)
     .replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 };

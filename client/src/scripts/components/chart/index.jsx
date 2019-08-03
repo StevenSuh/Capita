@@ -1,10 +1,8 @@
 import React from "react";
-import { defaults, Line } from "react-chartjs-2";
+import { Line } from "react-chartjs-2";
 import classNames from "classnames";
 
 import styles from "./styles.module.css";
-
-defaults.global.animation = false;
 
 class Chart extends React.Component {
   constructor(props) {
@@ -13,9 +11,22 @@ class Chart extends React.Component {
     this.state = {
       isMoving: false,
       x: 0,
+      boundary: {
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+      },
+      offsetLeft: 0,
     };
 
     this.chartRef = React.createRef();
+    this.chartWrapperRef = React.createRef();
+  }
+
+  componentDidMount() {
+    const { left } = this.chartWrapperRef.current.getBoundingClientRect();
+    this.setState({ offsetLeft: left });
   }
 
   afterBuildTicks = data => chart => {
@@ -27,28 +38,104 @@ class Chart extends React.Component {
     chart.ticks.push(tickSize * 3);
   };
 
-  getElementAtEvent = ({ button, buttons, clientX }, elems) => {
-    const { isMoving } = this.state;
+  getElementAtEvent = (event, elems = []) => {
+    const { button, buttons, clientX, target, touches = [] } = event;
     const leftClick = button === 1 || buttons === 1;
+    const touch = touches.length > 0;
 
-    if (isMoving) {
-      if (!leftClick) {
-        // TODO: manually check for mouseout through clientBoundingRects
-        this.setState({ isMoving: false });
-        return;
-      }
-    }
-
-    if (leftClick && elems.length > 0) {
+    if ((leftClick || touch) && elems.length > 0) {
+      const { boundary, isMoving, offsetLeft } = this.state;
       const { onDetectValue = () => {} } = this.props;
 
       const index = elems[0]._index;
       const dataset = elems[0]._chart.data.datasets[0].data;
       const value = dataset[index];
-      const x = clientX - 20;
+      const x = touch ? touches[0].clientX - offsetLeft : clientX - offsetLeft;
+
+      const updateState = { isMoving: true, x };
+
+      if (!boundary.top) {
+        const { top, left, bottom, right } = target.getBoundingClientRect();
+        const boundary = { top, left, bottom, right };
+        updateState.boundary = boundary;
+      }
+
+      if (!isMoving) {
+        if (leftClick) {
+          document.addEventListener("mouseover", this.onMouseOver);
+          document.addEventListener("mouseup", this.onMouseUp);
+        }
+        if (touch) {
+          document.addEventListener("touchmove", this.onTouchMove);
+          document.addEventListener("touchend", this.onTouchEnd);
+        }
+      }
 
       onDetectValue(value);
-      this.setState({ isMoving: true, x });
+      this.setState(updateState);
+    }
+  };
+
+  onMouseOver = ({ clientX, clientY }) => {
+    const { allowXOut, allowYOut, onDetectReset = () => {} } = this.props;
+    const {
+      isMoving,
+      boundary: { top, left, bottom, right },
+    } = this.state;
+
+    if (isMoving) {
+      const outOfX = allowXOut ? false : clientX < left || clientX > right;
+      const outOfY = allowYOut ? false : clientY < top || clientY > bottom;
+
+      if (outOfX || outOfY) {
+        onDetectReset();
+        this.setState({ isMoving: false, boundary: {} });
+        document.removeEventListener("mouseover", this.onMouseOver);
+        document.removeEventListener("mouseup", this.onMouseUp);
+      }
+    }
+  };
+
+  onMouseUp = () => {
+    if (this.state.isMoving) {
+      const { onDetectReset = () => {} } = this.props;
+
+      onDetectReset();
+      this.setState({ isMoving: false, boundary: {} });
+      document.removeEventListener("mouseover", this.onMouseOver);
+      document.removeEventListener("mouseup", this.onMouseUp);
+    }
+  };
+
+  onTouchMove = ({ touches }) => {
+    const { clientX, clientY } = touches[0];
+    const { allowXOut, allowYOut, onDetectReset = () => {} } = this.props;
+    const {
+      isMoving,
+      boundary: { top, left, bottom, right },
+    } = this.state;
+
+    if (isMoving) {
+      const outOfX = allowXOut ? false : clientX < left || clientX > right;
+      const outOfY = allowYOut ? false : clientY < top || clientY > bottom;
+
+      if (outOfX || outOfY) {
+        onDetectReset();
+        this.setState({ isMoving: false, boundary: {} });
+        document.removeEventListener("touchmove", this.onTouchMove);
+        document.removeEventListener("touchend", this.onTouchEnd);
+      }
+    }
+  };
+
+  onTouchEnd = () => {
+    if (this.state.isMoving) {
+      const { onDetectReset = () => {} } = this.props;
+
+      onDetectReset();
+      this.setState({ isMoving: false, boundary: {} });
+      document.removeEventListener("touchmove", this.onTouchMove);
+      document.removeEventListener("touchend", this.onTouchEnd);
     }
   };
 
@@ -57,7 +144,7 @@ class Chart extends React.Component {
     const { isMoving, x } = this.state;
 
     return (
-      <div className={styles.main}>
+      <div className={styles.main} ref={this.chartWrapperRef}>
         <Line
           ref={this.chartRef}
           data={{
@@ -83,12 +170,19 @@ class Chart extends React.Component {
               intersect: false,
             },
             onHover: this.getElementAtEvent,
-            // animation: {
-            //   onComplete: () => (defaults.global.animation = true),
-            // },
+            animation: {
+              duration: 0,
+              onComplete() {
+                this.options.animation.duration = 300;
+                this.options.animation.onComplete = null;
+                this.update();
+              },
+            },
             layout: {
               padding: {
-                top: 5,
+                top: 15,
+                left: -10,
+                bottom: 10,
               },
             },
             legend: {
@@ -108,11 +202,13 @@ class Chart extends React.Component {
               ],
               yAxes: [
                 {
+                  position: "left",
                   gridLines: {
                     borderDash: [5, 5],
-                    color: "#d0d0d0",
+                    color: "#eaeaea",
                     // display: false,
                     drawBorder: false,
+                    lineWidth: 2,
                   },
                   ticks: {
                     display: false,

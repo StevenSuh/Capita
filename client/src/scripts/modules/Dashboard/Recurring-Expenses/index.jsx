@@ -9,7 +9,7 @@ import Empty from "scripts/components/empty";
 import * as utils from "utils";
 
 import * as transactionActions from "scripts/modules/Transactions/actions";
-import { PROP_RECURRING_TRANSACTIONS } from "scripts/modules/Transactions/defs";
+import { PROP_TRANSACTIONS } from "scripts/modules/Transactions/defs";
 import { ROUTES } from "defs";
 
 import { ReactComponent as ArrowRightIcon } from "assets/icons/arrow-right.svg";
@@ -18,10 +18,12 @@ import styles from "./styles.module.css";
 const RecurringExpenses = ({
   history,
   recurringExpenses,
-  onGetRecurringTransactions,
+  onGetTransactions,
 }) => {
+  const initFn = () => onGetTransactions(false, { recurring: true });
+
   return (
-    <IsLoading className={styles.isLoading} init={onGetRecurringTransactions}>
+    <IsLoading className={styles.isLoading} init={initFn}>
       <div className={classNames(styles.main, "container")}>
         <div className={styles.titles}>
           <h4 className={styles.title}>Recurring expenses</h4>
@@ -77,7 +79,7 @@ const RecurringExpenses = ({
 
 export const mapStateToProps = ({ transactions }) => ({
   recurringExpenses: transactions
-    .get(PROP_RECURRING_TRANSACTIONS)
+    .get(PROP_TRANSACTIONS)
     .toJS()
     .slice(0, 10),
 });
@@ -85,6 +87,6 @@ export const mapStateToProps = ({ transactions }) => ({
 export default connect(
   mapStateToProps,
   {
-    onGetRecurringTransactions: transactionActions.getRecurringTransactions,
+    onGetTransactions: transactionActions.getTransactions,
   },
 )(withRouter(RecurringExpenses));

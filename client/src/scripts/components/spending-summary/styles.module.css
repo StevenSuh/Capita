@@ -1,0 +1,27 @@
+.summary {
+  margin-top: 20px;
+}
+
+.summary_item {
+  font-weight: 700;
+}
+
+.summary_title {
+  font-size: var(--font-medium);
+  font-weight: 400;
+}
+
+.summary_hr {
+  border-top: 0.5px solid var(--light-gray-color);
+  height: 0px;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.negative {
+  color: var(--red-color);
+}
+
+.positive {
+  color: var(--green-color);
+}

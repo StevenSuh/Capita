@@ -10,6 +10,9 @@ export const ROUTES = {
   TRANSFER: "/app/transfer",
   TRANSACTIONS: "/app/transactions",
   TRANSACTION_ITEM: "/app/transactions/:transaction_id",
+  NEW_TRANSACTION: "/app/transactions/new",
+  EDIT_TRANSACTION: "/app/transactions/edit",
+  BUDGET: "/app/budget",
   SPENDING: "/app/spending",
   APP_NOTIFICATIONS: "/app/notifications",
   USER_INFORMATION: "/app/information",
@@ -30,6 +33,9 @@ export const API_ROUTES = {
 
 export const MODAL_NAMES = {
   OPTIONS: "options",
+  SPENDING_OPTIONS: "spending-options",
+  TRANSACTIONS_OPTIONS: "transactions-options",
+  TRANSACTIONS_FILTER: "transactions-filter",
   CONFIRM_CAPITA_ACCOUNT_DELETE: "confirm-capita-account-delete",
   CONFIRM_LINK_DELETE: "confirm-link-delete",
 };

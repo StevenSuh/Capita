@@ -1,0 +1,137 @@
+/* Default */
+.reveal-appear,
+.reveal-enter {
+  opacity: 0;
+}
+
+.reveal-appear-active,
+.reveal-enter-active,
+.reveal-enter-done {
+  transition: opacity var(--transition-duration) var(--transition-curve);
+  opacity: 1;
+}
+
+.reveal-exit {
+  transition: none;
+  opacity: 1;
+}
+
+.reveal-exit-active,
+.reveal-exit-done {
+  opacity: 0;
+}
+
+/* Slideshow */
+.slide-enter {
+  transform: translateX(100%);
+}
+
+.slide-enter-active,
+.slide-enter-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve);
+  transform: translateX(0);
+}
+
+.slide-exit {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateX(-50%);
+}
+
+.slide-exit-active,
+.slide-exit-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve),
+    left var(--transition-long-duration) var(--transition-curve);
+  left: 0;
+  transform: translateX(-100%);
+}
+
+/* Slideshow reversed */
+.transition-group.right > .slide-enter {
+  transform: translateX(-100%);
+}
+
+.transition-group.right > .slide-enter-active,
+.transition-group.right > .slide-enter-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve);
+  transform: translateX(0);
+}
+
+.transition-group.right > .slide-exit {
+  position: absolute;
+  left: unset;
+  right: 50%;
+  top: 0;
+  transform: translateX(50%);
+}
+
+.transition-group.right > .slide-exit-active,
+.transition-group.right > .slide-exit-done {
+  transition: transform var(--transition-long-duration) var(--transition-curve),
+    right var(--transition-long-duration) var(--transition-curve);
+  right: 0;
+  transform: translateX(100%);
+}
+
+/* Snackbar */
+.snackbar-appear,
+.snackbar-enter {
+  transform: translateY(-100%);
+}
+
+.snackbar-appear-active,
+.snackbar-enter-active,
+.snackbar-enter-done {
+  transition: transform var(--transition-short-duration) var(--transition-curve);
+  transform: translateY(0);
+}
+
+.snackbar-exit {
+  opacity: 1;
+}
+
+.snackbar-exit-active,
+.snackbar-exit-done {
+  transition: opacity var(--transition-duration) var(--transition-curve);
+  opacity: 0;
+}
+
+/* Ticker */
+/* .ticker {
+  overflow: hidden;
+}
+
+.ticker-appear,
+.ticker-appear-active {
+  opacity: 1;
+  transition: none;
+}
+
+.ticker-enter {
+  opacity: 0;
+  max-width: 0px;
+}
+
+.ticker-enter-active,
+.ticker-enter-done {
+  transition: opacity var(--transition-short-duration) var(--transition-curve),
+    max-width var(--transition-short-duration) var(--transition-curve);
+  opacity: 1;
+  max-width: var(--ticker-width);
+}
+
+.ticker-exit {
+  opacity: 1;
+  max-width: var(--ticker-width);
+}
+
+.ticker-exit-active,
+.ticker-exit-done {
+  transition: opacity var(--transition-short-duration) var(--transition-curve),
+    max-width var(--transition-short-duration) var(--transition-curve);
+  opacity: 0;
+  max-width: 0px;
+} */
