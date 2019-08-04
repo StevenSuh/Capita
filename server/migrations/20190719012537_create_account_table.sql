@@ -4,6 +4,7 @@ SELECT 'up SQL query';
 CREATE TABLE IF NOT EXISTS accounts (
   id serial PRIMARY KEY,
   user_id integer REFERENCES users ON DELETE CASCADE NOT NULL,
+  profile_id integer REFERENCES profiles ON DELETE SET NULL,
   institution_link_id integer REFERENCES institution_links ON DELETE CASCADE NOT NULL,
   plaid_account_id varchar(255) NOT NULL,
   active boolean NOT NULL DEFAULT true,
@@ -33,13 +34,6 @@ CREATE TABLE IF NOT EXISTS accounts (
   updated_at timestamp NOT NULL DEFAULT NOW()
 );
 
-CREATE TABLE IF NOT EXISTS profile_account_relations (
-  id serial PRIMARY KEY,
-  profile_id integer REFERENCES profiles ON DELETE CASCADE NOT NULL,
-  account_id integer REFERENCES accounts ON DELETE CASCADE NOT NULL,
-  created_at timestamp NOT NULL DEFAULT NOW()
-);
-
 CREATE TRIGGER update_time_accounts
   BEFORE UPDATE
   ON accounts
@@ -50,7 +44,6 @@ CREATE TRIGGER update_time_accounts
 -- +goose Down
 -- +goose StatementBegin
 SELECT 'down SQL query';
-DROP TABLE IF EXISTS profile_account_relations;
 DROP TABLE IF EXISTS accounts;
 DROP TRIGGER IF EXISTS update_time_accounts ON accounts;
 -- +goose StatementEnd

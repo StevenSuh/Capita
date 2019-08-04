@@ -1,6 +1,8 @@
 import React from "react";
 import classNames from "classnames";
 
+import { ReactComponent as EyeIcon } from "assets/icons/eye.svg";
+import { ReactComponent as EyeOffIcon } from "assets/icons/eye-off.svg";
 import styles from "./styles.module.css";
 
 class Input extends React.Component {
@@ -10,6 +12,7 @@ class Input extends React.Component {
     this.state = {
       focused: false,
       value: "",
+      ignorePassword: false,
     };
   }
 
@@ -29,8 +32,15 @@ class Input extends React.Component {
     this.setState({ focused: false });
   };
 
+  onToggleIgnorePassword = () => {
+    this.setState({ ignorePassword: !this.state.ignorePassword });
+  };
+
   render() {
     const { className = "", error = "", name, type = "text" } = this.props;
+    const { focused, ignorePassword, value } = this.state;
+
+    const isPassword = type === "password";
 
     return (
       <div
@@ -43,26 +53,40 @@ class Input extends React.Component {
         <div
           className={classNames({
             [styles.main]: true,
-            [styles.active]: this.state.focused || this.state.value.length > 0,
-            [styles.error]: this.props.error,
+            [styles.active]: focused || value.length > 0,
+            [styles.error]: error,
           })}
         >
           <input
-            className={styles.input}
+            className={classNames({
+              [styles.input]: true,
+              [styles.password]: isPassword,
+            })}
             onChange={this.onInputChange}
             onFocus={this.onInputFocus}
             onBlur={this.onInputBlur}
             name={name}
-            value={this.state.value}
-            type={type}
+            value={value}
+            type={isPassword ? (ignorePassword ? "text" : type) : type}
           />
+          {isPassword &&
+            (ignorePassword ? (
+              <EyeOffIcon
+                className={classNames(styles.pw_icon, "click")}
+                onClick={this.onToggleIgnorePassword}
+              />
+            ) : (
+              <EyeIcon
+                className={classNames(styles.pw_icon, "click")}
+                onClick={this.onToggleIgnorePassword}
+              />
+            ))}
           {name && (
             <span
               className={classNames({
                 [styles.label]: true,
-                [styles.active]:
-                  this.state.focused || this.state.value.length > 0,
-                [styles.error]: this.props.error,
+                [styles.active]: focused || value.length > 0,
+                [styles.error]: error,
               })}
             >
               {name}

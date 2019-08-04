@@ -49,9 +49,7 @@ const App = ({ history, loggedIn }) => {
 
 const slideshowItems = [
   <div>
-    <h6 className={styles.slideshow_item_title}>
-      Minimalistic financial tracker
-    </h6>
+    <h6 className={styles.slideshow_item_title}>Modern money tracker</h6>
     <p className={styles.slideshow_item_content}>
       Focus on where your money is going
     </p>

@@ -12,6 +12,7 @@ type User struct {
 	Name                        string         `db:"name" json:"name"`
 	Email                       string         `db:"email" json:"email"`
 	Password                    string         `db:"password" json:"-"`
+	Pin                         sql.NullString `db:"pin" json:"pin"`
 	Session                     sql.NullString `db:"session" json:"-"`
 	SessionExpiration           pq.NullTime    `db:"session_expiration" json:"-"`
 	NotificationEnabled         bool           `db:"notification_enabled" json:"notificationEnabled"`
@@ -31,15 +32,6 @@ type Profile struct {
 	UpdatedAt time.Time `db:"updated_at" json:"updatedAt"`
 }
 
-type NotificationAlert struct {
-	ID        int64     `db:"id" json:"id"`
-	UserID    int64     `db:"user_id" json:"userId"`
-	ProfileID int64     `db:"profile_id" json:"profileId"`
-	Content   string    `db:"content" json:"content"`
-	Type      string    `db:"string" json:"string"`
-	CreatedAt time.Time `db:"created_at" json:"createdAt"`
-}
-
 type InstitutionLink struct {
 	ID                 int64          `db:"id" json:"id"`
 	UserID             int64          `db:"user_id" json:"userId"`
@@ -57,6 +49,7 @@ type InstitutionLink struct {
 type Account struct {
 	ID                            int64           `db:"id" json:"id"`
 	UserID                        int64           `db:"user_id" json:"userId"`
+	ProfileID                     int64           `db:"profile_id" json:"profileId"`
 	InstitutionLinkID             int64           `db:"institution_link_id" json:"institutionLinkId"`
 	PlaidAccountID                string          `db:"plaid_account_id" json:"plaidAccountId"`
 	Active                        bool            `db:"active" json:"active"`
@@ -86,38 +79,20 @@ type Account struct {
 	UpdatedAt                     time.Time       `db:"updated_at" json:"updatedAt"`
 }
 
-type ProfileAccountRelation struct {
-	ID        int64     `db:"id" json:"id"`
-	ProfileID int64     `db:"profile_id" json:"profileId"`
-	AccountID int64     `db:"account_id" json:"accountId"`
-	CreatedAt time.Time `db:"created_at" json:"createdAt"`
-}
-
-type BaseTransactionCategory struct {
-	ID        int64     `db:"id" json:"id"`
-	Name      string    `db:"name" json:"name"`
-	CreatedAt time.Time `db:"created_at" json:"createdAt"`
-}
-
-type TransactionCategory struct {
+type Category struct {
 	ID        int64     `db:"id" json:"id"`
 	UserID    int64     `db:"user_id" json:"userId"`
 	Name      string    `db:"name" json:"name"`
+	PlaidName string    `db:"plaid_name" json:"plaidName"`
 	CreatedAt time.Time `db:"created_at" json:"createdAt"`
 	UpdatedAt time.Time `db:"updated_at" json:"updatedAt"`
-}
-
-type BaseTransactionCategoryRelation struct {
-	ID                        int64     `db:"id" json:"id"`
-	BaseTransactionCategoryID int64     `db:"base_transaction_category_id" json:"baseTransactionCategoryId"`
-	TransactionCategoryID     int64     `db:"transaction_category_id" json:"transactionCategoryId"`
-	CreatedAt                 time.Time `db:"created_at" json:"createdAt"`
 }
 
 type Transaction struct {
 	ID                     int64          `db:"id" json:"id"`
 	UserID                 int64          `db:"user_id" json:"userId"`
 	AccountID              int64          `db:"account_id" json:"accountId"`
+	CategoryID             int64          `db:"category_id" json:"categoryId"`
 	PlaidTransactionID     string         `db:"plaid_transaction_id" json:"plaidTransactionId"`
 	TransactionType        string         `db:"transaction_type" json:"transactionType"`
 	Name                   string         `db:"name" json:"name"`
@@ -125,18 +100,22 @@ type Transaction struct {
 	IsoCurrencyCode        sql.NullString `db:"iso_currency_code" json:"IsoCurrencyCode"`
 	UnofficialCurrencyCode sql.NullString `db:"unofficial_currency_code" json:"unofficialCurrencyCode"`
 	Date                   string         `db:"date" json:"date"`
+	Note                   sql.NullString `db:"note" json:"note"`
 	Pending                bool           `db:"pending" json:"pending"`
 	Recurring              bool           `db:"recurring" json:"recurring"`
 	ManuallyCreated        bool           `db:"manually_created" json:"manuallyCreated"`
+	Hidden                 bool           `db:"hidden" json:"hidden"`
 	CreatedAt              time.Time      `db:"created_at" json:"createdAt"`
 	UpdatedAt              time.Time      `db:"updated_at" json:"updatedAt"`
 }
 
-type TransactionCategoryRelation struct {
-	ID                    int64     `db:"id" json:"id"`
-	TransactionID         int64     `db:"transaction_id" json:"transactionId"`
-	TransactionCategoryID int64     `db:"transaction_category_id" json:"transaction_category_id"`
-	CreatedAt             time.Time `db:"created_at" json:"createdAt"`
+type NotificationAlert struct {
+	ID        int64     `db:"id" json:"id"`
+	UserID    int64     `db:"user_id" json:"userId"`
+	ProfileID int64     `db:"profile_id" json:"profileId"`
+	Content   string    `db:"content" json:"content"`
+	Type      string    `db:"string" json:"string"`
+	CreatedAt time.Time `db:"created_at" json:"createdAt"`
 }
 
 type TransferLog struct {
@@ -144,6 +123,21 @@ type TransferLog struct {
 	FromAccountID int64     `db:"from_account_id" json:"fromAccountId"`
 	ToAccountID   int64     `db:"to_account_id" json:"toAccountId"`
 	Amount        float64   `db:"amount" json:"amount"`
+	CreatedAt     time.Time `db:"created_at" json:"createdAt"`
+}
+
+type Tag struct {
+	ID        int64     `db:"id" json:"id"`
+	UserID    int64     `db:"user_id" json:"userId"`
+	ProfileID int64     `db:"profile_id" json:"profileId"`
+	Name      string    `db:"name" json:"name"`
+	CreatedAt time.Time `db:"created_at" json:"createdAt"`
+}
+
+type TransactionTagRelation struct {
+	ID            int64     `db:"id" json:"id"`
+	TransactionID int64     `db:"transaction_id" json:"transactionId"`
+	TagID         int64     `db:"tag_id" json:"tagId"`
 	CreatedAt     time.Time `db:"created_at" json:"createdAt"`
 }
 

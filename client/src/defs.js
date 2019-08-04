@@ -69,3 +69,20 @@ export const CURRENCY_CODES = {
   USD: "$",
   EUR: "€",
 };
+
+export const CATEGORIES = [
+  "Bank Fees",
+  "Cash Advance",
+  "Community",
+  "Food and Drink",
+  "Healthcare",
+  "Interest",
+  "Payment",
+  "Recreation",
+  "Service",
+  "Shops",
+  "Tax",
+  "Transfer",
+  "Travel",
+  "Other",
+];

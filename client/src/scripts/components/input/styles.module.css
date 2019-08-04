@@ -4,21 +4,39 @@
 
 .main {
   border: 1px solid var(--gray-color);
-  transition: border-color var(--transition-short-duration) var(--transition-curve);
+  transition: border-color var(--transition-short-duration)
+    var(--transition-curve);
+}
+
+.main > .pw_icon > * {
+  stroke: var(--gray-color);
+  transition: stroke var(--transition-short-duration) var(--transition-curve);
 }
 
 .main.active {
   border-color: var(--black-color);
 }
 
+.main.active > .pw_icon > * {
+  stroke: var(--black-color);
+}
+
 .main.error {
   border-color: var(--red-color);
+}
+
+.main.error > .pw_icon > * {
+  stroke: var(--red-color);
 }
 
 .input {
   padding: 12px 15px;
   width: 100%;
   height: 100%;
+}
+
+.input.password {
+  width: calc(100% - var(--icon-size) - 20px);
 }
 
 .label {
@@ -54,4 +72,9 @@
 
 .hidden {
   display: none;
+}
+
+.pw_icon {
+  margin: 0 10px;
+  vertical-align: middle;
 }

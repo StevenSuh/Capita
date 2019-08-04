@@ -43,6 +43,8 @@
   border-radius: 3px;
   padding: 10px 15px;
   width: 120px;
+  min-width: 120px;
+  max-width: 120px;
   height: 85px;
   margin-right: 10px;
   transition: box-shadow var(--transition-duration) var(--transition-curve);
