@@ -1,5 +1,5 @@
 import {
-  createInstitutionLink,
+  createInstitutionLink as createInstitutionLinkApi,
   deleteInstitutionLink as deleteInstitutionLinkApi,
   getConnectedAccounts as getConnectedAccountsApi,
 } from "scripts/services/api";
@@ -11,14 +11,14 @@ export const setAccounts = accounts => ({
   value: accounts,
 });
 
-export const addAccount = account => ({
-  type: defs.actionTypes.onAddAccount,
-  value: account,
+export const addAccounts = accounts => ({
+  type: defs.actionTypes.onAddAccounts,
+  value: accounts,
 });
 
-export const deleteAccount = accountId => ({
-  type: defs.actionTypes.onDeleteAccount,
-  value: accountId,
+export const deleteAccounts = accountIds => ({
+  type: defs.actionTypes.onDeleteAccounts,
+  value: accountIds,
 });
 
 export const setIsEditing = isEditing => ({
@@ -34,6 +34,11 @@ export const setIsDeletingLink = isDeletingLink => ({
 export const selectAccount = selectedAccount => ({
   type: defs.actionTypes.onSelectAccount,
   value: selectedAccount,
+});
+
+export const setIsRetrieving = isRetrieving => ({
+  type: defs.actionTypes.onSetIsRetrieving,
+  value: isRetrieving,
 });
 
 export const getConnectedAccounts = (force = false) => async (
@@ -54,19 +59,32 @@ export const getConnectedAccounts = (force = false) => async (
     return;
   }
 
+  const isRetrieving = accounts.find(x => !x.ready);
+
   dispatch(setAccounts(accounts));
+  dispatch(setIsRetrieving(Boolean(isRetrieving)));
 };
 
-export const exchangePublicToken = (
+export const createInstitutionLink = (
   publicToken = "",
-  { accounts, institution, link_session_id: linkSessionId } = {},
+  {
+    institution: { institution_id: institutionId },
+    link_session_id: linkSessionId,
+  },
 ) => async dispatch => {
-  await createInstitutionLink(dispatch)(
+  const { error, accounts } = await createInstitutionLinkApi(dispatch)(
     publicToken,
-    accounts,
-    institution,
+    institutionId,
     linkSessionId,
   );
+  if (error) {
+    return;
+  }
+
+  const isRetrieving = accounts.find(x => !x.ready);
+
+  dispatch(addAccounts(accounts));
+  dispatch(setIsRetrieving(Boolean(isRetrieving)));
 };
 
 export const deleteInstitutionLink = () => async (dispatch, getState) => {

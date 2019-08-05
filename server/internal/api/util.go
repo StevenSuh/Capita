@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"net/http"
 	"time"
 
@@ -35,13 +36,15 @@ func CheckAuth(next http.Handler) http.Handler {
 		response["error"] = true
 		response["msg"] = "You need to login to access the page"
 
-		_, err := CheckCookie(w, r)
+		user, err := CheckCookie(w, r)
 		if err != nil {
 			render.Status(r, http.StatusUnauthorized)
 			render.JSON(w, r, response)
 			return
 		}
-		next.ServeHTTP(w, r)
+
+		ctx := context.WithValue(r.Context(), UserCtx, user)
+		next.ServeHTTP(w, r.WithContext(ctx))
 	})
 }
 

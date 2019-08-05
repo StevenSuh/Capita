@@ -119,20 +119,13 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var userID int64
-	err = db.Client.QueryRow(SQLInsertByNameEmailPassword, name, email, password).Scan(&userID)
+	err = db.Client.QueryRow(SQLInsert, name, email, password).Scan(&user)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
 		return
 	}
 
-	err = db.Client.Get(&user, SQLSelectByID, userID)
-	if err != nil {
-		render.Status(r, http.StatusBadRequest)
-		return
-	}
-
-	api.SetCookie(userID, w, r)
+	api.SetCookie(user.ID, w, r)
 	response["error"] = false
 	response["msg"] = "Registration success"
 	response["user"] = user

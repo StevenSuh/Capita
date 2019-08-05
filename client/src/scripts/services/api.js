@@ -27,13 +27,15 @@ export const catchApiError = dispatch => error => {
 };
 
 export const checkLogin = dispatch => async () => {
-  const res = await axios.get(API_ROUTES.LOGIN).catch(catchApiError(dispatch));
+  const res = await axios
+    .get(API_ROUTES.USER.LOGIN)
+    .catch(catchApiError(dispatch));
   return res.data;
 };
 
 export const submitLogin = dispatch => async (email, password) => {
   const res = await axios
-    .post(API_ROUTES.LOGIN, {
+    .post(API_ROUTES.USER.LOGIN, {
       email,
       password,
     })
@@ -43,7 +45,7 @@ export const submitLogin = dispatch => async (email, password) => {
 
 export const submitRegister = dispatch => async (name, email, password) => {
   const res = await axios
-    .post(API_ROUTES.REGISTER, {
+    .post(API_ROUTES.USER.REGISTER, {
       name,
       email,
       password,
@@ -54,7 +56,7 @@ export const submitRegister = dispatch => async (name, email, password) => {
 
 export const getConnectedAccounts = dispatch => async userId => {
   const res = await axios
-    .get(API_ROUTES.CONNECTED_ACCOUNTS.replace(":userId", userId))
+    .get(API_ROUTES.USER.CONNECTED_ACCOUNTS.replace(":userId", userId))
     .catch(catchApiError(dispatch));
   return res.data;
 };
@@ -66,7 +68,7 @@ export const createInstitutionLink = dispatch => async (
   linkSessionId,
 ) => {
   const res = await axios
-    .post(API_ROUTES.PLAID.CREATE_INSTITUTION_LINK, {
+    .post(API_ROUTES.LINK.CREATE, {
       publicToken,
       accounts,
       institution,
@@ -78,7 +80,7 @@ export const createInstitutionLink = dispatch => async (
 
 export const deleteInstitutionLink = dispatch => async institutionLinkId => {
   const res = await axios
-    .post(API_ROUTES.PLAID.DELETE_INSTITUTION_LINK, { institutionLinkId })
+    .post(API_ROUTES.LINK.DELETE, { institutionLinkId })
     .catch(catchApiError(dispatch));
   return res.data;
 };
@@ -89,7 +91,7 @@ export const getTransactions = dispatch => async (
 ) => {
   const search = queryString.stringify({ ...params, limit, offset });
   const res = await axios
-    .get(API_ROUTES.TRANSACTIONS.replace(":userId", userId) + "?" + search)
+    .get(API_ROUTES.USER.TRANSACTIONS.replace(":userId", userId) + "?" + search)
     .catch(catchApiError(dispatch));
   return res.data;
 };

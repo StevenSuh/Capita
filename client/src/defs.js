@@ -20,13 +20,17 @@ export const ROUTES = {
 };
 
 export const API_ROUTES = {
-  LOGIN: "/api/user/login",
-  REGISTER: "/api/user/register",
-  CONNECTED_ACCOUNTS: "/api/user/:userId/accounts",
-  TRANSACTIONS: "/api/user/:userId/transactions",
+  USER: {
+    LOGIN: "/api/user/login",
+    REGISTER: "/api/user/register",
+    CONNECTED_ACCOUNTS: "/api/user/:userId/accounts",
+    TRANSACTIONS: "/api/user/:userId/transactions",
+  },
+  LINK: {
+    CREATE: "/api/link/create",
+    DELETE: "/api/link/delete",
+  },
   PLAID: {
-    CREATE_INSTITUTION_LINK: "/api/plaid/create_institution_link",
-    DELETE_INSTITUTION_LINK: "/api/plaid/delete_institution_link",
     WEBHOOK: "/api/plaid/webhook",
   },
 };

@@ -9,7 +9,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 
-	"./internal/api/plaid"
+	"./internal/api/link"
 	"./internal/api/user"
 	"./internal/db"
 )
@@ -35,7 +35,7 @@ func Routes() *chi.Mux {
 
 	router.Route("/api", func(r chi.Router) {
 		r.Mount("/user", user.Routes())
-		r.Mount("/plaid", plaid.Routes())
+		r.Mount("/link", link.Routes())
 	})
 
 	return router

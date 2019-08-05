@@ -2,12 +2,14 @@ export const PROP_ACCOUNTS = "accounts";
 export const PROP_IS_EDITING = "is-editing";
 export const PROP_IS_DELETING_LINK = "is-deleting-link";
 export const PROP_SELECTED_ACCOUNT = "selected-account";
+export const PROP_IS_RETRIEVING = "is-retrieving";
 
 export const actionTypes = {
   onSetAccounts: "accounts/set-accounts",
-  onAddAccount: "accounts/add-account",
-  onDeleteAccount: "accounts/delete-account",
+  onAddAccounts: "accounts/add-accounts",
+  onDeleteAccounts: "accounts/delete-accounts",
   onSetIsEditing: "accounts/set-is-editing",
   onSetIsDeletingLink: "accounts/set-is-deleting-link",
   onSelectAccount: "accounts/select-account",
+  onSetIsRetrieving: "accounts/is-retrieving",
 };

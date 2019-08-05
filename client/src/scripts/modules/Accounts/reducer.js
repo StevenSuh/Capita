@@ -139,22 +139,21 @@ export default (state = initialState, action) => {
     case defs.actionTypes.onSetAccounts: {
       return state.set(defs.PROP_ACCOUNTS, Immutable.fromJS(action.value));
     }
-    case defs.actionTypes.onAddAccount: {
+    case defs.actionTypes.onAddAccounts: {
       const accounts = state.get(defs.PROP_ACCOUNTS);
 
       return state.set(
         defs.PROP_ACCOUNTS,
-        accounts.push(Immutable.fromJS(action.value)),
+        accounts.concat(Immutable.fromJS(action.value)),
       );
     }
-    case defs.actionTypes.onDeleteAccount: {
+    case defs.actionTypes.onDeleteAccounts: {
       const accounts = state.get(defs.PROP_ACCOUNTS);
-      const index = accounts.findIndex(item => item.get("id") === action.value);
 
-      if (index === -1) {
-        return state;
-      }
-      return state.set(defs.PROP_ACCOUNTS, accounts.delete(index));
+      return state.set(
+        defs.PROP_ACCOUNTS,
+        accounts.filter(item => !action.value.includes(item.get("id"))),
+      );
     }
     case defs.actionTypes.onSetIsEditing: {
       // reset selected account as well
@@ -164,6 +163,9 @@ export default (state = initialState, action) => {
     }
     case defs.actionTypes.onSetIsDeletingLink: {
       return state.set(defs.PROP_IS_DELETING_LINK, action.value);
+    }
+    case defs.actionTypes.onSetIsRetrieving: {
+      return state.set(defs.PROP_IS_RETRIEVING, action.value);
     }
     case defs.actionTypes.onSelectAccount: {
       return state.set(
