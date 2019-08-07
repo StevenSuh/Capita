@@ -42,6 +42,8 @@ type InstitutionLink struct {
 	InstitutionName    string         `db:"institution_name" json:"institutionName"`
 	InstitutionURL     sql.NullString `db:"institution_url" json:"institutionUrl"`
 	InstitutionLogo    sql.NullString `db:"institution_logo" json:"institutionLogo"`
+	Ready              bool           `db:"ready" json:"ready"`
+	Update             bool           `db:"update" json:"update"`
 	CreatedAt          time.Time      `db:"created_at" json:"createdAt"`
 	UpdatedAt          time.Time      `db:"updated_at" json:"updatedAt"`
 }
@@ -52,7 +54,6 @@ type Account struct {
 	ProfileID                     sql.NullInt64   `db:"profile_id" json:"profileId"`
 	InstitutionLinkID             int64           `db:"institution_link_id" json:"institutionLinkId"`
 	PlaidAccountID                string          `db:"plaid_account_id" json:"plaidAccountId"`
-	Ready                         bool            `db:"ready" json:"ready"`
 	Mask                          string          `db:"mask" json:"mask"`
 	Name                          string          `db:"name" json:"name"`
 	OfficialName                  sql.NullString  `db:"official_name" json:"officalName"`
@@ -64,7 +65,7 @@ type Account struct {
 	BalanceLimit                  sql.NullFloat64 `db:"balance_limit" json:"balanceLimit"`
 	BalanceIsoCurrencyCode        sql.NullString  `db:"balance_iso_currency_code" json:"balanceIsoCurrencyCode"`
 	BalanceUnofficialCurrencyCode sql.NullString  `db:"balance_unofficial_currency_code" json:"balanceUnofficialCurrencyCode"`
-	APY                           sql.NullFloat64 `db:"apy" json:"apy"`
+	Apy                           sql.NullFloat64 `db:"apy" json:"apy"`
 	WithdrawalLimit               sql.NullInt64   `db:"withdrawal_limit" json:"withdrawalLimit"`
 	MinimumBalance                sql.NullFloat64 `db:"minimum_balance" json:"minimumBalance"`
 	NotificationEnabled           bool            `db:"notification_enabled" json:"notificationEnabled"`
@@ -93,10 +94,10 @@ type Transaction struct {
 	ID                     int64          `db:"id" json:"id"`
 	UserID                 int64          `db:"user_id" json:"userId"`
 	AccountID              int64          `db:"account_id" json:"accountId"`
-	CategoryID             int64          `db:"category_id" json:"categoryId"`
 	PlaidTransactionID     string         `db:"plaid_transaction_id" json:"plaidTransactionId"`
-	TransactionType        string         `db:"transaction_type" json:"transactionType"`
 	Name                   string         `db:"name" json:"name"`
+	Category               string         `db:"category" json:"category"`
+	Type                   string         `db:"type" json:"type"`
 	Amount                 float64        `db:"amount" json:"amount"`
 	IsoCurrencyCode        sql.NullString `db:"iso_currency_code" json:"IsoCurrencyCode"`
 	UnofficialCurrencyCode sql.NullString `db:"unofficial_currency_code" json:"unofficialCurrencyCode"`

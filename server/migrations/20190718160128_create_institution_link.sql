@@ -11,6 +11,8 @@ CREATE TABLE IF NOT EXISTS institution_links (
   institution_name varchar(255) NOT NULL,
   institution_url varchar(255),
   institution_logo varchar(255),
+  ready boolean NOT NULL DEFAULT false,
+  update boolean,
   created_at timestamp NOT NULL DEFAULT NOW(),
   updated_at timestamp NOT NULL DEFAULT NOW()
 );

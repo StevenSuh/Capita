@@ -36,9 +36,14 @@ export const selectAccount = selectedAccount => ({
   value: selectedAccount,
 });
 
-export const setIsRetrieving = isRetrieving => ({
-  type: defs.actionTypes.onSetIsRetrieving,
-  value: isRetrieving,
+export const setIsReady = isReady => ({
+  type: defs.actionTypes.onSetIsReady,
+  value: isReady,
+});
+
+export const setNeedsUpdate = needsUpdate => ({
+  type: defs.actionTypes.onSetNeedsUpdate,
+  value: needsUpdate,
 });
 
 export const getConnectedAccounts = (force = false) => async (
@@ -54,15 +59,16 @@ export const getConnectedAccounts = (force = false) => async (
   }
 
   const userId = appReducer.getIn([PROP_USER, "id"]);
-  const { error, accounts } = await getConnectedAccountsApi(dispatch)(userId);
+  const { error, accounts, ready, update } = await getConnectedAccountsApi(
+    dispatch,
+  )(userId);
   if (error) {
     return;
   }
 
-  const isRetrieving = accounts.find(x => !x.ready);
-
   dispatch(setAccounts(accounts));
-  dispatch(setIsRetrieving(Boolean(isRetrieving)));
+  dispatch(setIsReady(ready));
+  dispatch(setNeedsUpdate(update));
 };
 
 export const createInstitutionLink = (
@@ -72,7 +78,7 @@ export const createInstitutionLink = (
     link_session_id: linkSessionId,
   },
 ) => async dispatch => {
-  const { error, accounts } = await createInstitutionLinkApi(dispatch)(
+  const { error, accounts, ready } = await createInstitutionLinkApi(dispatch)(
     publicToken,
     institutionId,
     linkSessionId,
@@ -81,10 +87,8 @@ export const createInstitutionLink = (
     return;
   }
 
-  const isRetrieving = accounts.find(x => !x.ready);
-
   dispatch(addAccounts(accounts));
-  dispatch(setIsRetrieving(Boolean(isRetrieving)));
+  dispatch(setIsReady(ready));
 };
 
 export const deleteInstitutionLink = () => async (dispatch, getState) => {

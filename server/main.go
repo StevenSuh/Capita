@@ -9,8 +9,10 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 
+	"./internal/api/account"
 	"./internal/api/link"
 	"./internal/api/user"
+	"./internal/api/webhook"
 	"./internal/db"
 )
 
@@ -34,8 +36,10 @@ func Routes() *chi.Mux {
 	)
 
 	router.Route("/api", func(r chi.Router) {
-		r.Mount("/user", user.Routes())
+		r.Mount("/account", account.Routes())
 		r.Mount("/link", link.Routes())
+		r.Mount("/user", user.Routes())
+		r.Mount("/webhook", webhook.Routes())
 	})
 
 	return router

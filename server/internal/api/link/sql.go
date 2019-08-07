@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	SQLInsert = `
+	SQLSelectByID = `SELECT * FROM institution_links WHERE id = $1;`
+	SQLInsert     = `
 		INSERT INTO institution_links
 		(
       user_id,
@@ -23,7 +24,19 @@ const (
     )
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 		RETURNING *;
-	`
+  `
+	SQLUpdateReady = `
+    UPDATE institution_links
+    SET ready = true
+    WHERE id = $1;
+  `
+	SQLGetStatus = `
+    SELECT COUNT(id) FROM institution_links
+    WHERE
+      user_id = $1 AND
+      ready = false;
+  `
+	SQLDeleteByID = `DELETE FROM institution_links WHERE id = $1;`
 )
 
 type InsertArgs struct {

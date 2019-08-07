@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS accounts (
   profile_id integer REFERENCES profiles ON DELETE SET NULL,
   institution_link_id integer REFERENCES institution_links ON DELETE CASCADE NOT NULL,
   plaid_account_id varchar(255) NOT NULL,
-  ready boolean NOT NULL DEFAULT false,
   mask varchar(255) NOT NULL,
   name varchar(255) NOT NULL,
   official_name varchar(255),
