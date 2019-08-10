@@ -5,7 +5,7 @@ import classNames from "classnames";
 
 import * as actions from "./actions";
 
-// import { ReactComponent as CloseIcon } from 'assets/icons/x.svg';
+import { ReactComponent as CloseIcon } from "assets/icons/x.svg";
 import { PROP_SNACKBARS } from "./defs";
 import styles from "./styles.module.css";
 
@@ -20,10 +20,10 @@ const Snackbar = props => (
       >
         <div className={classNames(styles.item, styles[type])}>
           <div className={styles.message}>{message}</div>
-          {/* <CloseIcon
-            className={classNames(styles.icon, 'click')}
+          <CloseIcon
+            className={classNames(styles.icon, "click")}
             onClick={() => props.onRemoveSnackbar(id)}
-          /> */}
+          />
         </div>
       </CSSTransition>
     ))}

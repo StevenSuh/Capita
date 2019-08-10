@@ -46,8 +46,8 @@ export const formatLongDate = date => moment(date).format("MMMM D, YYYY");
 export const cleanupPlaidIframe = () => {
   const iframes = document.getElementsByTagName("iframe");
 
-  if (iframes.length > 1) {
-    for (let i = 0; i < iframes.length - 1; i++) {
+  if (iframes.length > 0) {
+    for (let i = 0; i < iframes.length; i++) {
       iframes[i].remove();
     }
   }

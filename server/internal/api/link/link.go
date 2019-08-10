@@ -1,65 +1,50 @@
 package link
 
 import (
-	"encoding/json"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
-	plaidLib "github.com/plaid/plaid-go/plaid"
 
 	api ".."
 	"../../db"
 	"../../plaid"
-	"../account"
+	"../sql"
 	"../transaction"
 )
-
-type CreateLinkInput struct {
-	PublicToken   string `json:"publicToken"`
-	InstitutionID string `json:"institutionId"`
-	LinkSessionID string `json:"linkSessionId"`
-}
-
-type RemoveLinkInput struct {
-	linkID string `json:"institutionLinkId"`
-}
 
 func Routes() *chi.Mux {
 	router := chi.NewRouter()
 
 	router.Use(api.CheckAuth)
 	router.Post("/create", CreateInstitutionLink)
-	router.Post("/remove", RemoveInstitutionLink)
+	router.Post("/delete", DeleteInstitutionLink)
 	router.Get("/poll", GetLinkStatusPoll)
 
 	return router
 }
 
 func CreateInstitutionLink(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value(api.UserCtx).(api.User)
+	input := r.Context().Value(api.BodyCtx).(map[string]interface{})
+	user := r.Context().Value(api.UserCtx).(db.User)
+
+	publicToken := input["publicToken"].(string)
+	institutionID := input["institutionID"].(string)
+	linkSessionID := input["linkSessionID"].(string)
+
 	response := make(map[string]interface{})
 	response["error"] = true
 	response["ready"] = false
 	defer render.JSON(w, r, response)
 
-	// turn body into json
-	var input CreateLinkInput
-	err := json.NewDecoder(r.Body).Decode(&input)
-	if err != nil {
-		render.Status(r, http.StatusBadRequest)
-		return
-	}
-
-	publicToken := input.PublicToken
 	res, err := plaid.Client.ExchangePublicToken(publicToken)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		return
 	}
 
-	institutionRes, err := plaid.Client.GetInstitutionByID(input.InstitutionID)
+	institutionRes, err := plaid.Client.GetInstitutionByID(institutionID)
 	if err != nil {
 		render.Status(r, http.StatusInternalServerError)
 		return
@@ -67,13 +52,13 @@ func CreateInstitutionLink(w http.ResponseWriter, r *http.Request) {
 
 	// store institution link -- bank connection
 	institution := institutionRes.Institution
-	institutionLink := api.InstitutionLink{}
+	institutionLink := db.InstitutionLink{}
 	err = db.Client.QueryRow(
-		SQLInsert,
+		sql.LinkSQLInsert,
 		user.ID,
 		res.AccessToken,
 		res.ItemID,
-		input.LinkSessionID,
+		linkSessionID,
 		institution.ID,
 		institution.Name,
 		institution.URL,
@@ -91,16 +76,16 @@ func CreateInstitutionLink(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	insertArgs := &InsertArgs{
+	insertArgs := &sql.LinkInsertArgs{
 		User:        user,
 		Link:        institutionLink,
 		Institution: institution,
 		Accounts:    accountsRes.Accounts,
 	}
-	insertQuery, insertValues := SQLGenerateInsert(insertArgs)
+	insertQuery, insertValues := sql.LinkSQLGenerateInsert(insertArgs)
 
 	// store accounts
-	accounts := []api.Account{}
+	accounts := []db.Account{}
 	err = db.Client.QueryRow(insertQuery, insertValues...).Scan(&accounts)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
@@ -112,39 +97,32 @@ func CreateInstitutionLink(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetLinkStatusPoll(w http.ResponseWriter, r *http.Request) {
-	user := r.Context().Value(api.UserCtx).(api.User)
+	user := r.Context().Value(api.UserCtx).(db.User)
 	response := make(map[string]interface{})
-	response["error"] = true
-	response["ready"] = false
+	response["done"] = false
 	defer render.JSON(w, r, response)
 
 	var count int
-	err := db.Client.Get(&count, SQLGetStatus, user.ID)
-	if err == nil {
-		render.Status(r, http.StatusBadRequest)
-		return
-	}
-
-	response["error"] = false
-	response["ready"] = true
-}
-
-func RemoveInstitutionLink(w http.ResponseWriter, r *http.Request) {
-	response := make(map[string]interface{})
-	response["error"] = false
-	defer render.JSON(w, r, response)
-
-	// turn body into json
-	var input RemoveLinkInput
-	err := json.NewDecoder(r.Body).Decode(&input)
+	err := db.Client.Get(&count, sql.LinkSQLGetStatus, user.ID)
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
 		return
 	}
 
+	response["done"] = count == 0
+}
+
+func DeleteInstitutionLink(w http.ResponseWriter, r *http.Request) {
+	input := r.Context().Value(api.BodyCtx).(map[string]interface{})
+	institutionLinkId := input["institutionLinkId"].(string)
+
+	response := make(map[string]interface{})
+	response["error"] = false
+	defer render.JSON(w, r, response)
+
 	var count int
-	err = db.Client.QueryRow(SQLDeleteByID, input.linkID).Scan(&count)
-	if err == nil || count != 1 {
+	err := db.Client.QueryRow(sql.LinkSQLDeleteByID, institutionLinkId).Scan(&count)
+	if err != nil || count != 1 {
 		render.Status(r, http.StatusBadRequest)
 		return
 	}
@@ -152,67 +130,49 @@ func RemoveInstitutionLink(w http.ResponseWriter, r *http.Request) {
 	response["error"] = false
 }
 
+// InitializeLink - retrieves and stores all transactions associated to a link
+// called when Plaid sends a webhook code of HISTORICAL_UPDATE
 func InitializeLink(itemID string) {
-	end := time.Now()
-	endDate := end.Format(api.DateFormatISO)
-	start := end.AddDate(-2, 0, 0)
-	startDate := start.Format(api.DateFormatISO)
-
 	// get item
-	instLink := api.InstitutionLink{}
-	err := db.Client.Get(&instLink, SQLSelectByID, itemID)
+	instLink := db.InstitutionLink{}
+	err := db.Client.Get(&instLink, sql.LinkSQLSelectByID, itemID)
 	if err != nil {
 		return
 	}
 
 	// get all associated accounts
-	accounts := []api.Account{}
-	err = db.Client.Select(&accounts, account.SQLSelectByLink, instLink.ID)
+	accounts := []db.Account{}
+	err = db.Client.Select(&accounts, sql.AccountSQLSelectByLink, instLink.ID)
 	if err != nil {
 		return
 	}
 
-	// init params for plaid API call
-	var transactions []plaidLib.Transaction
-	accessToken := instLink.AccessToken
-	options := plaidLib.GetTransactionsOptions{
-		StartDate:  startDate,
-		EndDate:    endDate,
-		AccountIDs: []string{},
-		Count:      500,
-		Offset:     0,
+	// init params for GetAllTransactions
+	end := time.Now()
+	endDate := end.Format(api.DateFormatISO)
+	start := end.AddDate(-2, 0, 0) // 2 years earlier
+	startDate := start.Format(api.DateFormatISO)
+
+	transactions := transaction.GetAllTransactions(instLink.AccessToken, startDate, endDate)
+	if transactions == nil {
+		return
 	}
 
-	// get all transactions
-	for {
-		options.Offset = len(transactions)
-		transactionsRes, err := plaid.Client.GetTransactionsWithOptions(accessToken, options)
-		if err != nil || transactionsRes.Transactions == nil {
-			return
-		}
-
-		transactions = append(transactions, transactionsRes.Transactions...)
-		if len(transactions) >= transactionsRes.TotalTransactions {
-			break
-		}
-	}
-
-	insertArgs := &transaction.InsertArgs{
+	// store transactions
+	storedTransactions := []db.Transaction{}
+	insertArgs := &sql.TransactionInsertArgs{
 		Accounts:     accounts,
 		Transactions: transactions,
 	}
-	insertQuery, insertValues := transaction.SQLGenerateInsert(insertArgs)
-
-	// store transactions
-	storedTransactions := []api.Transaction{}
+	insertQuery, insertValues := sql.TransactionSQLGenerateInsert(insertArgs)
 	err = db.Client.QueryRow(insertQuery, insertValues...).Scan(&storedTransactions)
 	if err != nil {
 		return
 	}
 
-	// update link ready
+	// update link to ready
 	var count int
-	err = db.Client.QueryRow(SQLUpdateReady, itemID).Scan(&count)
+	err = db.Client.QueryRow(sql.LinkSQLUpdateReady, itemID).Scan(&count)
 	if err != nil || count != 1 {
 		return
 	}

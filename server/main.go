@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/chi/middleware"
 	"github.com/go-chi/render"
 
+	"./internal/api"
 	"./internal/api/account"
 	"./internal/api/link"
 	"./internal/api/user"
@@ -32,6 +33,7 @@ func Routes() *chi.Mux {
 		middleware.Logger,
 		middleware.RedirectSlashes,
 		middleware.Recoverer,
+		api.ParseBody,
 		noCache,
 	)
 

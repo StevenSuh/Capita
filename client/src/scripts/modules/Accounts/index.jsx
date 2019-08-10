@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import PlaidLink from "react-plaid-link";
 import classNames from "classnames";
 import { withLastLocation } from "react-router-last-location";
 
@@ -10,6 +9,7 @@ import Loading from "scripts/components/loading";
 import IsLoading from "scripts/hoc/isLoading";
 import Modal from "scripts/components/modal";
 import Nav from "scripts/components/nav";
+import PlaidLink from "scripts/components/plaid-link";
 
 import * as utils from "utils";
 import * as accountsActions from "scripts/modules/Accounts/actions";
@@ -37,7 +37,7 @@ const Accounts = ({
   onOpenModal,
   onCloseModal,
   onDeleteInstitutionLink,
-  onExchangePublicToken,
+  onCreateInstitutionLink,
   onGetConnectedAccounts,
   onSetIsEditing,
   selectedAccount,
@@ -112,8 +112,7 @@ const Accounts = ({
             )}
             style={{}}
             onExit={() => {}}
-            onLoad={utils.cleanupPlaidIframe}
-            onSuccess={onExchangePublicToken}
+            onSuccess={onCreateInstitutionLink}
             user={{
               legalName: user.name,
               emailAddress: user.email,
@@ -179,7 +178,7 @@ export default connect(
     onOpenModal: modalActions.openModal,
     onCloseModal: modalActions.closeModal,
     onDeleteInstitutionLink: accountsActions.deleteInstitutionLink,
-    onExchangePublicToken: accountsActions.exchangePublicToken,
+    onCreateInstitutionLink: accountsActions.createInstitutionLink,
     onGetConnectedAccounts: accountsActions.getConnectedAccounts,
     onSetIsEditing: accountsActions.setIsEditing,
   },

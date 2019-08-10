@@ -1,32 +1,28 @@
-package transaction
+package sql
 
 import (
 	"fmt"
 
 	"github.com/plaid/plaid-go/plaid"
 
-	api ".."
+	"../../db"
 )
 
-type InsertArgs struct {
-	Accounts     []api.Account
+const (
+	TransactionSQLGetCountOfRecurringByName = `
+    SELECT COUNT(id) FROM transactions
+    WHERE
+      name = $1 AND
+      recurring = true;
+  `
+)
+
+type TransactionInsertArgs struct {
+	Accounts     []db.Account
 	Transactions []plaid.Transaction
 }
 
-// UserID                 int64          `db:"user_id" json:"userId"`
-// AccountID              int64          `db:"account_id" json:"accountId"`
-// PlaidTransactionID     string         `db:"plaid_transaction_id" json:"plaidTransactionId"`
-// Name                   string         `db:"name" json:"name"`
-// Category               string         `db:"category" json:"category"`
-// Amount                 float64        `db:"amount" json:"amount"`
-// IsoCurrencyCode        sql.NullString `db:"iso_currency_code" json:"IsoCurrencyCode"`
-// UnofficialCurrencyCode sql.NullString `db:"unofficial_currency_code" json:"unofficialCurrencyCode"`
-// Date                   string         `db:"date" json:"date"`
-// Pending                bool           `db:"pending" json:"pending"`
-// Recurring              bool           `db:"recurring" json:"recurring"`
-// ManuallyCreated        bool           `db:"manually_created" json:"manuallyCreated"`
-
-func SQLGenerateInsert(args *InsertArgs) (insertQuery string, insertValues []interface{}) {
+func TransactionSQLGenerateInsert(args *TransactionInsertArgs) (insertQuery string, insertValues []interface{}) {
 	query := `
     INSERT INTO transactions
     (
@@ -61,7 +57,7 @@ func SQLGenerateInsert(args *InsertArgs) (insertQuery string, insertValues []int
 			indexes...,
 		)
 
-		var account api.Account
+		var account db.Account
 		for _, currAccount := range args.Accounts {
 			if currAccount.PlaidAccountID == transaction.AccountID {
 				account = currAccount
@@ -71,7 +67,7 @@ func SQLGenerateInsert(args *InsertArgs) (insertQuery string, insertValues []int
 
 		recurring := false
 		for _, category := range transaction.Category {
-			if category == Subscription {
+			if category == "Subscription" {
 				recurring = true
 				break
 			}

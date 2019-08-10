@@ -3,8 +3,10 @@ import {
   deleteInstitutionLink as deleteInstitutionLinkApi,
   getConnectedAccounts as getConnectedAccountsApi,
 } from "scripts/services/api";
+
 import { PROP_USER } from "scripts/modules/App/defs";
 import * as defs from "./defs";
+import { API_ROUTES } from "defs";
 
 export const setAccounts = accounts => ({
   type: defs.actionTypes.onSetAccounts,
@@ -39,11 +41,9 @@ export const selectAccount = selectedAccount => ({
 export const setIsReady = isReady => ({
   type: defs.actionTypes.onSetIsReady,
   value: isReady,
-});
-
-export const setNeedsUpdate = needsUpdate => ({
-  type: defs.actionTypes.onSetNeedsUpdate,
-  value: needsUpdate,
+  message: "An account is currently syncing with Capita (takes ~30 seconds)",
+  polling: !isReady,
+  url: API_ROUTES.LINK.POLLING,
 });
 
 export const getConnectedAccounts = (force = false) => async (
@@ -59,16 +59,24 @@ export const getConnectedAccounts = (force = false) => async (
   }
 
   const userId = appReducer.getIn([PROP_USER, "id"]);
-  const { error, accounts, ready, update } = await getConnectedAccountsApi(
+  const { error, accounts, ready, update = [] } = await getConnectedAccountsApi(
     dispatch,
   )(userId);
   if (error) {
     return;
   }
 
+  update.forEach(institutionLinkId => {
+    const account = accounts.find(
+      account => account.institutionLinkId === institutionLinkId,
+    );
+    if (account) {
+      account.update = true;
+    }
+  });
+
   dispatch(setAccounts(accounts));
   dispatch(setIsReady(ready));
-  dispatch(setNeedsUpdate(update));
 };
 
 export const createInstitutionLink = (

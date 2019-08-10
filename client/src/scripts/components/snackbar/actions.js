@@ -1,13 +1,19 @@
-import { actionTypes, TIMEOUT } from './defs';
+import { actionTypes, TIMEOUT } from "./defs";
 
-export const addSnackbar = dispatch => (message, type) => {
-  const id = Date.now();
-
+export const addSnackbar = dispatch => (
+  message,
+  type,
+  id = Date.now(),
+  infinite = false,
+) => {
   dispatch({
     type: actionTypes.onAddSnackbar,
     value: { message, type, id },
   });
-  setTimeout(() => dispatch(removeSnackbar(id)), TIMEOUT);
+
+  if (!infinite) {
+    setTimeout(() => dispatch(removeSnackbar(id)), TIMEOUT);
+  }
 };
 
 export const removeSnackbar = id => ({

@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"time"
 
@@ -9,10 +10,11 @@ import (
 	uuid "github.com/satori/go.uuid"
 
 	"../db"
+	"./sql"
 )
 
-func CheckCookie(_ http.ResponseWriter, r *http.Request) (*User, error) {
-	user := User{}
+func CheckCookie(_ http.ResponseWriter, r *http.Request) (*db.User, error) {
+	user := db.User{}
 	session, err := r.Cookie(Session)
 	if err != nil {
 		return nil, err
@@ -51,7 +53,7 @@ func CheckAuth(next http.Handler) http.Handler {
 func SetCookie(userID int64, w http.ResponseWriter, _ *http.Request) {
 	sessionExpiration := time.Now().AddDate(0, 0, SessionExpirationDuration)
 	sessionID := uuid.Must(uuid.NewV4()).String()
-	db.Client.MustExec(SQLUpdateSessionById, sessionID, sessionExpiration, userID)
+	db.Client.MustExec(sql.ApiSQLUpdateSessionById, sessionID, sessionExpiration, userID)
 
 	sessionCookie := &http.Cookie{
 		Name:     "session",
@@ -61,4 +63,28 @@ func SetCookie(userID int64, w http.ResponseWriter, _ *http.Request) {
 		MaxAge:   int(sessionExpiration.Unix()),
 	}
 	http.SetCookie(w, sessionCookie)
+}
+
+func ParseBody(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Body == http.NoBody {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		response := make(map[string]interface{})
+		response["error"] = true
+		response["msg"] = "Invalid input"
+
+		var input map[string]interface{}
+		err := json.NewDecoder(r.Body).Decode(&input)
+		if err != nil {
+			render.Status(r, http.StatusBadRequest)
+			render.JSON(w, r, response)
+			return
+		}
+
+		ctx := context.WithValue(r.Context(), BodyCtx, input)
+		next.ServeHTTP(w, r.WithContext(ctx))
+	})
 }

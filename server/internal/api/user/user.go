@@ -1,15 +1,16 @@
 package user
 
 import (
-	"encoding/json"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 
 	api ".."
 	"../../db"
+	"../sql"
 )
 
 type LoginInput struct {
@@ -44,21 +45,14 @@ func GetLoginStatus(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginToAccount(w http.ResponseWriter, r *http.Request) {
+	input := r.Context().Value(api.BodyCtx).(map[string]interface{})
+	email := input["email"].(string)
+	password := input["password"].(string)
+
 	response := make(map[string]interface{})
 	response["error"] = true
 	response["msg"] = "Invalid login information - Please try again"
 	defer render.JSON(w, r, response)
-
-	// turn body into json
-	var input LoginInput
-	err := json.NewDecoder(r.Body).Decode(&input)
-	if err != nil {
-		render.Status(r, http.StatusBadRequest)
-		return
-	}
-
-	email := input.Email
-	password := input.Password
 
 	// TODO: validation for all input
 	if !ValidatePassword(password) {
@@ -67,8 +61,8 @@ func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// retrieving user; check user password
-	user := api.User{}
-	err = db.Client.Get(&user, SQLSelectByEmail, email)
+	user := db.User{}
+	err := db.Client.Get(&user, sql.UserSQLSelectByEmail, email)
 	if err != nil {
 		render.Status(r, http.StatusUnauthorized)
 		return
@@ -86,22 +80,15 @@ func LoginToAccount(w http.ResponseWriter, r *http.Request) {
 }
 
 func RegisterAccount(w http.ResponseWriter, r *http.Request) {
+	input := r.Context().Value(api.BodyCtx).(map[string]interface{})
+	name := input["name"].(string)
+	email := input["email"].(string)
+	password := input["password"].(string)
+
 	response := make(map[string]interface{})
 	response["error"] = true
 	response["msg"] = "Error occurred while registering account - Please try again"
 	defer render.JSON(w, r, response)
-
-	// turn body into json
-	var input LoginInput
-	err := json.NewDecoder(r.Body).Decode(&input)
-	if err != nil {
-		render.Status(r, http.StatusBadRequest)
-		return
-	}
-
-	name := input.Name
-	email := input.Email
-	password := input.Password
 
 	// TODO: validation for all input
 	if !ValidatePassword(password) {
@@ -111,16 +98,12 @@ func RegisterAccount(w http.ResponseWriter, r *http.Request) {
 
 	EncryptPassword(&password)
 
-	user := api.User{}
-	err = db.Client.Get(&user, SQLSelectByEmail, email)
-	if err == nil {
-		response["msg"] = "An account with this email already exists"
-		render.Status(r, http.StatusBadRequest)
-		return
-	}
-
-	err = db.Client.QueryRow(SQLInsert, name, email, password).Scan(&user)
+	user := db.User{}
+	err := db.Client.QueryRow(sql.UserSQLInsert, name, email, password).Scan(&user)
 	if err != nil {
+		if i := strings.Index(err.Error(), "email"); i > -1 {
+			response["msg"] = "An account with this email already exists"
+		}
 		render.Status(r, http.StatusBadRequest)
 		return
 	}
@@ -143,7 +126,7 @@ func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	// userID := chi.URLParam(r, "userId")
 	response := make(map[string]interface{})
 	response["error"] = false
-	response["transactions"] = []api.Transaction{}
+	response["transactions"] = []db.Transaction{}
 	defer render.JSON(w, r, response)
 
 	query := r.URL.Query()

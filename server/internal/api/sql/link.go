@@ -1,16 +1,16 @@
-package link
+package sql
 
 import (
 	"fmt"
 
 	"github.com/plaid/plaid-go/plaid"
 
-	api ".."
+	"../../db"
 )
 
 const (
-	SQLSelectByID = `SELECT * FROM institution_links WHERE id = $1;`
-	SQLInsert     = `
+	LinkSQLSelectByID = `SELECT * FROM institution_links WHERE id = $1;`
+	LinkSQLInsert     = `
 		INSERT INTO institution_links
 		(
       user_id,
@@ -25,28 +25,28 @@ const (
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
 		RETURNING *;
   `
-	SQLUpdateReady = `
+	LinkSQLUpdateReady = `
     UPDATE institution_links
     SET ready = true
     WHERE id = $1;
   `
-	SQLGetStatus = `
+	LinkSQLGetStatus = `
     SELECT COUNT(id) FROM institution_links
     WHERE
       user_id = $1 AND
       ready = false;
   `
-	SQLDeleteByID = `DELETE FROM institution_links WHERE id = $1;`
+	LinkSQLDeleteByID = `DELETE FROM institution_links WHERE id = $1;`
 )
 
-type InsertArgs struct {
-	User        api.User
-	Link        api.InstitutionLink
+type LinkInsertArgs struct {
+	User        db.User
+	Link        db.InstitutionLink
 	Institution plaid.Institution
 	Accounts    []plaid.Account
 }
 
-func SQLGenerateInsert(args *InsertArgs) (insertQuery string, insertValues []interface{}) {
+func LinkSQLGenerateInsert(args *LinkInsertArgs) (insertQuery string, insertValues []interface{}) {
 	query := `
     INSERT INTO institution_links
     (

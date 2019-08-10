@@ -42,6 +42,8 @@ const AccountList = ({
             })}
             title={`${account.subtype} - ${account.mask}`}
             titleClassName={styles.account_title}
+            // TODO edit subtitle and mainclick to fix link
+            // subtitle={account.update ? "need fix link" : ""}
             key={index}
             leftItem={
               <div className={styles.left_side}>

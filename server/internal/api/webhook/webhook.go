@@ -1,12 +1,12 @@
 package webhook
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/go-chi/chi"
 	"github.com/go-chi/render"
 
+	api ".."
 	"../link"
 	"../transaction"
 )
@@ -20,18 +20,15 @@ func Routes() *chi.Mux {
 }
 
 func Plaid(w http.ResponseWriter, r *http.Request) {
+	input := r.Context().Value(api.BodyCtx).(map[string]interface{})
+
 	response := make(map[string]interface{})
 	response["error"] = false
 	render.JSON(w, r, response)
 
-	var input map[string]interface{}
-	err := json.NewDecoder(r.Body).Decode(&input)
-	if err != nil {
-		render.Status(r, http.StatusBadRequest)
-		return
-	}
+	webhookType := input[PlaidWebhookType].(string)
 
-	switch webhookType := input[PlaidWebhookType]; webhookType {
+	switch webhookType {
 	case PlaidAuth:
 		handlePlaidAuthWebhook(input)
 	case PlaidTransactions:
@@ -42,15 +39,20 @@ func Plaid(w http.ResponseWriter, r *http.Request) {
 }
 
 func handlePlaidAuthWebhook(input map[string]interface{}) {
-	// switch webhookCode := input[PlaidWebhookCode]; webhookCode {
+	// itemID := input[PlaidWebhookItemID].(string)
+	webhookCode := input[PlaidWebhookCode].(string)
 
-	// }
+	switch webhookCode {
+	case PlaidAuthVerificationExpired:
+		// TODO send notification
+	}
 }
 
 func handlePlaidTransactionsWebhook(input map[string]interface{}) {
 	itemID := input[PlaidWebhookItemID].(string)
+	webhookCode := input[PlaidWebhookCode].(string)
 
-	switch webhookCode := input[PlaidWebhookCode]; webhookCode {
+	switch webhookCode {
 	case PlaidTransactionsHistoricalUpdate:
 		link.InitializeLink(itemID)
 	case PlaidTransactionsDefaultUpdate:
@@ -63,7 +65,11 @@ func handlePlaidTransactionsWebhook(input map[string]interface{}) {
 }
 
 func handlePlaidItemWebhook(input map[string]interface{}) {
-	// switch webhookCode := input[PlaidWebhookCode]; webhookCode {
+	// itemID := input[PlaidWebhookItemID].(string)
+	webhookCode := input[PlaidWebhookCode].(string)
 
-	// }
+	switch webhookCode {
+	case PlaidItemError:
+		// TODO send notification
+	}
 }

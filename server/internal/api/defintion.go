@@ -10,6 +10,7 @@ const (
 type key string
 
 const (
+	BodyCtx key = "body"
 	UserCtx key = "user"
 )
 

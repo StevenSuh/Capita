@@ -6,6 +6,7 @@ import (
 	"github.com/go-chi/chi"
 
 	api ".."
+	"../../db"
 )
 
 func Routes() *chi.Mux {
@@ -16,6 +17,6 @@ func Routes() *chi.Mux {
 	return router
 }
 
-func AnalyzeAccounts(accounts []api.Account) {
+func AnalyzeAccounts(accounts []db.Account) {
 	fmt.Println(accounts)
 }

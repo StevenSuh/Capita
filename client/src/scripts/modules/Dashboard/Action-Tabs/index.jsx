@@ -11,7 +11,7 @@ const ActionTabs = ({ history }) => {
     <div className={styles.main}>
       <ActionRow
         title="Accounts"
-        subtitle="Add or delete your connected bank accounts"
+        subtitle="Add or delete your connected accounts"
         onMainClick={() => history.push(ROUTES.ACCOUNTS)}
       />
       <ActionRow

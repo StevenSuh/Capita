@@ -53,7 +53,5 @@ export const filterTransactions = (transactions, year, month, days) => {
     }
   });
 
-  console.log(amounts, adjustedDays);
-
   return [monthTransactions, amounts, adjustedDays];
 };

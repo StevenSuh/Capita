@@ -16,6 +16,6 @@ const (
 	Travel       = "Travel"
 	Other        = "Other"
 
-	// Special type that denotes recurring transaction
+	// Subscription - special type that denotes recurring transaction
 	Subscription = "Subscription"
 )

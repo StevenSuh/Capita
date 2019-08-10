@@ -1,7 +1,7 @@
-package account
+package sql
 
 const (
-	SQLSelectByLink = `
+	AccountSQLSelectByLink = `
     SELECT * FROM accounts
     WHERE institution_link_id = $1;
   `

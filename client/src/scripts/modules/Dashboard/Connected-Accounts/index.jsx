@@ -1,11 +1,11 @@
 import React from "react";
 import { connect } from "react-redux";
-import PlaidLink from "react-plaid-link";
 import classNames from "classnames";
 import { withRouter } from "react-router-dom";
 
 import IsLoading from "scripts/hoc/isLoading";
 import Empty from "scripts/components/empty";
+import PlaidLink from "scripts/components/plaid-link";
 
 import * as utils from "utils";
 import * as accountsActions from "scripts/modules/Accounts/actions";
@@ -21,7 +21,7 @@ import styles from "./styles.module.css";
 const ConnectedAccounts = ({
   accounts,
   history,
-  onExchangePublicToken,
+  onCreateInstitutionLink,
   onGetConnectedAccounts,
   user,
 }) => {
@@ -78,8 +78,7 @@ const ConnectedAccounts = ({
                   className={classNames("click")}
                   style={{}}
                   onExit={() => {}}
-                  onLoad={utils.cleanupPlaidIframe}
-                  onSuccess={onExchangePublicToken}
+                  onSuccess={onCreateInstitutionLink}
                   user={{
                     legalName: user.name,
                     emailAddress: user.email,
@@ -109,7 +108,7 @@ export const mapStateToProps = ({ app, accounts }) => ({
 export default connect(
   mapStateToProps,
   {
-    onExchangePublicToken: accountsActions.exchangePublicToken,
+    onCreateInstitutionLink: accountsActions.createInstitutionLink,
     onGetConnectedAccounts: accountsActions.getConnectedAccounts,
   },
 )(withRouter(ConnectedAccounts));

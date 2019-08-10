@@ -29,6 +29,7 @@ export const API_ROUTES = {
   LINK: {
     CREATE: "/api/link/create",
     DELETE: "/api/link/delete",
+    POLLING: "/api/link/poll",
   },
   PLAID: {
     WEBHOOK: "/api/plaid/webhook",

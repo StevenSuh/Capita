@@ -67,7 +67,7 @@ const slideshowItems = [
       Connect banks and transfer money
     </h6>
     <p className={styles.slideshow_item_content}>
-      Connect up to 3 banks and easily transfer money between them
+      Connect your bank accounts and easily transfer money between them
     </p>
   </div>,
   <div>

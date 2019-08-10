@@ -133,7 +133,6 @@ export const initialState = Immutable.fromJS({
   [defs.PROP_IS_DELETING_LINK]: false,
   [defs.PROP_SELECTED_ACCOUNT]: {},
   [defs.PROP_IS_READY]: true,
-  [defs.PROP_NEEDS_UPDATE]: false,
 });
 
 export default (state = initialState, action) => {
@@ -168,9 +167,6 @@ export default (state = initialState, action) => {
     }
     case defs.actionTypes.onSetIsReady: {
       return state.set(defs.PROP_IS_READY, action.value);
-    }
-    case defs.actionTypes.onSetNeedsUpdate: {
-      return state.set(defs.PROP_NEEDS_UPDATE, action.value);
     }
     case defs.actionTypes.onSelectAccount: {
       return state.set(
