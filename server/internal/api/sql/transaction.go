@@ -3,6 +3,7 @@ package sql
 import (
 	"fmt"
 
+	sq "github.com/Masterminds/squirrel"
 	"github.com/plaid/plaid-go/plaid"
 
 	"../../db"
@@ -15,7 +16,24 @@ const (
       name = $1 AND
       recurring = true;
   `
+	TransactionSQLDeleteByPlaidIDs = `
+    DELETE FROM transactions
+    WHERE plaid_transaction_id IN ($1);
+  `
 )
+
+func TransactionSQLGet(values map[string]interface{}) (string, []interface{}, error) {
+	transactions := sq.Select("*").From("transactions")
+
+	argsBuilder := sq.Eq{}
+
+	for key, value := range values {
+		argsBuilder[key] = value
+	}
+
+	sql, args, err := transactions.Where(argsBuilder).ToSql()
+	return sql, args, err
+}
 
 type TransactionInsertArgs struct {
 	Accounts     []db.Account

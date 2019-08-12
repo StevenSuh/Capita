@@ -1,9 +1,13 @@
 package transaction
 
 import (
+	"net/http"
 	"sync"
 	"time"
 
+	"github.com/go-chi/chi"
+	"github.com/go-chi/render"
+	"github.com/jmoiron/sqlx"
 	plaidLib "github.com/plaid/plaid-go/plaid"
 
 	api ".."
@@ -12,6 +16,41 @@ import (
 	"../sql"
 )
 
+func Routes() *chi.Mux {
+	router := chi.NewRouter()
+
+	router.Use(api.CheckAuth)
+	router.Get("/all", GetTransactions)
+
+	return router
+}
+
+func GetTransactions(w http.ResponseWriter, r *http.Request) {
+	// userID := chi.URLParam(r, "userId")
+	response := make(map[string]interface{})
+	response["error"] = false
+	response["transactions"] = []db.Transaction{}
+	defer render.JSON(w, r, response)
+
+	query := r.URL.Query()
+
+	recurring := query.Get("recurring") == "true"
+	limit := query.Get("limit")
+	offset := query.Get("offset")
+
+	if limit == "" {
+		limit = api.DefaultLimit
+	}
+	if offset == "" {
+		offset = api.DefaultOffset
+	}
+
+	response["recurring"] = recurring
+	response["limit"] = limit
+	response["offset"] = offset
+}
+
+// TODO error handling
 func Update(itemID string, newTransactionsCt int) {
 	// get item
 	instLink := db.InstitutionLink{}
@@ -67,8 +106,22 @@ func Update(itemID string, newTransactionsCt int) {
 	// TODO send notification
 }
 
+// TODO error handling
 func Remove(itemID string, removedTransactions []string) {
+	// sql array binding
+	query, args, err := sqlx.In(sql.TransactionSQLDeleteByPlaidIDs, removedTransactions)
+	if err != nil {
+		return
+	}
 
+	var count int
+	query = db.Client.Rebind(query)
+	err = db.Client.QueryRow(query, args...).Scan(&count)
+	if err != nil || count != len(removedTransactions) {
+		return
+	}
+
+	// success handling
 }
 
 func GetAllTransactions(accessToken string, startDate string, endDate string) []plaidLib.Transaction {

@@ -1,19 +1,9 @@
-import {
-  setLoggedIn,
-  setUser
-} from 'scripts/modules/App/actions';
-import {
-  submitLogin
-} from 'scripts/services/api';
+import { setLoggedIn, setUser } from "scripts/modules/App/actions";
+import { submitLogin } from "scripts/services/api";
 
-import {
-  validateEmail,
-  validatePassword
-} from 'utils';
-import * as defs from './defs';
-import {
-  ERROR_MSGS
-} from 'defs';
+import { validateEmail, validatePassword } from "utils";
+import * as defs from "./defs";
+import { ERROR_MSGS } from "defs";
 
 export const changeField = (field, value) => ({
   type: defs.actionTypes.onChangeField,
@@ -22,14 +12,12 @@ export const changeField = (field, value) => ({
 });
 
 export const attemptLogin = () => async (dispatch, getState) => {
-  const {
-    login
-  } = getState();
+  const { login } = getState();
   const email = login.get(defs.PROP_EMAIL);
   const password = login.get(defs.PROP_PASSWORD);
   const isAttemptingLogin = login.get(defs.PROP_IS_ATTEMPTING_LOGIN);
 
-  let loginError = '';
+  let loginError = "";
 
   if (isAttemptingLogin || !validateLoginForm(dispatch)(email, password)) {
     return;
@@ -37,10 +25,7 @@ export const attemptLogin = () => async (dispatch, getState) => {
 
   dispatch(changeField(defs.PROP_IS_ATTEMPTING_LOGIN, true));
 
-  const {
-    error,
-    user,
-  } = await submitLogin(dispatch)(email, password);
+  const { error, user } = await submitLogin(dispatch)(email, password);
   if (error) {
     loginError = ERROR_MSGS.mismatch;
   } else {
@@ -53,8 +38,8 @@ export const attemptLogin = () => async (dispatch, getState) => {
 };
 
 export const validateLoginForm = dispatch => (email, password) => {
-  let emailError = '';
-  let passwordError = '';
+  let emailError = "";
+  let passwordError = "";
   let error = false;
 
   if (!email) {
@@ -64,7 +49,7 @@ export const validateLoginForm = dispatch => (email, password) => {
     emailError = ERROR_MSGS.emailInvalid;
     error = true;
   } else {
-    emailError = '';
+    emailError = "";
   }
 
   if (!password) {
@@ -74,7 +59,7 @@ export const validateLoginForm = dispatch => (email, password) => {
     passwordError = ERROR_MSGS.passwordInvalid;
     error = true;
   } else {
-    passwordError = '';
+    passwordError = "";
   }
 
   dispatch(changeField(defs.PROP_EMAIL_ERROR, emailError));

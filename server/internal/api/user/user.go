@@ -2,7 +2,6 @@ package user
 
 import (
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/go-chi/chi"
@@ -24,8 +23,6 @@ func Routes() *chi.Mux {
 	router.Get("/login", GetLoginStatus)
 	router.Post("/login", LoginToAccount)
 	router.Post("/register", RegisterAccount)
-	router.Get("/{userID}/accounts", GetConnectedAccounts)
-	router.Get("/{userID}/transactions", GetTransactions)
 
 	return router
 }
@@ -40,6 +37,7 @@ func GetLoginStatus(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO uncomment below
 	// response["error"] = false
 	response["user"] = user
 }
@@ -120,34 +118,4 @@ func GetConnectedAccounts(w http.ResponseWriter, r *http.Request) {
 	response["error"] = false
 	response["accounts"] = []string{}
 	defer render.JSON(w, r, response)
-}
-
-func GetTransactions(w http.ResponseWriter, r *http.Request) {
-	// userID := chi.URLParam(r, "userId")
-	response := make(map[string]interface{})
-	response["error"] = false
-	response["transactions"] = []db.Transaction{}
-	defer render.JSON(w, r, response)
-
-	query := r.URL.Query()
-
-	recurring := query.Get("recurring") == "true"
-	limit := api.DefaultLimit
-	if query.Get("limit") != "" {
-		parsed, err := strconv.Atoi(query.Get("limit"))
-		if err == nil {
-			limit = parsed
-		}
-	}
-	offset := api.DefaultOffset
-	if query.Get("offset") != "" {
-		parsed, err := strconv.Atoi(query.Get("offset"))
-		if err == nil {
-			offset = parsed
-		}
-	}
-
-	response["recurring"] = recurring
-	response["limit"] = limit
-	response["offset"] = offset
 }

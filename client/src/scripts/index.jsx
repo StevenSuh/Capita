@@ -2,7 +2,6 @@ import React from "react";
 import { Provider } from "react-redux";
 import { Router, Redirect, Route, Switch } from "react-router-dom";
 import { LastLocationProvider } from "react-router-last-location";
-import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 import store from "scripts/config/setup";
 import history from "scripts/config/history";
@@ -33,82 +32,70 @@ const Wrapper = () => (
       <LastLocationProvider>
         <Route
           render={({ location }) => (
-            <TransitionGroup className="transition-group">
-              <CSSTransition
-                appear
-                classNames="reveal"
-                key={`${location.key}-main`}
-                timeout={{ enter: 200, exit: 0 }}
-                unmountOnExit
-              >
-                <Switch>
-                  <Route exact path={ROUTES.LANDING} component={LandingPage} />
-                  <Route path={ROUTES.APP}>
-                    <IsLoading>
-                      <Switch>
-                        <Route exact path={ROUTES.APP} component={App} />
-                        <Route
-                          exact
-                          path={ROUTES.APP_DASHBOARD}
-                          component={Dashboard}
-                        />
-                        <Route exact path={ROUTES.LOGIN} component={Login} />
-                        <Route
-                          exact
-                          path={ROUTES.GET_STARTED}
-                          component={GetStarted}
-                        />
-                        <Route
-                          exact
-                          path={ROUTES.ACCOUNTS}
-                          component={Accounts}
-                        />
-                        <Route
-                          path={ROUTES.ACCOUNT_ITEM}
-                          component={AccountItem}
-                        />
-                        <Route
-                          exact
-                          path={ROUTES.TRANSFER}
-                          component={Transfer}
-                        />
-                        <Route
-                          exact
-                          path={ROUTES.TRANSACTIONS}
-                          component={Transactions}
-                        />
-                        <Route
-                          path={ROUTES.TRANSACTION_ITEM}
-                          component={TransactionItem}
-                        />
-                        <Route
-                          exact
-                          path={ROUTES.SPENDING}
-                          component={Spending}
-                        />
-                        <Route
-                          exact
-                          path={ROUTES.APP_NOTIFICATIONS}
-                          component={AppNotifications}
-                        />
-                        <Route
-                          exact
-                          path={ROUTES.USER_INFORMATION}
-                          component={UserInformation}
-                        />
-                        <Route
-                          exact
-                          path={ROUTES.SUPPORT}
-                          component={Support}
-                        />
-                        <Redirect to={ROUTES.APP_DASHBOARD} />
-                      </Switch>
-                    </IsLoading>
-                  </Route>
-                  <Redirect to={ROUTES.LANDING} />
-                </Switch>
-              </CSSTransition>
-            </TransitionGroup>
+            <div className="reveal transition-group" key={location.key}>
+              <Switch>
+                <Route exact path={ROUTES.LANDING} component={LandingPage} />
+                <Route path={ROUTES.APP}>
+                  <IsLoading>
+                    <Switch>
+                      <Route exact path={ROUTES.APP} component={App} />
+                      <Route
+                        exact
+                        path={ROUTES.APP_DASHBOARD}
+                        component={Dashboard}
+                      />
+                      <Route exact path={ROUTES.LOGIN} component={Login} />
+                      <Route
+                        exact
+                        path={ROUTES.GET_STARTED}
+                        component={GetStarted}
+                      />
+                      <Route
+                        exact
+                        path={ROUTES.ACCOUNTS}
+                        component={Accounts}
+                      />
+                      <Route
+                        path={ROUTES.ACCOUNT_ITEM}
+                        component={AccountItem}
+                      />
+                      <Route
+                        exact
+                        path={ROUTES.TRANSFER}
+                        component={Transfer}
+                      />
+                      <Route
+                        exact
+                        path={ROUTES.TRANSACTIONS}
+                        component={Transactions}
+                      />
+                      <Route
+                        path={ROUTES.TRANSACTION_ITEM}
+                        component={TransactionItem}
+                      />
+                      <Route
+                        exact
+                        path={ROUTES.SPENDING}
+                        component={Spending}
+                      />
+                      <Route
+                        exact
+                        path={ROUTES.APP_NOTIFICATIONS}
+                        component={AppNotifications}
+                      />
+                      <Route
+                        exact
+                        path={ROUTES.USER_INFORMATION}
+                        component={UserInformation}
+                      />
+                      <Route exact path={ROUTES.SUPPORT} component={Support} />
+                      <Redirect to={ROUTES.APP_DASHBOARD} />
+                    </Switch>
+                  </IsLoading>
+                </Route>
+                <Redirect to={ROUTES.LANDING} />
+              </Switch>
+            </div>
           )}
         />
       </LastLocationProvider>

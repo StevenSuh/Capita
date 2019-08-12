@@ -234,3 +234,20 @@ svg > * {
 .container.tight {
   width: calc(100% - 80px);
 }
+
+.hidden {
+  display: none;
+}
+
+.reveal {
+  animation: reveal var(--transition-duration) var(--transition-curve) forwards;
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

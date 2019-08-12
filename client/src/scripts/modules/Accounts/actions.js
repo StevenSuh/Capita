@@ -62,6 +62,7 @@ export const getConnectedAccounts = (force = false) => async (
   const { error, accounts, ready, update = [] } = await getConnectedAccountsApi(
     dispatch,
   )(userId);
+
   if (error) {
     return;
   }

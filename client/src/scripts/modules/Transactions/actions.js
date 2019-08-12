@@ -48,6 +48,7 @@ export const getTransactions = (force = false, params) => async (
     userId,
     params,
   );
+
   if (error) {
     return;
   }
