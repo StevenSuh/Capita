@@ -11,25 +11,32 @@ class Ticker extends React.Component {
 
     this.state = {
       index: [],
-      currAmounts: [this.props.amount, 0],
+      currAmounts: [this.props.amount || 0, 0],
       height: 0,
     };
 
     this.targetRef = React.createRef();
   }
 
-  componentDidMount() {
-    const height = this.targetRef.current.clientHeight - 4;
-    const width = document.getElementsByClassName(styles.item)[0].clientWidth;
+  timeout = null;
 
-    document.documentElement.style.setProperty(
-      "--ticker-width",
-      `${width * 2}px`,
-    );
-    this.setState({ height });
+  componentDidMount() {
+    const target = this.targetRef.current;
+    const item = document.getElementsByClassName(styles.item);
+
+    this.timeout = setTimeout(() => {
+      const height = target.clientHeight - 4;
+      const width = item[0].clientWidth;
+      document.documentElement.style.setProperty(
+        "--ticker-width",
+        `${width * 2}px`,
+      );
+      this.setState({ height });
+    }, 0);
   }
 
   componentWillUnmount() {
+    clearTimeout(this.timeout);
     document.documentElement.style["--ticker-width"] = "";
   }
 

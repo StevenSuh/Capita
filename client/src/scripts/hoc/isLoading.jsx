@@ -35,10 +35,6 @@ class IsLoadingWrapper extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    console.log(":o");
-  }
-
   render() {
     const { className, children } = this.props;
     const { isLoading } = this.state;

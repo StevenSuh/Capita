@@ -87,7 +87,7 @@ export const deleteInstitutionLink = dispatch => async institutionLinkId => {
 
 export const getTransactions = dispatch => async (
   userId,
-  { limit = DEFAULT_PAGE_LIMIT, offset = 0, ...params },
+  { limit = DEFAULT_PAGE_LIMIT, offset = 0, ...params } = {},
 ) => {
   const search = queryString.stringify({ ...params, limit, offset });
   const res = await axios

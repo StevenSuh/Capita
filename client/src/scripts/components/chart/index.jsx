@@ -24,10 +24,21 @@ class Chart extends React.Component {
     this.chartWrapperRef = React.createRef();
   }
 
-  componentDidMount() {
-    const { left } = this.chartWrapperRef.current.getBoundingClientRect();
-    this.setState({ offsetLeft: left });
-  }
+  onAnimationComplete = () => {
+    if (
+      this.chartRef.current &&
+      this.chartRef.current.chartInstance &&
+      this.chartWrapperRef.current
+    ) {
+      const { chartInstance } = this.chartRef.current;
+      chartInstance.options.animation.duration = 300;
+      chartInstance.options.animation.onComplete = null;
+      chartInstance.update();
+
+      const { left } = this.chartWrapperRef.current.getBoundingClientRect();
+      this.setState({ offsetLeft: left });
+    }
+  };
 
   afterBuildTicks = data => chart => {
     const tickSize = Math.round(Math.max(...data) / 4);
@@ -172,11 +183,7 @@ class Chart extends React.Component {
             onHover: this.getElementAtEvent,
             animation: {
               duration: 0,
-              onComplete() {
-                this.options.animation.duration = 300;
-                this.options.animation.onComplete = null;
-                this.update();
-              },
+              onComplete: this.onAnimationComplete,
             },
             layout: {
               padding: {
