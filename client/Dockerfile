@@ -1,8 +1,13 @@
 FROM node:alpine as builder
 WORKDIR "/app"
-COPY ./package.json ./
+RUN mkdir shared
+COPY ./shared ./shared
+RUN mkdir client
+
+WORKDIR "/app/client"
+COPY ./client/package.json ./
 RUN yarn
-COPY . .
+COPY ./client .
 RUN yarn build
 
 FROM nginx

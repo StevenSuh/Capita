@@ -1,0 +1,8 @@
+{
+  "$id": "shared/common/error.json",
+  "properties": {
+    "message": {
+      "type": "string"
+    }
+  }
+}

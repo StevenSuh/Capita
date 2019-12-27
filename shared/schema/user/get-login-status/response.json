@@ -1,0 +1,8 @@
+{
+  "$id": "shared/schema/user/get-login-status/response.json",
+  "properties": {
+    "error": {
+      "$ref": "shared/schema/common/error.json"
+    }
+  }
+}
