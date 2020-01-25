@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package shared;
+
+message Link {
+  string obfuscated_id = 1;
+
+  Institution institution = 2;
+
+  bool ready = 3;
+
+  bool needs_update = 4;
+}
+
+message Institution {
+  string plaid_id = 1;
+
+  string name = 2;
+
+  string url = 3;
+
+  string logo = 4;
+}
+

@@ -1,7 +1,0 @@
-FROM golang:latest
-WORKDIR "/app"
-COPY . .
-ENV GOBIN=$GOPATH/bin
-RUN go get
-RUN go get github.com/pilu/fresh
-CMD ["fresh"]

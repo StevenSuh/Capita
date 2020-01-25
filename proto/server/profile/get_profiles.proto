@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package server.profile;
+
+import "shared/profile.proto";
+
+message GetProfilesRequest {}
+
+message GetProfilesResponse {
+  repeated shared.Profile profiles = 1;
+}
+

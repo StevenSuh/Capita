@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+package shared;
+
+message Transaction {
+  string obfuscated_id = 1;
+
+  string obfuscated_account_id = 2;
+
+  string name = 3;
+
+  string category = 4;
+
+  string type = 5;
+
+  float amount = 6;
+
+  string iso_currency_code = 7;
+
+  string unofficial_currency_code = 8;
+
+  string date = 9;
+
+  string note = 10;
+
+  bool pending = 11;
+
+  bool recurring = 12;
+
+  bool manually_created = 13;
+
+  bool hidden = 14;
+}
+

@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package server.user;
+
+message SignUpRequest {
+  string email = 1; // required
+
+  string password = 2; // required
+
+  string name = 3; // required
+}
+
+message SignUpResponse {
+  string session_token = 1;
+}
+

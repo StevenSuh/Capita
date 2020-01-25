@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package shared;
+
+message ErrorType {
+  ErrorTypeEnum type = 1;
+}
+
+enum ErrorTypeEnum {
+  UNKNOWN = 0;
+
+  // Client error.
+  BAD_REQUEST = 1;
+  INVALID_LOGIN = 2;
+  VALIDATION = 3;
+
+  // Server error.
+  DATABASE = 4;
+}
+

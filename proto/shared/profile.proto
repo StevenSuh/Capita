@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package shared;
+
+message Profile {
+  string obfuscated_id = 1;
+
+  string name = 2;
+
+  repeated string obfuscated_account_ids = 3;
+}
+

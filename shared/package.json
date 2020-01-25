@@ -1,0 +1,13 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "license": "MIT",
+  "_moduleAliases": {
+    "@": "./"
+  },
+  "dependencies": {
+    "module-alias": "^2.2.2",
+    "protobufjs": "^6.8.8"
+  },
+  "devDependencies": {}
+}

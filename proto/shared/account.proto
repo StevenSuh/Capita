@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+package shared;
+
+message Account {
+  string obfuscated_id = 1;
+
+  string obfuscated_link_id = 2;
+
+  string mask = 3;
+
+  string name = 4;
+
+  string official_name = 5;
+
+  string subtype = 6;
+
+  AccountType type = 7;
+
+  VerificationStatus verification_status = 8;
+
+  Balance balance = 9;
+
+  bool manually_created = 10;
+
+  bool hidden = 11;
+}
+
+message Balance {
+  float current = 1;
+
+  float available = 2;
+
+  float limit = 3;
+
+  string iso_currency_code = 4;
+
+  string unofficial_currency_code = 5;
+}
+
+enum AccountType {
+  UNKNOWN = 0;
+  INVESTMENT = 1;
+  CREDIT = 2;
+  DEPOSITORY = 3;
+  LOAN = 4;
+  OTHER = 5;
+}
+
+enum VerificationStatus {
+  UNKNOWN = 0;
+  PENDING_AUTOMATIC_VERIFICATION = 1;
+  AUTOMATICALLY_VERIFIED = 2;
+  PENDING_MANUAL_VERIFICATION = 3;
+  MANUALLY_VERIFIED = 4;
+}
+

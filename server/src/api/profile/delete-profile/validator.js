@@ -1,0 +1,22 @@
+const {
+  DeleteProfileRequest,
+} = require('shared/proto/server/profile/delete_profile').server.profile;
+
+const { ValidationError } = require('@src/shared/error');
+const { validateRequiredFields } = require('@src/shared/util');
+
+/**
+ * Validates DeleteProfileRequest.
+ *
+ * @param {DeleteProfileRequest} request - DeleteProfileRequest proto.
+ */
+function validate(request) {
+  if (!(request instanceof DeleteProfileRequest)) {
+    throw new ValidationError(
+      `Request ${request} is not an instance of DeleteProfileRequest`,
+    );
+  }
+  validateRequiredFields(request, ['obfuscatedId']);
+}
+
+module.exports = validate;

@@ -1,31 +1,23 @@
-start:
-	docker-compose up
-start-build:
-	docker-compose up --build
-start-reset: reset start
+start: proto-force
+	cd client; yarn start &
+	cd server; yarn run watch
+compile-proto:
+	cd proto; yarn run generate
+compile-proto-force:
+	cd proto; yarn run generate --force
+lint:
+	cd server; yarn run lint
+test:
+	cd server; yarn run test
 
-reset:
-	docker stop `docker ps -qa`; \
-	docker rm `docker ps -qa`; \
-	docker rmi -f `docker images -qa`; \
-	docker volume rm `docker volume ls -q`; \
-	docker network rm `docker network ls -q`
 psql:
 	psql -d capita -U stevenesuh
-sh-api:
-	docker exec -it $(shell docker ps -qf "name=api") sh
-sh-client:
-	docker exec -it $(shell docker ps -qf "name=client") sh
-update-client:
-	docker exec -it $(shell docker ps -qf "name=client") sh -c 'rm -f yarn.lock && yarn'
-update-api:
-	docker exec -it $(shell docker ps -qf "name=api") sh -c 'go get'
 
 migrate-create:
-	goose -dir=./server/migrations postgres "user=stevenesuh dbname=capita sslmode=disable" create ${NAME} sql
+	cd server; npx sequelize-cli model:create --name
 migrate-up:
-	goose -dir=./server/migrations postgres "user=stevenesuh dbname=capita sslmode=disable" up
+	cd server; npx sequelize-cli db:migrate
 migrate-down:
-	goose -dir=./server/migrations postgres "user=stevenesuh dbname=capita sslmode=disable" down
+	cd server; npx sequelize-cli db:migrate:undo
 migrate-status:
-	goose -dir=./server/migrations postgres "user=stevenesuh dbname=capita sslmode=disable" status
+	cd server; npx sequelize-cli db:migrate:status

@@ -1,0 +1,14 @@
+{
+  "name": "proto",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "generate": "./generate.sh",
+    "pbjs": "pbjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "protobufjs": "^6.8.8"
+  }
+}

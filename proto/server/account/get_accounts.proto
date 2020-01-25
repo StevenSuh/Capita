@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package server.account;
+
+import "shared/account.proto";
+
+message GetAccountsRequest {
+  // If provided, returns results associated with the profile_ids.
+  repeated string obfuscated_profile_ids = 1;
+
+  // If provided, returns results associated with the account_ids.
+  repeated string obfuscated_account_ids = 2;
+}
+
+message GetAccountsResponse {
+  repeated shared.Account accounts = 1;
+}
+

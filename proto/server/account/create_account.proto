@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package server.account;
+
+import "shared/account.proto";
+
+message CreateAccountRequest {
+  string name = 1; // required
+
+  shared.AccountType type = 2; // required
+
+  string subtype = 3; // required
+
+  shared.Balance balance = 4; // required
+}
+
+message CreateAccountResponse {
+  shared.Account account = 1;
+}
+

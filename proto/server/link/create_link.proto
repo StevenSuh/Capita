@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package server.link;
+
+message CreateLinkRequest {
+  string plaid_public_token = 1; // required
+
+  string plaid_institution_id = 2; // required
+}
+
+message CreateLinkResponse {}
+

@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package server.user;
+
+message UpdateNotificationsRequest {
+  // One of the following fields is required.
+  bool enable_notifications = 1;
+
+  bool enable_transaction_alert = 2;
+
+  bool enable_monthly_report = 3;
+}
+
+message UpdateNotificationsResponse {}
+

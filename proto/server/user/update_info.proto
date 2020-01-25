@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package server.user;
+
+message UpdateInfoRequest {
+  string email = 1; // required
+
+  string password = 2; // required
+}
+
+message UpdateInfoResponse {}
+

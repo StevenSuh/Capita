@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package server.transaction;
+
+import "shared/transaction.proto";
+
+message CreateTransactionRequest {
+  string obfuscated_account_id = 1; // required
+
+  string name = 2; // required
+
+  string category = 3; // required
+
+  string type = 4; // required
+
+  float amount = 5; // required
+
+  string date = 6; // required
+
+  string note = 7;
+
+  bool recurring = 8;
+}
+
+message CreateTransactionResponse {
+  shared.Transaction transaction = 1;
+}
+

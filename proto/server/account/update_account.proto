@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package server.account;
+
+import "shared/account.proto";
+
+message UpdateAccountRequest {
+  string obfuscated_id = 1; // required
+
+  // One of the following fields are required.
+  string mask = 2;
+
+  string name = 3;
+
+  string subtype = 4;
+
+  shared.AccountType type = 5;
+
+  bool hidden = 6;
+}
+
+message UpdateAccountResponse {}
+

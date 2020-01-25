@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package server.profile;
+
+import "shared/profile.proto";
+
+message CreateProfileRequest {
+  string name = 1; // required
+
+  repeated string obfuscated_account_ids = 2; // required
+}
+
+message CreateProfileResponse {
+  shared.Profile profile = 1;
+}
+

@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package server.transaction;
+
+message UpdateTransactionRequest {
+  string obfuscated_id = 1; // required
+
+  // One of the following fields are required.
+  string name = 2;
+
+  string category = 3;
+
+  string type = 4;
+
+  float amount = 5; // only if manually created.
+
+  string date = 6; // only if manually created.
+
+  string note = 7;
+
+  bool recurring = 8;
+
+  bool hidden = 9;
+}
+
+message UpdateTransactionResponse {}
+
