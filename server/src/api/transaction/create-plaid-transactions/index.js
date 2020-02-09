@@ -66,16 +66,13 @@ async function handleCreatePlaidTransactions(request) {
     returning: true,
   });
 
-  const results = newTransactions.map(newTransaction => {
+  const results = newTransactions.map(({ plaidTransactionId }) => {
     const successfulTransaction = successfulTransactions.find(
-      transaction =>
-        newTransaction.plaidTransactionId === transaction.plaidTransactionId,
+      transaction => plaidTransactionId === transaction.plaidTransactionId,
     );
 
     return CreatePlaidTransactionsResponse.Result.create({
-      transactionId: successfulTransaction
-        ? successfulTransaction.id
-        : undefined,
+      plaidTransactionId,
       errorType: successfulTransaction
         ? undefined
         : ErrorType.create({

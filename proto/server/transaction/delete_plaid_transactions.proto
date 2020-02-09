@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package server.transaction;
+
+import "shared/error_type.proto";
+
+message DeletePlaidTransactionsRequest {
+  repeated string plaid_transaction_ids = 1; // required
+}
+
+message DeletePlaidTransactionsResponse {
+  message Result {
+    string plaid_transaction_id = 1;
+
+    // If unset, successful.
+    shared.ErrorType error_type = 3;
+  }
+  repeated Result results = 1;
+}
+

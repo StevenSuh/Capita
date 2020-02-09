@@ -29,6 +29,8 @@ async function handleDeleteTransactions(request) {
   )}) RETURNING id`;
   const [deletedIds] = await sequelize.query(query);
 
+  // TODO: Update account_balance_history accordingly.
+
   const results = deletingIds.map(id =>
     DeleteTransactionsResponse.Result.create({
       obfuscatedId: obfuscateId(id),
