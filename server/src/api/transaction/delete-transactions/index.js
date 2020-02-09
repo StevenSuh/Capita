@@ -35,7 +35,7 @@ async function handleDeleteTransactions(request) {
       errorType: deletedIds.includes(id)
         ? undefined // success
         : ErrorType.create({
-            type: ErrorTypeEnum.UNKNOWN,
+            type: ErrorTypeEnum.DATABASE,
           }),
     }),
   );

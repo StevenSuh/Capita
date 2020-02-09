@@ -1,6 +1,6 @@
 const {
   UpdateProfileRequest,
-} = require('shared/proto/server/profile/update_profile').server.user;
+} = require('shared/proto/server/profile/update_profile').server.profile;
 
 const { ValidationError } = require('@src/shared/error');
 const {
