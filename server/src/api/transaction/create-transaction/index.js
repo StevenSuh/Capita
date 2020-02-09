@@ -1,7 +1,7 @@
 const {
   CreateTransactionRequest,
   CreateTransactionResponse,
-} = require('shared/proto/server/transaction/create_request').server.transaction;
+} = require('shared/proto/server/transaction/create_transaction').server.transaction;
 const { SessionToken } = require('shared/proto/server/session_token').server;
 
 const { Account, Transaction } = require('@src/db/models');

@@ -20,7 +20,16 @@ function validate(request) {
     );
   }
   validateRequiredFields(request, ['obfuscatedId']);
-  validateOneOfFields(request, ['name', 'category', 'type', 'amount', 'date', 'note', 'recurring', 'hidden']);
+  validateOneOfFields(request, [
+    'name',
+    'category',
+    'type',
+    'amount',
+    'date',
+    'note',
+    'recurring',
+    'hidden',
+  ]);
 }
 
 module.exports = validate;

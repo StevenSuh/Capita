@@ -1,0 +1,53 @@
+syntax = "proto3";
+
+package server.transaction;
+
+import "shared/error_type.proto";
+import "shared/transaction.proto";
+
+// Endpoint not exposed to client.
+message CreatePlaidTransactionRequest {
+  message PlaidTransaction {
+    int32 user_id = 1; // required
+
+    string plaid_account_id = 2; // required
+
+    string plaid_transaction_id = 3; // required
+
+    string name = 4; // required
+
+    string category = 5; // required
+
+    string type = 6; // required
+
+    float amount = 7; // required
+
+    string iso_currency_code = 8; // required
+
+    string unofficial_currency_code = 9; // required
+
+    string date = 10; // required
+
+    string note = 11;
+
+    bool pending = 12;
+
+    bool recurring = 13;
+
+    bool manually_created = 14;
+
+    bool hidden = 15;
+  }
+  repeated PlaidTransaction transactions = 1; // required
+}
+
+message CreatePlaidTransactionResponse {
+  message Result {
+    int32 transaction_id = 1;
+
+    // If unset, successful.
+    shared.ErrorType error_type = 2;
+  }
+  repeated Result results = 1;
+}
+

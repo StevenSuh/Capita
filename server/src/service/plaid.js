@@ -6,6 +6,7 @@ const plaidEnv =
   process.env.NODE_ENV === 'production'
     ? plaid.environments.production
     : plaid.environments.development;
+
 const plaidClient = new plaid.Client(
   plaidClientId,
   plaidSecret,
