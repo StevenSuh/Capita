@@ -1,7 +1,7 @@
 const {
-  CreatePlaidTransactionsRequest,
-  CreatePlaidTransactionsResponse,
-} = require('shared/proto/server/transaction/create_plaid_transactions').server.transaction;
+  UpsertPlaidTransactionsRequest,
+  UpsertPlaidTransactionsResponse,
+} = require('shared/proto/server/transaction/upsert_plaid_transactions').server.transaction;
 const {
   ErrorType,
   ErrorTypeEnum,
@@ -14,7 +14,7 @@ const validate = require('./validator');
 /**
  * Converts PlaidTransaction protos to object for query.
  *
- * @param {CreatePlaidTransactionsRequest.PlaidTransaction[]} transactions - List of transaction protos.
+ * @param {UpsertPlaidTransactionsRequest.PlaidTransaction[]} transactions - List of transaction protos.
  * @returns {Promise<object[]>} - Promise that resolves to list of transaction query objects.
  */
 function convertPlaidTransactionsToObject(transactions) {
@@ -24,7 +24,7 @@ function convertPlaidTransactionsToObject(transactions) {
         where: { plaidAccountId: transaction.plaidAccountId },
       });
       if (!account) {
-        // TODO: Call create_plaid_accounts since it's missing
+        // TODO: Call upsert_plaid_accounts since it's missing
         return {};
       }
 
@@ -50,13 +50,13 @@ function convertPlaidTransactionsToObject(transactions) {
 }
 
 /**
- * CreatePlaidTransactions endpoint.
- * Creates and returns a new transaction.
+ * UpsertPlaidTransactions endpoint.
+ * Upserts and returns a new transaction.
  *
- * @param {CreatePlaidTransactionsRequest} request - request proto.
- * @returns {CreatePlaidTransactionsResponse} - response proto.
+ * @param {UpsertPlaidTransactionsRequest} request - request proto.
+ * @returns {UpsertPlaidTransactionsResponse} - response proto.
  */
-async function handleCreatePlaidTransactions(request) {
+async function handleUpsertPlaidTransactions(request) {
   validate(request);
 
   const newTransactions = await convertPlaidTransactionsToObject(
@@ -64,6 +64,7 @@ async function handleCreatePlaidTransactions(request) {
   );
   const successfulTransactions = await Transaction.bulkCreate(newTransactions, {
     returning: true,
+    updateOnDuplicate: true,
   });
 
   const results = newTransactions.map(({ plaidTransactionId }) => {
@@ -71,7 +72,7 @@ async function handleCreatePlaidTransactions(request) {
       transaction => plaidTransactionId === transaction.plaidTransactionId,
     );
 
-    return CreatePlaidTransactionsResponse.Result.create({
+    return UpsertPlaidTransactionsResponse.Result.create({
       plaidTransactionId,
       errorType: successfulTransaction
         ? undefined
@@ -81,9 +82,9 @@ async function handleCreatePlaidTransactions(request) {
     });
   });
 
-  return CreatePlaidTransactionsResponse.create({ results });
+  return UpsertPlaidTransactionsResponse.create({ results });
 }
 
 module.exports = {
-  handleCreatePlaidTransactions,
+  handleUpsertPlaidTransactions,
 };

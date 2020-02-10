@@ -1,19 +1,19 @@
 const {
-  CreatePlaidTransactionsRequest,
-} = require('shared/proto/server/transaction/create_plaid_transactions').server.transaction;
+  UpsertPlaidTransactionsRequest,
+} = require('shared/proto/server/transaction/upsert_plaid_transactions').server.transaction;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');
 
 /**
- * Validates CreatePlaidTransactionsRequest.
+ * Validates UpsertPlaidTransactionsRequest.
  *
- * @param {CreatePlaidTransactionsRequest} request - CreatePlaidTransactionsRequest proto.
+ * @param {UpsertPlaidTransactionsRequest} request - UpsertPlaidTransactionsRequest proto.
  */
 function validate(request) {
-  if (!(request instanceof CreatePlaidTransactionsRequest)) {
+  if (!(request instanceof UpsertPlaidTransactionsRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of CreatePlaidTransactionsRequest`,
+      `Request ${request} is not an instance of UpsertPlaidTransactionsRequest`,
     );
   }
   validateRequiredFields(request, ['transactions']);

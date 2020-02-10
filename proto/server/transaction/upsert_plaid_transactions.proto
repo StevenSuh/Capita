@@ -3,10 +3,9 @@ syntax = "proto3";
 package server.transaction;
 
 import "shared/error_type.proto";
-import "shared/transaction.proto";
 
 // Endpoint not exposed to client.
-message CreatePlaidTransactionRequest {
+message UpsertPlaidTransactionRequest {
   message PlaidTransaction {
     int32 user_id = 1; // required
 
@@ -41,9 +40,9 @@ message CreatePlaidTransactionRequest {
   repeated PlaidTransaction transactions = 1; // required
 }
 
-message CreatePlaidTransactionResponse {
+message UpsertPlaidTransactionResponse {
   message Result {
-    int32 transaction_id = 1;
+    string plaid_transaction_id = 1;
 
     // If unset, successful.
     shared.ErrorType error_type = 2;
