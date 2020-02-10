@@ -1,0 +1,67 @@
+const {
+  UpsertAccountBalanceHistoriesRequest,
+  UpsertAccountBalanceHistoriesResponse,
+} = require('shared/proto/server/transaction/upsert_plaid_transactions').server.transaction;
+const {
+  ErrorType,
+  ErrorTypeEnum,
+} = require('shared/proto/shared/error_type').shared;
+
+const { Account, Transaction } = require('@src/db/models');
+
+const validate = require('./validator');
+
+function convertAccountBalanceHistoryToObject(item) {
+  const updatingItem = {};
+
+  if (item.id) {
+    updatingItem.id = item.id;
+  }
+  if (item.accountId) {
+    updatingItem.accountId = item.accountId;
+  }
+  if (item.amount) {
+    updatingItem.amount = item.amount;
+  }
+  if (item.date) {
+    updatingItem.date = item.date;
+  }
+
+  return updatingItem;
+}
+
+/**
+ * UpsertAccountBalanceHistories endpoint.
+ * Upserts and returns a new transaction.
+ *
+ * @param {UpsertAccountBalanceHistoriesRequest} request - request proto.
+ * @returns {UpsertAccountBalanceHistoriesResponse} - response proto.
+ */
+async function handleUpsertAccountBalanceHistories(request) {
+  validate(request);
+
+  const requestItems = request.items.map(convertAccountBalanceHistoryToObject);
+  const successfulItems = await AccountBalanceHistory.bulkCreate(requestItems, {
+    returning: true,
+    updateOnDuplicate: true,
+  });
+
+  const results = requestItems.map({ id } => {
+    const isSuccess = Boolean(successfulItems.find(item => item.id === id));
+
+    return UpsertAccountBalanceHistoriesResponse.Result.create({
+      id,
+      errorType: successfulTransaction
+        ? undefined
+        : ErrorType.create({
+            type: ErrorTypeEnum.DATABASE,
+          }),
+    });
+  });
+
+  return UpsertAccountBalanceHistoriesResponse.create({ results });
+}
+
+module.exports = {
+  handleUpsertAccountBalanceHistories,
+};

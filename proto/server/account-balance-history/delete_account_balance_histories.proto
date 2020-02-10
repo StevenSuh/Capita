@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package server.account_balance_history;
+
+import "shared/error_type.proto";
+
+message DeleteAccountBalanceHistoriesRequest {
+  repeated int32 ids = 1; // required
+}
+
+message DeleteAccountBalanceHistoriesResponse {
+  message Result {
+    int32 id = 1;
+
+    // If unset, successful.
+    shared.ErrorType error_type = 2;
+  }
+  repeated Result results = 1;
+}
+

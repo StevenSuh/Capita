@@ -10,9 +10,17 @@ module.exports = {
       },
       userId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Users',
+          key: 'id',
+        },
       },
       accountId: {
         type: Sequelize.INTEGER,
+        references: {
+          model: 'Accounts',
+          key: 'id',
+        },
       },
       amount: {
         type: Sequelize.DECIMAL,

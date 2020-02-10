@@ -13,7 +13,7 @@ message DeleteTransactionsResponse {
     string obfuscated_id = 1;
 
     // If unset, successful.
-    shared.ErrorType error_type = 3;
+    shared.ErrorType error_type = 2;
   }
   repeated Result results = 1;
 }

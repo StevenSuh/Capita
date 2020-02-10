@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+package server.account_balance_history;
+
+import "shared/account_balance_history.proto";
+
+message GetAccountBalanceHistoriesRequest {
+  // If provided, returns results associated with the account_ids.
+  repeated string obfuscated_account_ids = 1;
+}
+
+message GetAccountBalanceHistoriesResponse {
+  repeated shared.AccountBalanceHistory account_balance_histories = 1;
+}
+

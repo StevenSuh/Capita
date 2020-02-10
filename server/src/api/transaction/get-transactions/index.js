@@ -3,6 +3,7 @@ const {
   GetTransactionsRequest,
   GetTransactionsResponse,
 } = require('shared/proto/server/transaction/get_transactions');
+const { SessionToken } = require('shared/proto/server/session_token').server;
 
 const { Transaction } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
@@ -16,9 +17,10 @@ const validate = require('./validator');
  * Could filter results by matching accountIds or transactioinIds in the query if supplied in request.
  *
  * @param {GetTransactionsRequest} request - request proto.
+ * @param {SessionToken} session - session proto.
  * @returns {GetTransactionsResponse} - response proto.
  */
-async function handleGetTransactions(request) {
+async function handleGetTransactions(request, session) {
   validate(request);
 
   const accountIds = (request.obfuscatedAccountIds || []).map(unobfuscateId);
@@ -26,10 +28,23 @@ async function handleGetTransactions(request) {
     unobfuscateId,
   );
 
+  const whereQuery = { userId: session.userId };
+
+  if (transactionIds.length || accountIds.length) {
+    const orFieldQuery = [];
+
+    if (transactionIds.length) {
+      orFieldQuery.push({ transactionId: transactionIds });
+    }
+    if (accountIds.length) {
+      orFieldQuery.push({ accountId: accountIds });
+    }
+
+    whereQuery[Op.or] = orFieldQuery;
+  }
+
   const transactions = await Transaction.findAll({
-    where: {
-      [Op.or]: [{ accountId: accountIds }, { transactionId: transactionIds }],
-    },
+    where: whereQuery,
   }).then(results => results.map(convertTransactionToProto));
 
   return GetTransactionsResponse.create({ transactions });
@@ -47,7 +62,7 @@ function registerGetTransactionsRoute(app) {
     async (req, res) => {
       const request = GetTransactionsRequest.decode(req.raw);
 
-      const response = await handleGetTransactions(request);
+      const response = await handleGetTransactions(request, req.session);
       const responseBuffer = GetTransactionsResponse.encode(response).finish();
 
       return res.send(responseBuffer);

@@ -2,6 +2,7 @@ const {
   GetAccountsRequest,
   GetAccountsResponse,
 } = require('shared/proto/server/account/get_accounts');
+const { SessionToken } = require('shared/proto/server/session_token').server;
 
 const { Account, Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
@@ -28,9 +29,10 @@ function reduceProfilesToAccountIds(profiles) {
  * Could filter results by matching accountIds or profileIds at the point of querying.
  *
  * @param {GetAccountsRequest} request - request proto.
+ * @param {SessionToken} session - session proto.
  * @returns {GetAccountsResponse} - response proto.
  */
-async function handleGetAccounts(request) {
+async function handleGetAccounts(request, session) {
   validate(request);
 
   let accountIds = (request.obfuscatedAccountIds || []).map(unobfuscateId);
@@ -42,8 +44,13 @@ async function handleGetAccounts(request) {
     accountIds = Array.from(new Set(accountIds.concat(accountIdsFromProfiles)));
   }
 
+  const whereQuery = { userId: session.userId };
+  if (accountIds.length) {
+    whereQuery.id = accountIds;
+  }
+
   const accounts = await Account.findAll({
-    where: { id: accountIds },
+    where: whereQuery,
   }).then(results => results.map(convertAccountToProto));
 
   return GetAccountsResponse.create({ accounts });
@@ -58,7 +65,7 @@ function registerGetAccountsRoute(app) {
   app.post('/api/account/get-accounts', verifyAuth, async (req, res) => {
     const request = GetAccountsRequest.decode(req.raw);
 
-    const response = await handleGetAccounts(request);
+    const response = await handleGetAccounts(request, req.session);
     const responseBuffer = GetAccountsResponse.encode(response).finish();
 
     return res.send(responseBuffer);
