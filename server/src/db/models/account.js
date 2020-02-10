@@ -6,7 +6,10 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       linkId: DataTypes.INTEGER,
-      plaidAccountId: DataTypes.STRING,
+      plaidAccountId: {
+        type: DataTypes.STRING,
+        unique: true,
+      },
       mask: DataTypes.STRING,
       name: DataTypes.STRING,
       officialName: DataTypes.STRING,
