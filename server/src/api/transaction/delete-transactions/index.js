@@ -7,10 +7,14 @@ const {
   ErrorTypeEnum,
 } = require('shared/proto/shared/error_type').shared;
 
+const {
+  handleUpsertAccountBalanceHistories,
+} = require('@src/api/account-balance-history/upsert-account-balance-histories');
 const { sequelize, Transaction } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
 const { obfuscateId, unobfuscateId } = require('@src/shared/util');
 
+const { createUpsertAccountBalanceHistoriesRequest } = require('../util');
 const validate = require('./validator');
 
 /**
@@ -26,15 +30,22 @@ async function handleDeleteTransactions(request) {
   const deletingIds = request.obfuscatedIds.map(unobfuscateId);
   const query = `DELETE FROM "${Transaction.getTableName()}" WHERE id IN (${deletingIds.join(
     ', ',
-  )}) RETURNING id`;
-  const [deletedIds] = await sequelize.query(query);
+  )}) RETURNING *`;
+  const [deletedTransactions] = await sequelize.query(query);
 
-  // TODO: Update account_balance_history accordingly.
+  // Update balance histories accordingly.
+  const upsertAccountBalanceHistoriesRequest = createUpsertAccountBalanceHistoriesRequest(
+    deletedTransactions,
+  );
+  handleUpsertAccountBalanceHistories(
+    upsertAccountBalanceHistoriesRequest,
+    /* newTransactions= */ [],
+  );
 
   const results = deletingIds.map(id =>
     DeleteTransactionsResponse.Result.create({
       obfuscatedId: obfuscateId(id),
-      errorType: deletedIds.includes(id)
+      errorType: deletedTransactions.find(transaction => transaction.id === id)
         ? undefined // success
         : ErrorType.create({
             type: ErrorTypeEnum.DATABASE,

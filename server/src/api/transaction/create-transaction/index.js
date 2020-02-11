@@ -49,6 +49,8 @@ async function handleCreateTransaction(request, session) {
     manuallyCreated: true,
   }).then(convertTransactionToProto);
 
+  // TODO: upsert account balance histories
+
   return CreateTransactionResponse.create({ transaction });
 }
 
