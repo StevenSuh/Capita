@@ -1,4 +1,6 @@
-const { registerGetAccountBalanceHistoriesRoute } = require('./get-account-balance-histories');
+const {
+  registerGetAccountBalanceHistoriesRoute,
+} = require('./get-account-balance-histories');
 
 module.exports = app => {
   registerGetAccountBalanceHistoriesRoute(app);

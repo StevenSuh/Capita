@@ -1,4 +1,6 @@
-const { AccountBalanceHistory } = require('shared/proto/shared/account_balance_history').shared;
+const {
+  AccountBalanceHistory,
+} = require('shared/proto/shared/account_balance_history').shared;
 
 const { obfuscateId } = require('@src/shared/util');
 

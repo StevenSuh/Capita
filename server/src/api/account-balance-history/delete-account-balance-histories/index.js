@@ -22,7 +22,7 @@ async function handleDeleteAccountBalanceHistories(request) {
   validate(request);
 
   const deletingIds = request.ids;
-  const query = `DELETE FROM "${AccountBalanceHistories.getTableName()}" WHERE id IN (${deletingIds.join(
+  const query = `DELETE FROM "${AccountBalanceHistory.getTableName()}" WHERE id IN (${deletingIds.join(
     ', ',
   )}) RETURNING id`;
   const [deletedIds] = await sequelize.query(query);

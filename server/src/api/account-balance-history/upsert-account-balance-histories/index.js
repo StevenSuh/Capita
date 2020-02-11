@@ -7,10 +7,16 @@ const {
   ErrorTypeEnum,
 } = require('shared/proto/shared/error_type').shared;
 
-const { Account, Transaction } = require('@src/db/models');
+const { AccountBalanceHistory } = require('@src/db/models');
 
 const validate = require('./validator');
 
+/**
+ * Converts UpsertingItem proto to object.
+ *
+ * @param {UpsertAccountBalanceHistoriesRequest.UpsertingItem} item - item proto.
+ * @returns {object} - object of UpsertingItem.
+ */
 function convertAccountBalanceHistoryToObject(item) {
   const updatingItem = {};
 
@@ -46,12 +52,12 @@ async function handleUpsertAccountBalanceHistories(request) {
     updateOnDuplicate: true,
   });
 
-  const results = requestItems.map({ id } => {
+  const results = requestItems.map(({ id }) => {
     const isSuccess = Boolean(successfulItems.find(item => item.id === id));
 
     return UpsertAccountBalanceHistoriesResponse.Result.create({
       id,
-      errorType: successfulTransaction
+      errorType: isSuccess
         ? undefined
         : ErrorType.create({
             type: ErrorTypeEnum.DATABASE,

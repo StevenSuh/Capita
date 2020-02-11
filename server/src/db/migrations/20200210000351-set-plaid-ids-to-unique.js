@@ -30,12 +30,20 @@ module.exports = {
         queryInterface.removeConstraint('Links', 'Links_plaidItemId_uk', {
           transaction,
         }),
-        queryInterface.removeConstraint('Accounts', 'Accounts_plaidAccountId_uk', {
-          transaction,
-        }),
-        queryInterface.removeConstraint('Transactions', 'Transactions_plaidTransactionId_uk', {
-          transaction,
-        }),
+        queryInterface.removeConstraint(
+          'Accounts',
+          'Accounts_plaidAccountId_uk',
+          {
+            transaction,
+          },
+        ),
+        queryInterface.removeConstraint(
+          'Transactions',
+          'Transactions_plaidTransactionId_uk',
+          {
+            transaction,
+          },
+        ),
       ]),
     ),
 };

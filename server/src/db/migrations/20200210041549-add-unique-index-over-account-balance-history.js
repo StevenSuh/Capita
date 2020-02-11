@@ -6,6 +6,8 @@ module.exports = {
       unique: true,
     }),
   down: (queryInterface, Sequelize) =>
-    queryInterface.removeIndex('AccountBalanceHistories', 'account_balance_histories_account_id_date'),
+    queryInterface.removeIndex(
+      'AccountBalanceHistories',
+      'account_balance_histories_account_id_date',
+    ),
 };
-

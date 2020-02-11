@@ -42,14 +42,23 @@ async function handleGetAccountBalanceHistories(request, session) {
  * @param {object} app - given.
  */
 function registerGetAccountBalanceHistoriesRoute(app) {
-  app.post('/api/account-balance-history/get-account-balance-histories', verifyAuth, async (req, res) => {
-    const request = GetAccountBalanceHistoriesRequest.decode(req.raw);
+  app.post(
+    '/api/account-balance-history/get-account-balance-histories',
+    verifyAuth,
+    async (req, res) => {
+      const request = GetAccountBalanceHistoriesRequest.decode(req.raw);
 
-    const response = await handleGetAccountBalanceHistories(request, req.session);
-    const responseBuffer = GetAccountBalanceHistoriesResponse.encode(response).finish();
+      const response = await handleGetAccountBalanceHistories(
+        request,
+        req.session,
+      );
+      const responseBuffer = GetAccountBalanceHistoriesResponse.encode(
+        response,
+      ).finish();
 
-    return res.send(responseBuffer);
-  });
+      return res.send(responseBuffer);
+    },
+  );
 }
 
 module.exports = {

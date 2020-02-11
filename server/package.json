@@ -15,6 +15,7 @@
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
     "module-alias": "^2.2.2",
+    "moment": "^2.24.0",
     "morgan": "^1.9.1",
     "pg": "^7.17.1",
     "plaid": "^4.3.0",
