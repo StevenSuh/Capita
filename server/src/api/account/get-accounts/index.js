@@ -2,7 +2,9 @@ const {
   GetAccountsRequest,
   GetAccountsResponse,
 } = require('shared/proto/server/account/get_accounts').server.account;
-const { GetProfilesRequest } = require('shared/proto/server/profile/get_profiles').server.profile;
+const {
+  GetProfilesRequest,
+} = require('shared/proto/server/profile/get_profiles').server.profile;
 const { Profile } = require('shared/proto/shared/profile').shared;
 const { SessionToken } = require('shared/proto/server/session_token').server;
 
@@ -22,7 +24,8 @@ const validate = require('./validator');
  */
 function reduceProfilesToAccountIds(profiles) {
   return profiles.reduce(
-    (accumulator, profile) => accumulator.concat(profile.obfuscatedAccountIds.map(unobfuscateId)),
+    (accumulator, profile) =>
+      accumulator.concat(profile.obfuscatedAccountIds.map(unobfuscateId)),
     [],
   );
 }
@@ -40,9 +43,13 @@ async function handleGetAccounts(request, session) {
 
   let accountIds = (request.obfuscatedAccountIds || []).map(unobfuscateId);
   if (request.obfuscatedProfileIds) {
-    const getProfilesRequest = GetProfilesRequest.create({ obfuscatedProfileIds: request.obfuscatedProfileIds });
+    const getProfilesRequest = GetProfilesRequest.create({
+      obfuscatedProfileIds: request.obfuscatedProfileIds,
+    });
     const getProfilesResponse = await handleGetProfiles(getProfilesRequest);
-    const accountIdsFromProfiles = reduceProfilesToAccountIds(getProfilesResponse.profiles);
+    const accountIdsFromProfiles = reduceProfilesToAccountIds(
+      getProfilesResponse.profiles,
+    );
     // Merges accountIds from profiles and request without duplicates.
     accountIds = Array.from(new Set(accountIds.concat(accountIdsFromProfiles)));
   }

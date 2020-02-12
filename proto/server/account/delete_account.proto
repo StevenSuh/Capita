@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package server.account;
+
+message DeleteAccountRequest {
+  string obfuscated_id = 1; // required
+}
+
+message DeleteAccountResponse {}

@@ -1,18 +1,16 @@
-const {GetAccountBalanceHistoriesRequest} =
-    require(
-        'shared/proto/server/account-balance-history/get_account_balance_histories')
-        .server.account_balance_history;
+const moment = require('moment');
+const {
+  GetAccountBalanceHistoriesRequest,
+} = require('shared/proto/server/account-balance-history/get_account_balance_histories').server.account_balance_history;
 const {
   UpsertAccountBalanceHistoriesRequest,
-} =
-    require(
-        'shared/proto/server/account-balance-history/upsert_account_balance_histories')
-        .server.account_balance_history;
-const {Transaction} = require('shared/proto/shared/transaction').shared;
+} = require('shared/proto/server/account-balance-history/upsert_account_balance_histories').server.account_balance_history;
+const { Transaction } = require('shared/proto/shared/transaction').shared;
 
-const {handleGetAccountBalanceHistories} =
-    require('@src/api/account-balance-history/get-account-balance-histories');
-const {obfuscateId} = require('@src/shared/util');
+const {
+  handleGetAccountBalanceHistories,
+} = require('@src/api/account-balance-history/get-account-balance-histories');
+const { obfuscateId } = require('@src/shared/util');
 
 /**
  * Convert transaction object to client-consumable transaction proto.
@@ -56,8 +54,8 @@ function createDateSortedTransactionMapByAccountId(transactions) {
     map[transaction.accountId].push(transaction);
   });
   // Sorted from oldest date to most recent.
-  Object.keys(map).forEach(
-      key => map[key].sort((a, b) => (a.date > b.date ? 1 : -1)),
+  Object.keys(map).forEach(key =>
+    map[key].sort((a, b) => (a.date > b.date ? 1 : -1)),
   );
 
   return map;
@@ -71,7 +69,9 @@ function createDateSortedTransactionMapByAccountId(transactions) {
  * @returns {string} - Date string.
  */
 function normalizeToOneYearMax(date) {
-  const oneYearAgo = moment().subtract(1, 'year').format('YYYY-MM-DD');
+  const oneYearAgo = moment()
+    .subtract(1, 'year')
+    .format('YYYY-MM-DD');
   return date < oneYearAgo ? oneYearAgo : date;
 }
 
@@ -83,54 +83,55 @@ function normalizeToOneYearMax(date) {
  * @returns {object} - Map of histories by account id.
  */
 async function calculateAccountBalanceHistoriesByAccountId(
-    oldTransactionMap,
-    newTransactionMap,
+  oldTransactionMap,
+  newTransactionMap,
 ) {
   const accountBalanceHistoriesMap = {};
 
   await Promise.all(
-      Object.keys(newTransactionMap).map(async key => {
-        const oldTransactions = oldTransactionMap[key] || [];
-        const newTransactions = newTransactionMap[key] || [];
-        const minDate = oldTransactions[0].date < newTransactions[0].date ?
-            oldTransactions[0].date :
-            newTransactions[0].date;
+    Object.keys(newTransactionMap).map(async key => {
+      const oldTransactions = oldTransactionMap[key] || [];
+      const newTransactions = newTransactionMap[key] || [];
+      const minDate =
+        oldTransactions[0].date < newTransactions[0].date
+          ? oldTransactions[0].date
+          : newTransactions[0].date;
 
-        const request = GetAccountBalanceHistoriesRequest.create({
-          obfuscatedAccountIds: [obfuscateId(key)],
-          startDate: normalizeToOneYearMax(minDate),
-        });
-        const response = await handleGetAccountBalanceHistories(request);
-        const accountBalanceHistories = response.accountBalanceHistories;
+      const request = GetAccountBalanceHistoriesRequest.create({
+        obfuscatedAccountIds: [obfuscateId(key)],
+        startDate: normalizeToOneYearMax(minDate),
+      });
+      const response = await handleGetAccountBalanceHistories(request);
+      const { accountBalanceHistories } = response;
 
-        // Subtract old transaction balances from fetched histories.
-        oldTransactions.forEach(transaction => {
-          let index = accountBalanceHistories.findIndex(
-              item => item.date === transaction.date,
-          );
-          index = index === -1 ? 0 : index;
+      // Subtract old transaction balances from fetched histories.
+      oldTransactions.forEach(transaction => {
+        let index = accountBalanceHistories.findIndex(
+          item => item.date === transaction.date,
+        );
+        index = index === -1 ? 0 : index;
 
-          while (index < accountBalanceHistories.length) {
-            accountBalanceHistories[index].amount -= transaction.amount;
-            index += 1;
-          }
-        });
+        while (index < accountBalanceHistories.length) {
+          accountBalanceHistories[index].amount -= transaction.amount;
+          index += 1;
+        }
+      });
 
-        // Add new transaction balances to fetched histories.
-        newTransactions.forEach(transaction => {
-          let index = accountBalanceHistories.findIndex(
-              item => item.date === transaction.date,
-          );
-          index = index === -1 ? 0 : index;
+      // Add new transaction balances to fetched histories.
+      newTransactions.forEach(transaction => {
+        let index = accountBalanceHistories.findIndex(
+          item => item.date === transaction.date,
+        );
+        index = index === -1 ? 0 : index;
 
-          while (index < accountBalanceHistories.length) {
-            accountBalanceHistories[index].amount += transaction.amount;
-            index += 1;
-          }
-        });
+        while (index < accountBalanceHistories.length) {
+          accountBalanceHistories[index].amount += transaction.amount;
+          index += 1;
+        }
+      });
 
-        accountBalanceHistoriesMap[key] = accountBalanceHistories;
-      }),
+      accountBalanceHistoriesMap[key] = accountBalanceHistories;
+    }),
   );
 
   return accountBalanceHistoriesMap;
@@ -147,39 +148,36 @@ async function calculateAccountBalanceHistoriesByAccountId(
  * @returns {UpsertAccountBalanceHistoriesRequest} - request proto.
  */
 async function createUpsertAccountBalanceHistoriesRequest(
-    oldTransactions,
-    newTransactions,
+  oldTransactions,
+  newTransactions,
 ) {
   const oldTransactionMap = createDateSortedTransactionMapByAccountId(
-      oldTransactions,
+    oldTransactions,
   );
   const newTransactionMap = createDateSortedTransactionMapByAccountId(
-      newTransactions,
+    newTransactions,
   );
-  const accountBalanceHistoriesMap =
-      await calculateAccountBalanceHistoriesByAccountId(
-          oldTransactionMap,
-          newTransactionMap,
-      );
+  const accountBalanceHistoriesMap = await calculateAccountBalanceHistoriesByAccountId(
+    oldTransactionMap,
+    newTransactionMap,
+  );
 
-  const upsertingItems =
-      Object.keys(accountBalanceHistoriesMap)
-          .reduce(
-              (accumulator, key) => accumulator.concat(
-                  accountBalanceHistoriesMap[key].map(
-                      item => UpsertAccountBalanceHistoriesRequest.UpsertingItem
-                                  .create({
-                                    id: item.id,
-                                    accountId: item.accountId,
-                                    amount: item.amount,
-                                    date: item.date,
-                                  }),
-                      ),
-                  ),
-              [],
-          );
+  const upsertingItems = Object.keys(accountBalanceHistoriesMap).reduce(
+    (accumulator, key) =>
+      accumulator.concat(
+        accountBalanceHistoriesMap[key].map(item =>
+          UpsertAccountBalanceHistoriesRequest.UpsertingItem.create({
+            id: item.id,
+            accountId: item.accountId,
+            amount: item.amount,
+            date: item.date,
+          }),
+        ),
+      ),
+    [],
+  );
 
-  return UpsertAccountBalanceHistoriesRequest.create({items: upsertingItems});
+  return UpsertAccountBalanceHistoriesRequest.create({ items: upsertingItems });
 }
 
 module.exports = {

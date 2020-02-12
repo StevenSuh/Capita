@@ -28,10 +28,14 @@ async function handleGetProfiles(request, session) {
     whereQuery.id = request.obfuscatedProfileIds.map(unobfuscateId);
   }
   if (request.obfuscatedAccountIds) {
-    whereQuery.accountIds = { [Op.overlap]: request.obfuscatedAccountIds.map(unobfuscateId) };
+    whereQuery.accountIds = {
+      [Op.overlap]: request.obfuscatedAccountIds.map(unobfuscateId),
+    };
   }
 
-  const profiles = await Profile.findAll({ where: whereQuery }).then(results => results.map(convertProfileToProto));
+  const profiles = await Profile.findAll({ where: whereQuery }).then(results =>
+    results.map(convertProfileToProto),
+  );
 
   return GetProfilesResponse.create({ profiles });
 }
