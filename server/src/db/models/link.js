@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   Link.associate = function(models) {
     // associations can be defined here
     Link.belongsTo(models.User);
-    Link.hasMany(models.Account);
+    Link.hasMany(models.Account, { onDelete: 'CASCADE' });
   };
   return Link;
 };

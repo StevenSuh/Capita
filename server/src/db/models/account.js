@@ -30,8 +30,8 @@ module.exports = (sequelize, DataTypes) => {
     // associations can be defined here
     Account.belongsTo(models.User);
     Account.belongsTo(models.Link);
-    Account.hasMany(models.Transaction);
-    Account.hasMany(models.AccountBalanceHistory);
+    Account.hasMany(models.Transaction, { onDelete: 'CASCADE' });
+    Account.hasMany(models.AccountBalanceHistory, { onDelete: 'CASCADE' });
   };
   return Account;
 };

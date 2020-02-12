@@ -14,10 +14,10 @@ module.exports = (sequelize, DataTypes) => {
   );
   User.associate = function(models) {
     // associations can be defined here
-    User.hasMany(models.Link);
-    User.hasMany(models.Profile);
-    User.hasMany(models.Account);
-    User.hasMany(models.AccountBalanceHistory);
+    User.hasMany(models.Link, { onDelete: 'CASCADE' });
+    User.hasMany(models.Profile, { onDelete: 'CASCADE' });
+    User.hasMany(models.Account, { onDelete: 'CASCADE' });
+    User.hasMany(models.AccountBalanceHistory, { onDelete: 'CASCADE' });
   };
   return User;
 };
