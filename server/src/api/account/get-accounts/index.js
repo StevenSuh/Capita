@@ -1,10 +1,13 @@
 const {
   GetAccountsRequest,
   GetAccountsResponse,
-} = require('shared/proto/server/account/get_accounts');
+} = require('shared/proto/server/account/get_accounts').server.account;
+const { GetProfilesRequest } = require('shared/proto/server/profile/get_profiles').server.profile;
+const { Profile } = require('shared/proto/shared/profile').shared;
 const { SessionToken } = require('shared/proto/server/session_token').server;
 
-const { Account, Profile } = require('@src/db/models');
+const { handleGetProfiles } = require('@src/api/profile/get-profiles');
+const { Account } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
 const { unobfuscateId } = require('@src/shared/util');
 
@@ -14,12 +17,12 @@ const validate = require('./validator');
 /**
  * Reduces profiles' account ids into a single list.
  *
- * @param {object[]} profiles - List of profile query results.
+ * @param {Profile[]} profiles - List of profile query results.
  * @returns {number[]} - List of account ids associated with the profiles.
  */
 function reduceProfilesToAccountIds(profiles) {
   return profiles.reduce(
-    (accumulator, profile) => accumulator.concat(profile.accountIds),
+    (accumulator, profile) => accumulator.concat(profile.obfuscatedAccountIds.map(unobfuscateId)),
     [],
   );
 }
@@ -37,9 +40,9 @@ async function handleGetAccounts(request, session) {
 
   let accountIds = (request.obfuscatedAccountIds || []).map(unobfuscateId);
   if (request.obfuscatedProfileIds) {
-    const accountIdsFromProfiles = await Profile.findAll({
-      where: { id: request.obfuscatedProfileIds.map(unobfuscateId) },
-    }).then(reduceProfilesToAccountIds);
+    const getProfilesRequest = GetProfilesRequest.create({ obfuscatedProfileIds: request.obfuscatedProfileIds });
+    const getProfilesResponse = await handleGetProfiles(getProfilesRequest);
+    const accountIdsFromProfiles = reduceProfilesToAccountIds(getProfilesResponse.profiles);
     // Merges accountIds from profiles and request without duplicates.
     accountIds = Array.from(new Set(accountIds.concat(accountIdsFromProfiles)));
   }
