@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package server.account;
+
+import "shared/account.proto";
+import "shared/error_type.proto";
+
+// Endpoint not exposed to client.
+message UpsertPlaidAccountsRequest {
+  message PlaidAccount {
+    int32 user_id = 1; // required
+
+    int32 link_id = 2; // required
+
+    string plaid_account_id = 3; // required
+
+    string mask = 4;
+
+    string name = 5; // required
+
+    string official_name = 6;
+
+    string subtype = 7; // required
+
+    shared.AccountType type = 8; // required
+
+    shared.VerificationStatus verification_status = 9; // required
+
+    shared.Balance balance = 10; // required
+
+    bool manually_created = 14;
+
+    bool hidden = 15;
+  }
+  repeated PlaidAccount accounts = 1; // required
+}
+
+message UpsertPlaidAccountsResponse {
+  message Result {
+    string plaid_account_id = 1;
+
+    // If unset, successful.
+    shared.ErrorType error_type = 2;
+  }
+  repeated Result results = 1;
+}
+

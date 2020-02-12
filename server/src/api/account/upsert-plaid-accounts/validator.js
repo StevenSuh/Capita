@@ -1,0 +1,34 @@
+const {
+  UpsertPlaidAccountsRequest,
+} = require('shared/proto/server/account/upsert_plaid_accounts').server.account;
+
+const { ValidationError } = require('@src/shared/error');
+const { validateRequiredFields } = require('@src/shared/util');
+
+/**
+ * Validates UpsertPlaidAccountsRequest.
+ *
+ * @param {UpsertPlaidAccountsRequest} request - UpsertPlaidAccountsRequest proto.
+ */
+function validate(request) {
+  if (!(request instanceof UpsertPlaidAccountsRequest)) {
+    throw new ValidationError(
+      `Request ${request} is not an instance of UpsertPlaidAccountsRequest`,
+    );
+  }
+  validateRequiredFields(request, ['accounts']);
+  request.accounts.forEach(account =>
+    validateRequiredFields(account, [
+      'userId',
+      'linkId',
+      'plaidAccountId',
+      'name',
+      'subtype',
+      'type',
+      'verificationStatus',
+      'balance',
+    ]),
+  );
+}
+
+module.exports = validate;

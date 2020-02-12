@@ -76,6 +76,28 @@ function convertVerificationStatusToEnum(verificationStatus) {
 }
 
 /**
+ * Converts VerificationStatus enum proto to string.
+ *
+ * @param {VerificationStatus} verificationStatus - VerificationStatus enum proto.
+ * @returns {string} - VerificationStatus string.
+ */
+function convertVerificationStatusToString(verificationStatus) {
+  switch (verificationStatus) {
+    case VerificationStatus.PENDING_AUTOMATIC_VERIFICATION:
+      return 'pending_automatic_verification';
+    case VerificationStatus.AUTOMATICALLY_VERIFIED:
+      return 'automatically_verified';
+    case VerificationStatus.PENDING_MANUAL_VERIFICATION:
+      return 'pending_manual_verification';
+    case VerificationStatus.MANUALLY_VERIFIED:
+      return 'manually_verified';
+    case VerificationStatus.UNKNOWN:
+    default:
+      return '';
+  }
+}
+
+/**
  * Creates Balance proto from Account query.
  *
  * @param {object} account - Account query result.
@@ -89,6 +111,22 @@ function createBalanceProtoFromAccount(account) {
     isoCurrencyCode: account.balanceIsoCurrencyCode,
     unofficialCurrencyCode: account.balanceUnofficialCurrencyCode,
   });
+}
+
+/**
+ * Converts Balance proto to query-compatible object.
+ *
+ * @param {Balance} balance - Balance proto.
+ * @returns {object} - Balance object.
+ */
+function convertBalanceProtoToObject(balance) {
+  return {
+    balanceCurrent: balance.current,
+    balanceAvailable: balance.available,
+    balanceLimit: balance.limit,
+    balanceIsoCurrencyCode: balance.isoCurrencyCode,
+    balanceUnofficialCurrencyCode: balance.unofficialCurrencyCode,
+  };
 }
 
 /**
@@ -120,5 +158,7 @@ module.exports = {
   convertAccountTypeToEnum,
   convertAccountTypeToString,
   convertVerificationStatusToEnum,
+  convertVerificationStatusToString,
+  convertBalanceProtoToObject,
   createBalanceProtoFromAccount,
 };
