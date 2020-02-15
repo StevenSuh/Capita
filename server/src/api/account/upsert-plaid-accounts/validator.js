@@ -13,7 +13,7 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof UpsertPlaidAccountsRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of UpsertPlaidAccountsRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of UpsertPlaidAccountsRequest`,
     );
   }
   validateRequiredFields(request, ['accounts']);

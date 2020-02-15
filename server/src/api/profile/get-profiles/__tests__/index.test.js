@@ -1,12 +1,13 @@
 const { Profile } = require('@src/db/models');
 
-const { convertProfileToProto } = require('../util');
-const { handleGetProfiles, registerGetProfilesRoute } = require('./');
+const { convertProfileToProto } = require('../../util');
+const { handleGetProfiles, registerGetProfilesRoute } = require('..');
 
 // Constants
 const USER_ID = 1;
 
 // Mocks
+jest.mock('../validator', () => () => {});
 jest.mock('@src/db/models', () => {
   return {
     Profile: {

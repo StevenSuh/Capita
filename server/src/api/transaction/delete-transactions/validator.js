@@ -13,7 +13,7 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof DeleteTransactionsRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of DeleteTransactionsRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of DeleteTransactionsRequest`,
     );
   }
   validateRequiredFields(request, ['obfuscatedIds']);

@@ -12,7 +12,7 @@ const { ValidationError } = require('@src/shared/error');
 function validate(request) {
   if (!(request instanceof GetTransactionsRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of GetTransactionsRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of GetTransactionsRequest`,
     );
   }
 }

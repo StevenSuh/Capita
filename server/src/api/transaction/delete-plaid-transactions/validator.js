@@ -13,7 +13,7 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof DeletePlaidTransactionsRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of DeletePlaidTransactionsRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of DeletePlaidTransactionsRequest`,
     );
   }
   validateRequiredFields(request, ['plaidTransactionIds']);

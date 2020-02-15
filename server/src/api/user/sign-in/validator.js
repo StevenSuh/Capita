@@ -15,7 +15,7 @@ const { validateEmail, validatePassword } = require('../util');
 function validate(request) {
   if (!(request instanceof SignInRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of SignInRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of SignInRequest`,
     );
   }
   validateRequiredFields(request, ['email', 'password']);

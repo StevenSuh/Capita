@@ -12,7 +12,7 @@ const { ValidationError } = require('@src/shared/error');
 function validate(request) {
   if (!(request instanceof GetProfilesRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of GetProfilesRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of GetProfilesRequest`,
     );
   }
 }

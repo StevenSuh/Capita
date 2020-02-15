@@ -13,7 +13,7 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof CreateTransactionRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of CreateTransactionRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of CreateTransactionRequest`,
     );
   }
   validateRequiredFields(request, [

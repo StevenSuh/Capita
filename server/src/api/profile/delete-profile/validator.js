@@ -13,7 +13,7 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof DeleteProfileRequest)) {
     throw new ValidationError(
-      `Request ${request} is not an instance of DeleteProfileRequest`,
+      `Request ${JSON.stringify(request)} is not an instance of DeleteProfileRequest`,
     );
   }
   validateRequiredFields(request, ['obfuscatedId']);
