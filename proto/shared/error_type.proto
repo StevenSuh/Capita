@@ -16,5 +16,6 @@ enum ErrorTypeEnum {
 
   // Server error.
   DATABASE = 4;
+  PLAID = 5;
 }
 

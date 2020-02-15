@@ -33,7 +33,6 @@ class ValidationError extends Error {
 }
 
 /** Server errors */
-
 class DatabaseError extends Error {
   constructor(errorMessage) {
     super(errorMessage);
@@ -43,9 +42,19 @@ class DatabaseError extends Error {
   }
 }
 
+class PlaidError extends Error {
+  constructor(errorMessage) {
+    super(errorMessage);
+
+    this.type = ErrorType.create({ type: ErrorTypeEnum.PLAID });
+    this.typeBuffer = ErrorType.encode(this.type).finish();
+  }
+}
+
 module.exports = {
   BadRequestError,
   InvalidLoginError,
   ValidationError,
   DatabaseError,
+  PlaidError,
 };

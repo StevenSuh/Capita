@@ -3,6 +3,8 @@ require('dotenv').config();
 // Allows absolute path requires.
 require('module-alias/register');
 
+require('@src/service/plaid');
+
 const express = require('express');
 const morgan = require('morgan');
 
