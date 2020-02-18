@@ -34,7 +34,7 @@ async function handleUpdateProfile(request) {
   });
   if (!affectedRows) {
     throw new DatabaseError(
-      `An error has occurred while updating profile ${request.toString()}`,
+      `An error has occurred while updating profile ${JSON.stringify(request)}`,
     );
   }
 

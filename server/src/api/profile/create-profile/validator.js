@@ -18,7 +18,7 @@ function validate(request) {
       )} is not an instance of CreateProfileRequest`,
     );
   }
-  validateRequiredFields(request, ['name', 'accountIds']);
+  validateRequiredFields(request, ['name', 'obfuscatedAccountIds']);
 }
 
 module.exports = validate;
