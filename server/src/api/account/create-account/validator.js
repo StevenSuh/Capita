@@ -13,7 +13,9 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof CreateAccountRequest)) {
     throw new ValidationError(
-      `Request ${JSON.stringify(request)} is not an instance of CreateAccountRequest`,
+      `Request ${JSON.stringify(
+        request,
+      )} is not an instance of CreateAccountRequest`,
     );
   }
   validateRequiredFields(request, ['name', 'type', 'subtype', 'balance']);

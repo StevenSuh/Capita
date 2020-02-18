@@ -16,7 +16,9 @@ const {
 function validate(request) {
   if (!(request instanceof UpdateTransactionRequest)) {
     throw new ValidationError(
-      `Request ${JSON.stringify(request)} is not an instance of UpdateTransactionRequest`,
+      `Request ${JSON.stringify(
+        request,
+      )} is not an instance of UpdateTransactionRequest`,
     );
   }
   validateRequiredFields(request, ['obfuscatedId']);

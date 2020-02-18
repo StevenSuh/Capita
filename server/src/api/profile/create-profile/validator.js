@@ -13,7 +13,9 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof CreateProfileRequest)) {
     throw new ValidationError(
-      `Request ${JSON.stringify(request)} is not an instance of CreateProfileRequest`,
+      `Request ${JSON.stringify(
+        request,
+      )} is not an instance of CreateProfileRequest`,
     );
   }
   validateRequiredFields(request, ['name', 'accountIds']);

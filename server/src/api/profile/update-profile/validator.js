@@ -16,7 +16,9 @@ const {
 function validate(request) {
   if (!(request instanceof UpdateProfileRequest)) {
     throw new ValidationError(
-      `Request ${JSON.stringify(request)} is not an instance of UpdateProfileRequest`,
+      `Request ${JSON.stringify(
+        request,
+      )} is not an instance of UpdateProfileRequest`,
     );
   }
   validateRequiredFields(request, ['obfuscatedId']);

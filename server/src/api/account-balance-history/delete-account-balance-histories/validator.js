@@ -13,7 +13,9 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof DeleteAccountBalanceHistoriesRequest)) {
     throw new ValidationError(
-      `Request ${JSON.stringify(request)} is not an instance of DeleteAccountBalanceHistoriesRequest`,
+      `Request ${JSON.stringify(
+        request,
+      )} is not an instance of DeleteAccountBalanceHistoriesRequest`,
     );
   }
   validateRequiredFields(request, ['ids']);

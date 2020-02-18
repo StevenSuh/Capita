@@ -13,7 +13,9 @@ const { validateRequiredFields } = require('@src/shared/util');
 function validate(request) {
   if (!(request instanceof UpsertAccountBalanceHistoriesRequest)) {
     throw new ValidationError(
-      `Request ${JSON.stringify(request)} is not an instance of UpsertAccountBalanceHistoriesRequest`,
+      `Request ${JSON.stringify(
+        request,
+      )} is not an instance of UpsertAccountBalanceHistoriesRequest`,
     );
   }
   validateRequiredFields(request, ['items']);
