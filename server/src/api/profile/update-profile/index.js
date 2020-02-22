@@ -2,6 +2,7 @@ const {
   UpdateProfileRequest,
   UpdateProfileResponse,
 } = require('shared/proto').server.profile;
+const { SessionToken } = require('shared/proto').server;
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
@@ -13,9 +14,10 @@ const validate = require('./validator');
  * UpdateProfile endpoint.
  *
  * @param {UpdateProfileRequest} request - request proto.
+ * @param {SessionToken} session - session token proto.
  * @returns {UpdateProfileResponse} - response proto.
  */
-async function handleUpdateProfile(request) {
+async function handleUpdateProfile(request, session) {
   validate(request);
 
   const updatingProfile = {};
@@ -27,7 +29,7 @@ async function handleUpdateProfile(request) {
   }
 
   const [affectedRows] = await Profile.update(updatingProfile, {
-    where: { id: request.id },
+    where: { id: request.id, userId: session.userId },
   });
   if (!affectedRows) {
     throw new DatabaseError(
@@ -47,7 +49,7 @@ function registerUpdateProfileRoute(app) {
   app.post('/api/profile/update-profile', verifyAuth, async (req, res) => {
     const request = UpdateProfileRequest.decode(req.raw);
 
-    const response = await handleUpdateProfile(request);
+    const response = await handleUpdateProfile(request, req.session);
     const responseBuffer = UpdateProfileResponse.encode(response).finish();
 
     return res.send(responseBuffer);

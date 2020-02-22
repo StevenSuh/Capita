@@ -3,6 +3,7 @@ const {
   DeleteAccountResponse,
 } = require('shared/proto').server.account;
 const { GetProfilesRequest } = require('shared/proto').server.profile;
+const { SessionToken } = require('shared/proto').server;
 const ProfileProto = require('shared/proto').shared.Profile;
 
 const { handleGetProfiles } = require('@src/api/profile/get-profiles');
@@ -30,9 +31,10 @@ function createAccountIdFilteredProfileObject(profile, accountId) {
  * Deletes a account.
  *
  * @param {DeleteAccountRequest} request - request proto.
+ * @param {SessionToken} session - session token proto.
  * @returns {DeleteAccountResponse} - response proto.
  */
-async function handleDeleteAccount(request) {
+async function handleDeleteAccount(request, session) {
   validate(request);
 
   const getProfilesRequest = GetProfilesRequest.create({
@@ -47,7 +49,7 @@ async function handleDeleteAccount(request) {
 
   // Remove the deleting account id from Profile. Because accountIds is an array field, ON DELETE CASCADE becomes nontrivial.
   await Profile.bulkCreate(profiles, { updateOnDuplicate: true });
-  await Account.destroy({ where: { id: accountId } });
+  await Account.destroy({ where: { id: accountId, userId: session.userId } });
 
   return DeleteAccountResponse.create();
 }
@@ -61,7 +63,7 @@ function registerDeleteAccountRoute(app) {
   app.post('/api/account/delete-account', verifyAuth, async (req, res) => {
     const request = DeleteAccountRequest.decode(req.raw);
 
-    const response = await handleDeleteAccount(request);
+    const response = await handleDeleteAccount(request, req.session);
     const responseBuffer = DeleteAccountResponse.encode(response).finish();
 
     return res.send(responseBuffer);

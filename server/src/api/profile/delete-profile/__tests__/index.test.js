@@ -7,6 +7,9 @@ const { Profile } = require('@src/db/models');
 
 const { handleDeleteProfile, registerDeleteProfileRoute } = require('..');
 
+// Constants
+const SESSION = { userId: 456 };
+
 // Mocks
 jest.mock('../validator', () => () => {});
 jest.mock('@src/db/models', () => {
@@ -35,9 +38,12 @@ describe('DeleteProfile', () => {
   describe('handleDeleteProfile', () => {
     test('returns response', async () => {
       // Act
-      const response = await handleDeleteProfile({
-        id: 123,
-      });
+      const response = await handleDeleteProfile(
+        {
+          id: 123,
+        },
+        SESSION,
+      );
 
       // Assert
       expect(response).toEqual({});
@@ -48,10 +54,10 @@ describe('DeleteProfile', () => {
       const queryId = 123;
 
       // Act
-      await handleDeleteProfile({ id: queryId });
+      await handleDeleteProfile({ id: queryId }, SESSION);
 
       // Assert
-      const expectedQuery = { where: { id: queryId } };
+      const expectedQuery = { where: { id: queryId, userId: SESSION.userId } };
       expect(getProfileDestroyArg()).toEqual(expectedQuery);
     });
   });
@@ -75,6 +81,7 @@ describe('DeleteProfile', () => {
       const app = { post: jest.fn() };
       const req = {
         raw: DeleteProfileRequest.encode({ id: 123 }).finish(),
+        session: SESSION,
       };
       const res = { send: jest.fn() };
 

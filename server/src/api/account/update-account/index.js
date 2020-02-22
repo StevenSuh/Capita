@@ -2,6 +2,7 @@ const {
   UpdateAccountRequest,
   UpdateAccountResponse,
 } = require('shared/proto').server.account;
+const { SessionToken } = require('shared/proto').server;
 
 const { Account } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
@@ -14,9 +15,10 @@ const validate = require('./validator');
  * UpdateAccount endpoint.
  *
  * @param {UpdateAccountRequest} request - request proto.
+ * @param {SessionToken} session - session token proto.
  * @returns {UpdateAccountResponse} - response proto.
  */
-async function handleUpdateAccount(request) {
+async function handleUpdateAccount(request, session) {
   validate(request);
 
   const updatingAccount = {};
@@ -37,7 +39,7 @@ async function handleUpdateAccount(request) {
   }
 
   const [affectedRows] = await Account.update(updatingAccount, {
-    where: { id: request.id },
+    where: { id: request.id, userId: session.userId },
   });
   if (!affectedRows) {
     throw new DatabaseError(
@@ -57,7 +59,7 @@ function registerUpdateAccountRoute(app) {
   app.post('/api/account/update-account', verifyAuth, async (req, res) => {
     const request = UpdateAccountRequest.decode(req.raw);
 
-    const response = await handleUpdateAccount(request);
+    const response = await handleUpdateAccount(request, req.session);
     const responseBuffer = UpdateAccountResponse.encode(response).finish();
 
     return res.send(responseBuffer);

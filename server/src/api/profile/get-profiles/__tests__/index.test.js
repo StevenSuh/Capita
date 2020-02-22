@@ -1,3 +1,8 @@
+const {
+  GetProfilesRequest,
+  GetProfilesResponse,
+} = require('shared/proto').server.profile;
+
 const { Profile } = require('@src/db/models');
 
 const { convertProfileToProto } = require('../../util');
@@ -33,11 +38,11 @@ describe('GetProfiles', () => {
     });
   }
 
-  describe('handleGetProfiles', () => {
-    beforeEach(() => {
-      setUpProfileFindAll(USER_ID, []);
-    });
+  beforeEach(() => {
+    setUpProfileFindAll(USER_ID, []);
+  });
 
+  describe('handleGetProfiles', () => {
     test('returns response', async () => {
       // Arrange
       const profile = {
@@ -70,6 +75,30 @@ describe('GetProfiles', () => {
 
       expect(route).toBe('/api/profile/get-profiles');
       expect(middleware).toBe('verifyAuth');
+    });
+
+    test('maps to correct callback', async () => {
+      // Arrange
+      const app = { post: jest.fn() };
+      const req = {
+        raw: GetProfilesRequest.encode({}).finish(),
+        session: { userId: USER_ID },
+      };
+      const res = { send: jest.fn() };
+
+      const expectedResponseBuffer = GetProfilesResponse.encode({
+        profiles: [],
+      }).finish();
+
+      // Act
+      registerGetProfilesRoute(app);
+
+      const callback = app.post.mock.calls[0][2];
+      await callback(req, res);
+
+      // Assert
+      const actualResponseBuffer = res.send.mock.calls[0][0];
+      expect(actualResponseBuffer).toEqual(expectedResponseBuffer);
     });
   });
 });

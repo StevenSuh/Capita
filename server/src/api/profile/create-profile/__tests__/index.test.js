@@ -24,6 +24,7 @@ const RESPONSE = {
     accountIds: PROFILE.accountIds,
   },
 };
+const SESSION = { userId: 123 };
 
 // Mocks
 jest.mock('../validator', () => () => {});
@@ -53,7 +54,7 @@ describe('CreateProfile', () => {
 
     test('returns response', async () => {
       // Act
-      const response = await handleCreateProfile(REQUEST);
+      const response = await handleCreateProfile(REQUEST, SESSION);
 
       // Assert
       expect(response).toEqual(RESPONSE);
@@ -79,6 +80,7 @@ describe('CreateProfile', () => {
       const app = { post: jest.fn() };
       const req = {
         raw: CreateProfileRequest.encode(REQUEST).finish(),
+        session: SESSION,
       };
       const res = { send: jest.fn() };
       const expectedResponseBuffer = CreateProfileResponse.encode(

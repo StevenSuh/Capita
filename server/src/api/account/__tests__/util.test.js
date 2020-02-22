@@ -1,10 +1,7 @@
 const {
   convertAccountToProto,
   convertAccountTypeToEnum,
-  convertAccountTypeToString,
   convertVerificationStatusToEnum,
-  convertVerificationStatusToString,
-  convertBalanceProtoToObject,
   createBalanceProtoFromAccount,
 } = require('../util');
 
