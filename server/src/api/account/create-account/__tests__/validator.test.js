@@ -1,6 +1,6 @@
 const {
   CreateAccountRequest,
-} = require('shared/proto/server/account/create_account').server.account;
+} = require('shared/proto').server.account;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');

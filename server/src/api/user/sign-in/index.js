@@ -1,7 +1,7 @@
 const {
   SignInRequest,
   SignInResponse,
-} = require('shared/proto/server/user/sign_in').server.user;
+} = require('shared/proto').server.user;
 
 const { User } = require('@src/db/models');
 const { InvalidLoginError } = require('@src/shared/error');

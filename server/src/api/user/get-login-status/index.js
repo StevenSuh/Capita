@@ -1,7 +1,7 @@
 const {
   GetLoginStatusRequest,
   GetLoginStatusResponse,
-} = require('shared/proto/server/user/get_login_status').server.user;
+} = require('shared/proto').server.user;
 
 const { verifyAuth } = require('@src/middleware');
 

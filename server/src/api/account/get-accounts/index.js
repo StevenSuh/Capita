@@ -1,12 +1,12 @@
 const {
   GetAccountsRequest,
   GetAccountsResponse,
-} = require('shared/proto/server/account/get_accounts').server.account;
+} = require('shared/proto').server.account;
 const {
   GetProfilesRequest,
-} = require('shared/proto/server/profile/get_profiles').server.profile;
-const { Profile } = require('shared/proto/shared/profile').shared;
-const { SessionToken } = require('shared/proto/server/session_token').server;
+} = require('shared/proto').server.profile;
+const { Profile } = require('shared/proto').shared;
+const { SessionToken } = require('shared/proto').server;
 
 const { handleGetProfiles } = require('@src/api/profile/get-profiles');
 const { Account } = require('@src/db/models');

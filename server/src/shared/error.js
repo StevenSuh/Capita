@@ -1,7 +1,7 @@
 const {
   ErrorType,
   ErrorTypeEnum,
-} = require('shared/proto/shared/error_type').shared;
+} = require('shared/proto').shared;
 
 /** Client errors */
 

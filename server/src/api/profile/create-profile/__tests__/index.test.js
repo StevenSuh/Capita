@@ -1,3 +1,8 @@
+const {
+  CreateProfileRequest,
+  CreateProfileResponse,
+} = require('shared/proto').server.profile;
+
 const { Profile } = require('@src/db/models');
 const { obfuscateId } = require('@src/shared/util');
 
@@ -9,6 +14,17 @@ const PROFILE = {
   name: 'Steven',
   accountIds: [456],
 };
+const REQUEST = {
+  name: PROFILE.name,
+  obfuscatedAccountIds: PROFILE.accountIds.map(obfuscateId),
+};
+      const RESPONSE = {
+        profile: {
+          obfuscatedId: obfuscateId(PROFILE.id),
+          name: PROFILE.name,
+          obfuscatedAccountIds: PROFILE.accountIds.map(obfuscateId),
+        },
+      };
 
 // Mocks
 jest.mock('../validator', () => () => {});
@@ -38,20 +54,10 @@ describe('CreateProfile', () => {
 
     test('returns response', async () => {
       // Act
-      const response = await handleCreateProfile({
-        name: PROFILE.name,
-        obfuscatedAccountIds: PROFILE.accountIds.map(obfuscateId),
-      });
+      const response = await handleCreateProfile(REQUEST);
 
       // Assert
-      const expectedResponse = {
-        profile: {
-          obfuscatedId: obfuscateId(PROFILE.id),
-          name: PROFILE.name,
-          obfuscatedAccountIds: PROFILE.accountIds.map(obfuscateId),
-        },
-      };
-      expect(response).toEqual(expectedResponse);
+      expect(response).toEqual(RESPONSE);
     });
   });
 
@@ -64,11 +70,29 @@ describe('CreateProfile', () => {
       registerCreateProfileRoute(app);
 
       // Assert
-      const args = app.post.mock.calls[0];
-      const [route, middleware] = args;
-
+      const [route, middleware] = app.post.mock.calls[0];
       expect(route).toBe('/api/profile/create-profile');
       expect(middleware).toBe('verifyAuth');
+    });
+
+    test('maps to correct callback', async () => {
+      // Arrange
+      const app = { post: jest.fn() };
+      const req = {
+        raw: CreateProfileRequest.encode(REQUEST).finish(),
+      };
+      const res = { send: jest.fn() };
+      const expectedResponseBuffer = CreateProfileResponse.encode(RESPONSE).finish();
+
+      // Act
+      registerCreateProfileRoute(app);
+
+      const callback = app.post.mock.calls[0][2];
+      await callback(req, res);
+
+      // Assert
+      const actualResponseBuffer = res.send.mock.calls[0][0];
+      expect(actualResponseBuffer).toEqual(expectedResponseBuffer);
     });
   });
 });

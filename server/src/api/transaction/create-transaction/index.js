@@ -1,11 +1,11 @@
 const {
   CreateTransactionRequest,
   CreateTransactionResponse,
-} = require('shared/proto/server/transaction/create_transaction').server.transaction;
+} = require('shared/proto').server.transaction;
 const {
   GetAccountsRequest,
-} = require('shared/proto/server/account/get_accounts').server.account;
-const { SessionToken } = require('shared/proto/server/session_token').server;
+} = require('shared/proto').server.account;
+const { SessionToken } = require('shared/proto').server;
 
 const { handleGetAccounts } = require('@src/api/account/get-accounts');
 const { Transaction } = require('@src/db/models');

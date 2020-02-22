@@ -2,8 +2,8 @@ const { Op } = require('sequelize');
 const {
   GetProfilesRequest,
   GetProfilesResponse,
-} = require('shared/proto/server/profile/get_profiles').server.profile;
-const { SessionToken } = require('shared/proto/server/session_token').server;
+} = require('shared/proto').server.profile;
+const { SessionToken } = require('shared/proto').server;
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');

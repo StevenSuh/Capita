@@ -1,6 +1,6 @@
 const {
   SignInRequest,
-} = require('shared/proto/server/user/sign_in').server.user;
+} = require('shared/proto').server.user;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');

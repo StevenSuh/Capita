@@ -1,11 +1,11 @@
 const {
   DeleteTransactionsRequest,
   DeleteTransactionsResponse,
-} = require('shared/proto/server/transaction/delete_transactions').server.transaction;
+} = require('shared/proto').server.transaction;
 const {
   ErrorType,
   ErrorTypeEnum,
-} = require('shared/proto/shared/error_type').shared;
+} = require('shared/proto').shared;
 
 const {
   handleUpsertAccountBalanceHistories,

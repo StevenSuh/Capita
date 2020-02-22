@@ -1,6 +1,6 @@
 const {
   GetAccountsRequest,
-} = require('shared/proto/server/account/get_accounts').server.account;
+} = require('shared/proto').server.account;
 
 const { ValidationError } = require('@src/shared/error');
 

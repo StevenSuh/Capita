@@ -1,7 +1,14 @@
+const {
+  CreateAccountRequest,
+  CreateAccountResponse,
+} = require('shared/proto').server.account;
+
 const { Account } = require('@src/db/models');
+
 const {
   convertAccountToProto,
   convertAccountTypeToEnum,
+  createBalanceProtoFromAccount,
 } = require('../../util');
 const { handleCreateAccount, registerCreateAccountRoute } = require('..');
 
@@ -14,12 +21,18 @@ const ACCOUNT = {
   officialName: 'Bank of America Checking 10x',
   subtype: 'checking',
   type: 'depository',
-  balanceAvailable: 100,
-  balanceCurrent: 110,
+  balanceAvailable: 100.00,
+  balanceCurrent: 110.12,
   balanceLimit: null,
   balanceIsoCurrencyCode: 'USD',
   balanceUnofficialCurrencyCode: null,
   manuallyCreated: true,
+};
+const REQUEST = {
+  name: ACCOUNT.name,
+  type: convertAccountTypeToEnum(ACCOUNT.type),
+  subtype: ACCOUNT.subtype,
+  balance: createBalanceProtoFromAccount(ACCOUNT),
 };
 
 // Mocks
@@ -49,21 +62,8 @@ describe('CreateAccount', () => {
     });
 
     test('returns response', async () => {
-      // Arrange
-      const request = {
-        name: ACCOUNT.name,
-        type: convertAccountTypeToEnum(ACCOUNT.type),
-        subtype: ACCOUNT.subtype,
-        balance: {
-          available: ACCOUNT.balanceAvailable,
-          current: ACCOUNT.balanceCurrent,
-          limit: ACCOUNT.balanceLimit,
-          isoCurrencyCode: ACCOUNT.balanceIsoCurrencyCode,
-        },
-      };
-
       // Act
-      const response = await handleCreateAccount(request, {
+      const response = await handleCreateAccount(REQUEST, {
         userId: ACCOUNT.userId,
       });
 
@@ -82,11 +82,34 @@ describe('CreateAccount', () => {
       registerCreateAccountRoute(app);
 
       // Assert
-      const args = app.post.mock.calls[0];
-      const [route, middleware] = args;
-
+      const [route, middleware] = app.post.mock.calls[0];
       expect(route).toBe('/api/account/create-account');
       expect(middleware).toBe('verifyAuth');
+    });
+
+    test('maps to correct callback', async () => {
+      // Arrange
+      const app = { post: jest.fn() };
+      const req = {
+        raw: CreateAccountRequest.encode(REQUEST).finish(),
+        session: {
+          userId: ACCOUNT.userId,
+        },
+      };
+      const res = { send: jest.fn() };
+
+      const expectedResponse = { account: convertAccountToProto(ACCOUNT) };
+      const expectedResponseBuffer = CreateAccountResponse.encode(expectedResponse).finish();
+
+      // Act
+      registerCreateAccountRoute(app);
+
+      const callback = app.post.mock.calls[0][2];
+      await callback(req, res);
+
+      // Assert
+      const actualResponseBuffer = res.send.mock.calls[0][0];
+      expect(actualResponseBuffer).toEqual(expectedResponseBuffer);
     });
   });
 });

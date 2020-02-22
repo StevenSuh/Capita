@@ -1,11 +1,11 @@
 const moment = require('moment');
 const {
   GetAccountBalanceHistoriesRequest,
-} = require('shared/proto/server/account-balance-history/get_account_balance_histories').server.account_balance_history;
+} = require('shared/proto').server.account_balance_history;
 const {
   UpsertAccountBalanceHistoriesRequest,
-} = require('shared/proto/server/account-balance-history/upsert_account_balance_histories').server.account_balance_history;
-const { Transaction } = require('shared/proto/shared/transaction').shared;
+} = require('shared/proto').server.account_balance_history;
+const { Transaction } = require('shared/proto').shared;
 
 const {
   handleGetAccountBalanceHistories,

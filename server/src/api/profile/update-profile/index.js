@@ -1,7 +1,7 @@
 const {
   UpdateProfileRequest,
   UpdateProfileResponse,
-} = require('shared/proto/server/profile/update_profile').server.profile;
+} = require('shared/proto').server.profile;
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');

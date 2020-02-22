@@ -1,8 +1,8 @@
 const {
   CreateAccountRequest,
   CreateAccountResponse,
-} = require('shared/proto/server/account/create_account').server.account;
-const { SessionToken } = require('shared/proto/server/session_token').server;
+} = require('shared/proto').server.account;
+const { SessionToken } = require('shared/proto').server;
 
 const { Account } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');

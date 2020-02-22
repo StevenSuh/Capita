@@ -1,11 +1,11 @@
 const {
   UpsertPlaidAccountsRequest,
   UpsertPlaidAccountsResponse,
-} = require('shared/proto/server/account/upsert_plaid_accounts').server.account;
+} = require('shared/proto').server.account;
 const {
   ErrorType,
   ErrorTypeEnum,
-} = require('shared/proto/shared/error_type').shared;
+} = require('shared/proto').shared;
 
 const { Account } = require('@src/db/models');
 

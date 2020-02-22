@@ -1,7 +1,7 @@
 const {
   SignUpRequest,
   SignUpResponse,
-} = require('shared/proto/server/user/sign_up');
+} = require('shared/proto');
 
 const { User } = require('@src/db/models');
 const { BadRequestError } = require('@src/shared/error');

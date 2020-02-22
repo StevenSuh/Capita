@@ -3,8 +3,6 @@ start: proto-force
 	cd server; yarn run watch
 compile-proto:
 	cd proto; yarn run generate
-compile-proto-force:
-	cd proto; yarn run generate --force
 lint:
 	cd server; yarn run lint
 test:

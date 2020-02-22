@@ -1,11 +1,11 @@
 const {
   UpsertPlaidTransactionsRequest,
   UpsertPlaidTransactionsResponse,
-} = require('shared/proto/server/transaction/upsert_plaid_transactions').server.transaction;
+} = require('shared/proto').server.transaction;
 const {
   ErrorType,
   ErrorTypeEnum,
-} = require('shared/proto/shared/error_type').shared;
+} = require('shared/proto').shared;
 
 const { Account, Transaction } = require('@src/db/models');
 

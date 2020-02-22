@@ -1,6 +1,6 @@
 const {
   GetAccountBalanceHistoriesRequest,
-} = require('shared/proto/server/account-balance-history/get_account_balance_histories').server.account_balance_history;
+} = require('shared/proto').server.account_balance_history;
 
 const { ValidationError } = require('@src/shared/error');
 

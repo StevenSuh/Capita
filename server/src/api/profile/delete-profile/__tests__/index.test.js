@@ -1,3 +1,8 @@
+const {
+  DeleteProfileRequest,
+  DeleteProfileResponse,
+} = require('shared/proto').server.profile;
+
 const { Profile } = require('@src/db/models');
 const { obfuscateId } = require('@src/shared/util');
 
@@ -61,11 +66,30 @@ describe('DeleteProfile', () => {
       registerDeleteProfileRoute(app);
 
       // Assert
-      const args = app.post.mock.calls[0];
-      const [route, middleware] = args;
-
+      const [route, middleware] = app.post.mock.calls[0];
       expect(route).toBe('/api/profile/delete-profile');
       expect(middleware).toBe('verifyAuth');
+    });
+
+    test('maps to correct callback', async () => {
+      // Arrange
+      const app = { post: jest.fn() };
+      const req = {
+        raw: DeleteProfileRequest.encode({ obfuscatedId: obfuscateId(123) }).finish(),
+      };
+      const res = { send: jest.fn() };
+
+      const expectedResponseBuffer = DeleteProfileResponse.encode({}).finish();
+
+      // Act
+      registerDeleteProfileRoute(app);
+
+      const callback = app.post.mock.calls[0][2];
+      await callback(req, res);
+
+      // Assert
+      const actualResponseBuffer = res.send.mock.calls[0][0];
+      expect(actualResponseBuffer).toEqual(expectedResponseBuffer);
     });
   });
 });

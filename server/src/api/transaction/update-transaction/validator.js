@@ -1,6 +1,6 @@
 const {
   UpdateTransactionRequest,
-} = require('shared/proto/server/transaction/update_transaction').server.transaction;
+} = require('shared/proto').server.transaction;
 
 const { ValidationError } = require('@src/shared/error');
 const {

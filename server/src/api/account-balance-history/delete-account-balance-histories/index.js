@@ -1,11 +1,11 @@
 const {
   DeleteAccountBalanceHistoriesRequest,
   DeleteAccountBalanceHistoriesResponse,
-} = require('shared/proto/server/account-balance-history/delete_account_balance_histories').server.account_balance_history;
+} = require('shared/proto').server.account_balance_history;
 const {
   ErrorType,
   ErrorTypeEnum,
-} = require('shared/proto/shared/error_type').shared;
+} = require('shared/proto').shared;
 
 const { sequelize, AccountBalanceHistory } = require('@src/db/models');
 

@@ -1,6 +1,6 @@
 const {
   CreateProfileRequest,
-} = require('shared/proto/server/profile/create_profile').server.profile;
+} = require('shared/proto').server.profile;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');

@@ -1,11 +1,11 @@
 const {
   DeleteAccountRequest,
   DeleteAccountResponse,
-} = require('shared/proto/server/account/delete_account').server.account;
+} = require('shared/proto').server.account;
 const {
   GetProfilesRequest,
-} = require('shared/proto/server/profile/get_profiles').server.profile;
-const ProfileProto = require('shared/proto/shared/profile').shared.Profile;
+} = require('shared/proto').server.profile;
+const ProfileProto = require('shared/proto').shared.Profile;
 
 const { handleGetProfiles } = require('@src/api/profile/get-profiles');
 const { Account, Profile } = require('@src/db/models');

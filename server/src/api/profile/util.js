@@ -1,4 +1,4 @@
-const { Profile } = require('shared/proto/shared/profile').shared;
+const { Profile } = require('shared/proto').shared;
 
 const { obfuscateId } = require('@src/shared/util');
 

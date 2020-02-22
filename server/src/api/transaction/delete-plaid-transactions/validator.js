@@ -1,6 +1,6 @@
 const {
   DeletePlaidTransactionsRequest,
-} = require('shared/proto/server/transaction/delete_plaid_transactions').server.transaction;
+} = require('shared/proto').server.transaction;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');

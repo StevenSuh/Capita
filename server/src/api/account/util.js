@@ -3,7 +3,7 @@ const {
   AccountType,
   Balance,
   VerificationStatus,
-} = require('shared/proto/shared/account').shared;
+} = require('shared/proto').shared;
 
 const { obfuscateId } = require('@src/shared/util');
 

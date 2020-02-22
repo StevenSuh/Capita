@@ -1,7 +1,7 @@
 const {
   DeleteProfileRequest,
   DeleteProfileResponse,
-} = require('shared/proto/server/profile/delete_profile').server.profile;
+} = require('shared/proto').server.profile;
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');

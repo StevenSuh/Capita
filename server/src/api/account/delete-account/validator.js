@@ -1,6 +1,6 @@
 const {
   DeleteAccountRequest,
-} = require('shared/proto/server/account/delete_account').server.account;
+} = require('shared/proto').server.account;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');

@@ -1,7 +1,7 @@
 const {
   CreateProfileRequest,
   CreateProfileResponse,
-} = require('shared/proto/server/profile/create_profile').server.profile;
+} = require('shared/proto').server.profile;
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');

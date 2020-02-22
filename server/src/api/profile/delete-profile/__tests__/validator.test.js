@@ -1,6 +1,6 @@
 const {
   DeleteProfileRequest,
-} = require('shared/proto/server/profile/delete_profile').server.profile;
+} = require('shared/proto').server.profile;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');

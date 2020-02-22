@@ -1,7 +1,7 @@
 const {
   UpdateAccountRequest,
   UpdateAccountResponse,
-} = require('shared/proto/server/account/update_account').server.account;
+} = require('shared/proto').server.account;
 
 const { Account } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');

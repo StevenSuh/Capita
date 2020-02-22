@@ -1,7 +1,7 @@
 const {
   UpdateTransactionRequest,
   UpdateTransactionResponse,
-} = require('shared/proto/server/transaction/update_transaction').server.transaction;
+} = require('shared/proto').server.transaction;
 
 const { Transaction } = require('@sr/db/models');
 const { verifyAuth } = require('@src/middleware');

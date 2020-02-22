@@ -2,8 +2,8 @@ const { Op } = require('sequelize');
 const {
   GetTransactionsRequest,
   GetTransactionsResponse,
-} = require('shared/proto/server/transaction/get_transactions');
-const { SessionToken } = require('shared/proto/server/session_token').server;
+} = require('shared/proto');
+const { SessionToken } = require('shared/proto').server;
 
 const { Transaction } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
