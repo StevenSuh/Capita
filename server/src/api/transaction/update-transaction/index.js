@@ -82,7 +82,9 @@ async function handleUpdateTransaction(request) {
   });
   if (!affectedRows) {
     throw new DatabaseError(
-      `An error has occurred while updating transaction ${request.toString()}`,
+      `An error has occurred while updating transaction ${JSON.stringify(
+        request,
+      )}`,
     );
   }
 

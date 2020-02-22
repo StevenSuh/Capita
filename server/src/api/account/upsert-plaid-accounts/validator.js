@@ -26,7 +26,11 @@ function validate(request) {
       'subtype',
       'type',
       'verificationStatus',
-      'balance',
+      'balanceAvailable',
+      'balanceCurrent',
+      'balanceLimit',
+      'balanceIsoCurrencyCode',
+      'balanceUnofficialCurrencyCode',
     ]),
   );
 }

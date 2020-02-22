@@ -1,9 +1,10 @@
-const accountRoutes = require('@src/route/api/account');
-const accountBalanceHistoryRoutes = require('@src/route/api/account-balance-history');
-const linkRoutes = require('@src/route/api/link');
-const profileRoutes = require('@src/route/api/profile');
-const transactionRoutes = require('@src/route/api/transaction');
-const userRoutes = require('@src/route/api/user');
+const accountRoutes = require('@src/api/account');
+const accountBalanceHistoryRoutes = require('@src/api/account-balance-history');
+const linkRoutes = require('@src/api/link');
+const profileRoutes = require('@src/api/profile');
+const transactionRoutes = require('@src/api/transaction');
+const userRoutes = require('@src/api/user');
+const webhooks = require('@src/api/webhook');
 
 module.exports = app => {
   accountRoutes(app);
@@ -12,4 +13,5 @@ module.exports = app => {
   profileRoutes(app);
   transactionRoutes(app);
   userRoutes(app);
+  webhooks(app);
 };

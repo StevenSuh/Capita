@@ -14,28 +14,34 @@ const {
 /**
  * Middleware to convert incoming stream of protobuf request into array buffer.
  *
- * @param {object} req - Given
- * @param {object} res - Given
- * @param {object} next - Given
+ * @param {string[]} routesToExclude - Skip array buffer parser middleware on these routes.
+ * @returns {Function} - Middleware function.
  */
-function arrayBufferParser(req, res, next) {
-  if (!req.is('application/octet-stream')) {
-    throw new BadRequestError(
-      `Request did not contain protobuf ${req.toString}`,
-    );
-  }
+function arrayBufferParser(routesToExclude) {
+  return (req, _res, next) => {
+    if (routesToExclude.includes(req.path)) {
+      next();
+      return;
+    }
 
-  const data = [];
-  req.on('data', chunk => data.push(chunk));
-  req.on('end', () => {
-    if (data.length <= 0) {
+    if (!req.is('application/octet-stream')) {
       throw new BadRequestError(
         `Request did not contain protobuf ${req.toString}`,
       );
     }
-    req.raw = Buffer.concat(data);
-    next();
-  });
+
+    const data = [];
+    req.on('data', chunk => data.push(chunk));
+    req.on('end', () => {
+      if (data.length <= 0) {
+        throw new BadRequestError(
+          `Request did not contain protobuf ${req.toString}`,
+        );
+      }
+      req.raw = Buffer.concat(data);
+      next();
+    });
+  };
 }
 
 /**

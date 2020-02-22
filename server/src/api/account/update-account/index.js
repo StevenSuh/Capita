@@ -43,7 +43,7 @@ async function handleUpdateAccount(request, session) {
   });
   if (!affectedRows) {
     throw new DatabaseError(
-      `An error has occurred while updating account ${request.toString()}`,
+      `An error has occurred while updating account ${JSON.stringify(request)}`,
     );
   }
 

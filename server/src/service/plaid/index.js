@@ -46,20 +46,12 @@ function getLink(publicToken) {
 }
 
 /**
- * Invalidates a plaid access token by item.
+ * Invalidates a plaid access token.
  *
- * @param {string} itemId - Plaid item id.
+ * @param {string} accessToken - Plaid access token.
  * @returns {Promise} - Void if successful, errors out otherwise.
  */
-async function invalidateItem(itemId) {
-  const { accessToken } = await Link.findOne({
-    where: { plaidItemId: itemId },
-  });
-
-  if (!accessToken) {
-    return Promise.resolve();
-  }
-
+async function invalidateAccessToken(accessToken) {
   return new Promise((resolve, reject) => {
     plaidClient.invalidateAccessToken(accessToken, err => {
       if (err) {
@@ -211,5 +203,5 @@ module.exports = {
   getLink,
   getInstitution,
   getTransactions,
-  invalidateItem,
+  invalidateAccessToken,
 };

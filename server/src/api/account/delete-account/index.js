@@ -51,6 +51,8 @@ async function handleDeleteAccount(request, session) {
   await Profile.bulkCreate(profiles, { updateOnDuplicate: true });
   await Account.destroy({ where: { id: accountId, userId: session.userId } });
 
+  // TODO: Remove link as well if this account is the last one.
+
   return DeleteAccountResponse.create();
 }
 
