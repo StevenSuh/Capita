@@ -5,12 +5,12 @@ package server.transaction;
 import "shared/error_type.proto";
 
 message DeleteTransactionsRequest {
-  repeated string obfuscated_ids = 1; // required
+  repeated int32 ids = 1; // required
 }
 
 message DeleteTransactionsResponse {
   message Result {
-    string obfuscated_id = 1;
+    int32 id = 1;
 
     // If unset, successful.
     shared.ErrorType error_type = 2;

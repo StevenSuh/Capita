@@ -1,6 +1,4 @@
-const {
-  UpsertPlaidAccountsRequest,
-} = require('shared/proto').server.account;
+const { UpsertPlaidAccountsRequest } = require('shared/proto').server.account;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');

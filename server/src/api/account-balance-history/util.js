@@ -1,8 +1,4 @@
-const {
-  AccountBalanceHistory,
-} = require('shared/proto').shared;
-
-const { obfuscateId } = require('@src/shared/util');
+const { AccountBalanceHistory } = require('shared/proto').shared;
 
 /**
  * Convert account_balance_history object to client-consumable account_balance_history proto.
@@ -12,7 +8,7 @@ const { obfuscateId } = require('@src/shared/util');
  */
 function convertAccountBalanceHistoryToProto(accountBalanceHistory) {
   return AccountBalanceHistory.create({
-    obfuscatedAccountId: obfuscateId(accountBalanceHistory.accountId),
+    accountId: accountBalanceHistory.accountId,
     amount: accountBalanceHistory.amount,
     date: accountBalanceHistory.date,
   });

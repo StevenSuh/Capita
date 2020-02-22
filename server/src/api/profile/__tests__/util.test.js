@@ -1,5 +1,3 @@
-const { obfuscateId } = require('@src/shared/util');
-
 const { convertProfileToProto } = require('../util');
 
 describe('Profile util', () => {
@@ -11,9 +9,9 @@ describe('Profile util', () => {
       accountIds: [2],
     };
     const expectedProto = {
-      obfuscatedId: obfuscateId(profile.id),
+      id: profile.id,
       name: profile.name,
-      obfuscatedAccountIds: profile.accountIds.map(obfuscateId),
+      accountIds: profile.accountIds,
     };
 
     // Act

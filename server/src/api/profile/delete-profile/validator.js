@@ -1,6 +1,4 @@
-const {
-  DeleteProfileRequest,
-} = require('shared/proto').server.profile;
+const { DeleteProfileRequest } = require('shared/proto').server.profile;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');
@@ -18,7 +16,7 @@ function validate(request) {
       )} is not an instance of DeleteProfileRequest`,
     );
   }
-  validateRequiredFields(request, ['obfuscatedId']);
+  validateRequiredFields(request, ['id']);
 }
 
 module.exports = validate;

@@ -5,7 +5,6 @@ const {
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { unobfuscateId } = require('@src/shared/util');
 
 const validate = require('./validator');
 
@@ -21,7 +20,7 @@ async function handleDeleteProfile(request) {
 
   await Profile.destroy({
     where: {
-      id: unobfuscateId(request.obfuscatedId),
+      id: request.id,
     },
   });
 

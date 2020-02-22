@@ -5,8 +5,6 @@ const {
   VerificationStatus,
 } = require('shared/proto').shared;
 
-const { obfuscateId } = require('@src/shared/util');
-
 /**
  * Converts AccountType enum proto to string.
  *
@@ -137,8 +135,8 @@ function convertBalanceProtoToObject(balance) {
  */
 function convertAccountToProto(account) {
   return Account.create({
-    obfuscatedId: obfuscateId(account.id),
-    obfuscatedLinkId: obfuscateId(account.linkId),
+    id: account.id,
+    linkId: account.linkId,
     mask: account.mask,
     name: account.name,
     officialName: account.officialName,

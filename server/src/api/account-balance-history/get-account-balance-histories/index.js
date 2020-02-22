@@ -8,7 +8,6 @@ const { SessionToken } = require('shared/proto').server;
 
 const { AccountBalanceHistory } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { unobfuscateId } = require('@src/shared/util');
 
 const { convertAccountBalanceHistoryToProto } = require('../util');
 const validate = require('./validator');
@@ -24,7 +23,7 @@ const validate = require('./validator');
 async function handleGetAccountBalanceHistories(request, session) {
   validate(request);
 
-  const accountIds = (request.obfuscatedAccountIds || []).map(unobfuscateId);
+  const accountIds = request.accountIds || [];
   const startDate =
     request.startDate ||
     moment()

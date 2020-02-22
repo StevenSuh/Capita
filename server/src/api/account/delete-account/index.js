@@ -2,15 +2,12 @@ const {
   DeleteAccountRequest,
   DeleteAccountResponse,
 } = require('shared/proto').server.account;
-const {
-  GetProfilesRequest,
-} = require('shared/proto').server.profile;
+const { GetProfilesRequest } = require('shared/proto').server.profile;
 const ProfileProto = require('shared/proto').shared.Profile;
 
 const { handleGetProfiles } = require('@src/api/profile/get-profiles');
 const { Account, Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { unobfuscateId } = require('@src/shared/util');
 
 const validate = require('./validator');
 
@@ -24,9 +21,7 @@ const validate = require('./validator');
 function createAccountIdFilteredProfileObject(profile, accountId) {
   return {
     id: profile.id,
-    accountIds: profile.obfuscatedAccountIds
-      .map(unobfuscateId)
-      .filter(id => id !== accountId),
+    accountIds: profile.accountIds.filter(id => id !== accountId),
   };
 }
 
@@ -41,11 +36,11 @@ async function handleDeleteAccount(request) {
   validate(request);
 
   const getProfilesRequest = GetProfilesRequest.create({
-    obfuscatedAccountIds: [request.unobfuscatedId],
+    accountIds: [request.id],
   });
   const getProfilesResponse = await handleGetProfiles(getProfilesRequest);
 
-  const accountId = unobfuscateId(request.unobfuscatedId);
+  const accountId = request.id;
   const profiles = getProfilesResponse.profiles.map(profile =>
     createAccountIdFilteredProfileObject(profile, accountId),
   );

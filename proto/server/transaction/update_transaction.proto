@@ -3,7 +3,7 @@ syntax = "proto3";
 package server.transaction;
 
 message UpdateTransactionRequest {
-  string obfuscated_id = 1; // required
+  int32 id = 1; // required
 
   // One of the following fields are required.
   string name = 2;

@@ -7,7 +7,6 @@ const { SessionToken } = require('shared/proto').server;
 
 const { Transaction } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { unobfuscateId } = require('@src/shared/util');
 
 const { convertTransactionToProto } = require('../util');
 const validate = require('./validator');
@@ -23,10 +22,8 @@ const validate = require('./validator');
 async function handleGetTransactions(request, session) {
   validate(request);
 
-  const accountIds = (request.obfuscatedAccountIds || []).map(unobfuscateId);
-  const transactionIds = (request.obfuscatedTransactionIds || []).map(
-    unobfuscateId,
-  );
+  const accountIds = request.accountIds || [];
+  const transactionIds = request.transactionIds || [];
 
   const whereQuery = { userId: session.userId };
 

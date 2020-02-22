@@ -2,17 +2,13 @@ const {
   DeleteTransactionsRequest,
   DeleteTransactionsResponse,
 } = require('shared/proto').server.transaction;
-const {
-  ErrorType,
-  ErrorTypeEnum,
-} = require('shared/proto').shared;
+const { ErrorType, ErrorTypeEnum } = require('shared/proto').shared;
 
 const {
   handleUpsertAccountBalanceHistories,
 } = require('@src/api/account-balance-history/upsert-account-balance-histories');
 const { sequelize, Transaction } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { obfuscateId, unobfuscateId } = require('@src/shared/util');
 
 const { createUpsertAccountBalanceHistoriesRequest } = require('../util');
 const validate = require('./validator');
@@ -27,7 +23,7 @@ const validate = require('./validator');
 async function handleDeleteTransactions(request) {
   validate(request);
 
-  const deletingIds = request.obfuscatedIds.map(unobfuscateId);
+  const deletingIds = request.ids;
   const query = `DELETE FROM "${Transaction.getTableName()}" WHERE id IN (${deletingIds.join(
     ', ',
   )}) RETURNING *`;
@@ -44,7 +40,7 @@ async function handleDeleteTransactions(request) {
 
   const results = deletingIds.map(id =>
     DeleteTransactionsResponse.Result.create({
-      obfuscatedId: obfuscateId(id),
+      id,
       errorType: deletedTransactions.find(transaction => transaction.id === id)
         ? undefined // success
         : ErrorType.create({

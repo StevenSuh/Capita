@@ -3,10 +3,10 @@ syntax = "proto3";
 package shared;
 
 message Profile {
-  string obfuscated_id = 1;
+  int32 id = 1;
 
   string name = 2;
 
-  repeated string obfuscated_account_ids = 3;
+  repeated int32 account_ids = 3;
 }
 

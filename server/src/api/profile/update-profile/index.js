@@ -6,7 +6,6 @@ const {
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
 const { DatabaseError } = require('@src/shared/error');
-const { unobfuscateId } = require('@src/shared/util');
 
 const validate = require('./validator');
 
@@ -23,14 +22,12 @@ async function handleUpdateProfile(request) {
   if (request.name) {
     updatingProfile.name = request.name;
   }
-  if (request.obfuscatedAccountIds) {
-    updatingProfile.accountIds = request.obfuscatedAccountIds.map(
-      unobfuscateId,
-    );
+  if (request.accountIds) {
+    updatingProfile.accountIds = request.accountIds;
   }
 
   const [affectedRows] = await Profile.update(updatingProfile, {
-    where: { id: unobfuscateId(request.obfuscatedId) },
+    where: { id: request.id },
   });
   if (!affectedRows) {
     throw new DatabaseError(

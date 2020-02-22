@@ -2,10 +2,7 @@ const {
   UpsertAccountBalanceHistoriesRequest,
   UpsertAccountBalanceHistoriesResponse,
 } = require('shared/proto').server.transaction;
-const {
-  ErrorType,
-  ErrorTypeEnum,
-} = require('shared/proto').shared;
+const { ErrorType, ErrorTypeEnum } = require('shared/proto').shared;
 
 const { AccountBalanceHistory } = require('@src/db/models');
 

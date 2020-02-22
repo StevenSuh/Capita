@@ -1,6 +1,4 @@
-const {
-  UpdateProfileRequest,
-} = require('shared/proto').server.profile;
+const { UpdateProfileRequest } = require('shared/proto').server.profile;
 
 const { ValidationError } = require('@src/shared/error');
 const {
@@ -21,7 +19,7 @@ function validate(request) {
       )} is not an instance of UpdateProfileRequest`,
     );
   }
-  validateRequiredFields(request, ['obfuscatedId']);
+  validateRequiredFields(request, ['id']);
   validateOneOfFields(request, ['name', 'accountIds']);
 }
 

@@ -2,9 +2,7 @@ const {
   CreateTransactionRequest,
   CreateTransactionResponse,
 } = require('shared/proto').server.transaction;
-const {
-  GetAccountsRequest,
-} = require('shared/proto').server.account;
+const { GetAccountsRequest } = require('shared/proto').server.account;
 const { SessionToken } = require('shared/proto').server;
 
 const { handleGetAccounts } = require('@src/api/account/get-accounts');
@@ -27,7 +25,7 @@ async function handleCreateTransaction(request, session) {
   validate(request);
 
   const getAccountsRequest = GetAccountsRequest.create({
-    obfuscatedAccountIds: [request.obfuscatedAccountId],
+    accountIds: [request.accountId],
   });
   const getAccountsResponse = await handleGetAccounts(getAccountsRequest);
 

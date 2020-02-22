@@ -43,5 +43,7 @@
     "src/db/*",
     "node_modules/*"
   ],
-  "engines" : { "node" : ">=8.3.0" }
+  "engines": {
+    "node": ">=8.3.0"
+  }
 }

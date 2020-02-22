@@ -4,7 +4,6 @@ const {
 } = require('shared/proto').server.profile;
 
 const { Profile } = require('@src/db/models');
-const { obfuscateId } = require('@src/shared/util');
 
 const { handleDeleteProfile, registerDeleteProfileRoute } = require('..');
 
@@ -37,7 +36,7 @@ describe('DeleteProfile', () => {
     test('returns response', async () => {
       // Act
       const response = await handleDeleteProfile({
-        obfuscatedId: obfuscateId(123),
+        id: 123,
       });
 
       // Assert
@@ -49,7 +48,7 @@ describe('DeleteProfile', () => {
       const queryId = 123;
 
       // Act
-      await handleDeleteProfile({ obfuscatedId: obfuscateId(queryId) });
+      await handleDeleteProfile({ id: queryId });
 
       // Assert
       const expectedQuery = { where: { id: queryId } };
@@ -75,7 +74,7 @@ describe('DeleteProfile', () => {
       // Arrange
       const app = { post: jest.fn() };
       const req = {
-        raw: DeleteProfileRequest.encode({ obfuscatedId: obfuscateId(123) }).finish(),
+        raw: DeleteProfileRequest.encode({ id: 123 }).finish(),
       };
       const res = { send: jest.fn() };
 

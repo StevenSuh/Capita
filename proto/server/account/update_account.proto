@@ -5,7 +5,7 @@ package server.account;
 import "shared/account.proto";
 
 message UpdateAccountRequest {
-  string obfuscated_id = 1; // required
+  int32 id = 1; // required
 
   // One of the following fields are required.
   string mask = 2;

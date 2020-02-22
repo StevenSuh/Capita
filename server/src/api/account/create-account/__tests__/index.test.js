@@ -21,7 +21,7 @@ const ACCOUNT = {
   officialName: 'Bank of America Checking 10x',
   subtype: 'checking',
   type: 'depository',
-  balanceAvailable: 100.00,
+  balanceAvailable: 100.0,
   balanceCurrent: 110.12,
   balanceLimit: null,
   balanceIsoCurrencyCode: 'USD',
@@ -99,7 +99,9 @@ describe('CreateAccount', () => {
       const res = { send: jest.fn() };
 
       const expectedResponse = { account: convertAccountToProto(ACCOUNT) };
-      const expectedResponseBuffer = CreateAccountResponse.encode(expectedResponse).finish();
+      const expectedResponseBuffer = CreateAccountResponse.encode(
+        expectedResponse,
+      ).finish();
 
       // Act
       registerCreateAccountRoute(app);

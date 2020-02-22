@@ -3,12 +3,12 @@ syntax = "proto3";
 package server.profile;
 
 message UpdateProfileRequest {
-  string obfuscated_id = 1; // required
+  int32 id = 1; // required
 
   // One of the following fields are required.
   string name = 2;
 
-  repeated string obfuscated_account_ids = 3;
+  repeated int32 account_ids = 3;
 }
 
 message UpdateProfileResponse {}

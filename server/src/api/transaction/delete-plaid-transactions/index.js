@@ -2,10 +2,7 @@ const {
   DeletePlaidTransactionsRequest,
   DeletePlaidTransactionsResponse,
 } = require('shared/proto').server.transaction;
-const {
-  ErrorType,
-  ErrorTypeEnum,
-} = require('shared/proto').shared;
+const { ErrorType, ErrorTypeEnum } = require('shared/proto').shared;
 
 const { sequelize, Transaction } = require('@src/db/models');
 

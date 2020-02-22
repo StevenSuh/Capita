@@ -7,7 +7,6 @@ const { SessionToken } = require('shared/proto').server;
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { unobfuscateId } = require('@src/shared/util');
 
 const { convertProfileToProto } = require('../util');
 const validate = require('./validator');
@@ -24,12 +23,12 @@ async function handleGetProfiles(request, session) {
   validate(request);
 
   const whereQuery = { userId: session.userId };
-  if (request.obfuscatedProfileIds) {
-    whereQuery.id = request.obfuscatedProfileIds.map(unobfuscateId);
+  if (request.profileIds) {
+    whereQuery.id = request.profileIds;
   }
-  if (request.obfuscatedAccountIds) {
+  if (request.accountIds) {
     whereQuery.accountIds = {
-      [Op.overlap]: request.obfuscatedAccountIds.map(unobfuscateId),
+      [Op.overlap]: request.accountIds,
     };
   }
 

@@ -1,7 +1,4 @@
-const {
-  ErrorType,
-  ErrorTypeEnum,
-} = require('shared/proto').shared;
+const { ErrorType, ErrorTypeEnum } = require('shared/proto').shared;
 
 /** Client errors */
 

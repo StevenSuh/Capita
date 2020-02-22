@@ -6,7 +6,7 @@ import "shared/account_balance_history.proto";
 
 message GetAccountBalanceHistoriesRequest {
   // If provided, returns results associated with the account_ids.
-  repeated string obfuscated_account_ids = 1;
+  repeated int32 account_ids = 1;
 
   // If not provided, will assume one year ago.
   string start_date = 2; // YYYY-MM-DD

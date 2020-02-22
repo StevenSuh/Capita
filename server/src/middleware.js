@@ -1,9 +1,6 @@
 const jwt = require('jsonwebtoken');
 const { SessionToken } = require('shared/proto').server;
-const {
-  ErrorType,
-  ErrorTypeEnum,
-} = require('shared/proto').shared;
+const { ErrorType, ErrorTypeEnum } = require('shared/proto').shared;
 
 const { secretKey } = require('@src/config');
 const { User } = require('@src/db/models');

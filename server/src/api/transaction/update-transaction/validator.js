@@ -1,6 +1,4 @@
-const {
-  UpdateTransactionRequest,
-} = require('shared/proto').server.transaction;
+const { UpdateTransactionRequest } = require('shared/proto').server.transaction;
 
 const { ValidationError } = require('@src/shared/error');
 const {
@@ -21,7 +19,7 @@ function validate(request) {
       )} is not an instance of UpdateTransactionRequest`,
     );
   }
-  validateRequiredFields(request, ['obfuscatedId']);
+  validateRequiredFields(request, ['id']);
   validateOneOfFields(request, [
     'name',
     'category',

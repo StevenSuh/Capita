@@ -1,5 +1,3 @@
-const { obfuscateId } = require('@src/shared/util');
-
 const {
   convertAccountToProto,
   convertAccountTypeToEnum,
@@ -19,7 +17,7 @@ const ACCOUNT = {
   officialName: 'Bank of America Checking 10x',
   subtype: 'checking',
   type: 'depository',
-  balanceAvailable: 100.00,
+  balanceAvailable: 100.0,
   balanceCurrent: 110.12,
   balanceLimit: null,
   balanceIsoCurrencyCode: 'USD',
@@ -31,14 +29,16 @@ describe('Account util', () => {
   test('convertAccountToProto', () => {
     // Arrange
     const expectedProto = {
-      obfuscatedId: obfuscateId(ACCOUNT.id),
-      obfuscatedLinkId: obfuscateId(ACCOUNT.linkId),
+      id: ACCOUNT.id,
+      linkId: ACCOUNT.linkId,
       mask: ACCOUNT.mask,
       name: ACCOUNT.name,
       officialName: ACCOUNT.officialName,
       subtype: ACCOUNT.subtype,
       type: convertAccountTypeToEnum(ACCOUNT.type),
-      verificationStatus: convertVerificationStatusToEnum(ACCOUNT.verificationStatus),
+      verificationStatus: convertVerificationStatusToEnum(
+        ACCOUNT.verificationStatus,
+      ),
       balance: createBalanceProtoFromAccount(ACCOUNT),
       manuallyCreated: ACCOUNT.manuallyCreated,
       hidden: ACCOUNT.hidden,

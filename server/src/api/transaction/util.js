@@ -10,7 +10,6 @@ const { Transaction } = require('shared/proto').shared;
 const {
   handleGetAccountBalanceHistories,
 } = require('@src/api/account-balance-history/get-account-balance-histories');
-const { obfuscateId } = require('@src/shared/util');
 
 /**
  * Convert transaction object to client-consumable transaction proto.
@@ -20,8 +19,8 @@ const { obfuscateId } = require('@src/shared/util');
  */
 function convertTransactionToProto(transaction) {
   return Transaction.create({
-    obfuscatedId: obfuscateId(transaction.id),
-    obfuscatedAccountId: obfuscateId(transaction.accountId),
+    id: transaction.id,
+    accountId: transaction.accountId,
     name: transaction.name,
     category: transaction.category,
     type: transaction.type,
@@ -98,7 +97,7 @@ async function calculateAccountBalanceHistoriesByAccountId(
           : newTransactions[0].date;
 
       const request = GetAccountBalanceHistoriesRequest.create({
-        obfuscatedAccountIds: [obfuscateId(key)],
+        accountIds: [key],
         startDate: normalizeToOneYearMax(minDate),
       });
       const response = await handleGetAccountBalanceHistories(request);

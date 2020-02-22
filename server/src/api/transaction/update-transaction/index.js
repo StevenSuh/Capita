@@ -6,7 +6,6 @@ const {
 const { Transaction } = require('@sr/db/models');
 const { verifyAuth } = require('@src/middleware');
 const { BadRequestError, DatabaseError } = require('@src/shared/error');
-const { unobfuscateId } = require('@src/shared/util');
 
 const validate = require('./validator');
 
@@ -18,7 +17,7 @@ const validate = require('./validator');
  */
 async function getUpdatingValues(request) {
   const transaction = await Transaction.findOne({
-    where: { id: unobfuscateId(request.obfuscatedId) },
+    where: { id: request.id },
   });
   if (!transaction) {
     throw new BadRequestError('Transaction does not exist');
@@ -79,7 +78,7 @@ async function handleUpdateTransaction(request) {
   const updatingTransaction = getUpdatingValues(request);
 
   const [affectedRows] = await Transaction.update(updatingTransaction, {
-    where: { id: unobfuscateId(request.obfuscatedId) },
+    where: { id: request.id },
   });
   if (!affectedRows) {
     throw new DatabaseError(

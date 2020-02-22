@@ -5,7 +5,7 @@ package server.transaction;
 import "shared/transaction.proto";
 
 message CreateTransactionRequest {
-  string obfuscated_account_id = 1; // required
+  int32 account_id = 1; // required
 
   string name = 2; // required
 

@@ -5,7 +5,6 @@ const {
 
 const { Profile } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { unobfuscateId } = require('@src/shared/util');
 
 const { convertProfileToProto } = require('../util');
 const validate = require('./validator');
@@ -22,7 +21,7 @@ async function handleCreateProfile(request) {
 
   const profile = await Profile.create({
     name: request.name,
-    accountIds: request.obfuscatedAccountIds.map(unobfuscateId),
+    accountIds: request.accountIds,
   }).then(convertProfileToProto);
 
   return CreateProfileResponse.create({ profile });

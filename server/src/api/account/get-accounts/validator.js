@@ -1,6 +1,4 @@
-const {
-  GetAccountsRequest,
-} = require('shared/proto').server.account;
+const { GetAccountsRequest } = require('shared/proto').server.account;
 
 const { ValidationError } = require('@src/shared/error');
 

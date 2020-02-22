@@ -1,6 +1,4 @@
-const {
-  DeleteAccountRequest,
-} = require('shared/proto').server.account;
+const { DeleteAccountRequest } = require('shared/proto').server.account;
 
 const { ValidationError } = require('@src/shared/error');
 const { validateRequiredFields } = require('@src/shared/util');
@@ -18,7 +16,7 @@ function validate(request) {
       )} is not an instance of DeleteAccountRequest`,
     );
   }
-  validateRequiredFields(request, ['obfuscatedId']);
+  validateRequiredFields(request, ['id']);
 }
 
 module.exports = validate;

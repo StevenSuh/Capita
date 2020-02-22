@@ -2,16 +2,13 @@ const {
   GetAccountsRequest,
   GetAccountsResponse,
 } = require('shared/proto').server.account;
-const {
-  GetProfilesRequest,
-} = require('shared/proto').server.profile;
+const { GetProfilesRequest } = require('shared/proto').server.profile;
 const { Profile } = require('shared/proto').shared;
 const { SessionToken } = require('shared/proto').server;
 
 const { handleGetProfiles } = require('@src/api/profile/get-profiles');
 const { Account } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
-const { unobfuscateId } = require('@src/shared/util');
 
 const { convertAccountToProto } = require('../util');
 const validate = require('./validator');
@@ -24,8 +21,7 @@ const validate = require('./validator');
  */
 function reduceProfilesToAccountIds(profiles) {
   return profiles.reduce(
-    (accumulator, profile) =>
-      accumulator.concat(profile.obfuscatedAccountIds.map(unobfuscateId)),
+    (accumulator, profile) => accumulator.concat(profile.accountIds),
     [],
   );
 }
@@ -41,10 +37,10 @@ function reduceProfilesToAccountIds(profiles) {
 async function handleGetAccounts(request, session) {
   validate(request);
 
-  let accountIds = (request.obfuscatedAccountIds || []).map(unobfuscateId);
-  if (request.obfuscatedProfileIds) {
+  let accountIds = request.accountIds || [];
+  if (request.profileIds) {
     const getProfilesRequest = GetProfilesRequest.create({
-      obfuscatedProfileIds: request.obfuscatedProfileIds,
+      profileIds: request.profileIds,
     });
     const getProfilesResponse = await handleGetProfiles(getProfilesRequest);
     const accountIdsFromProfiles = reduceProfilesToAccountIds(

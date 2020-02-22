@@ -4,7 +4,6 @@ const {
 } = require('shared/proto').server.profile;
 
 const { Profile } = require('@src/db/models');
-const { obfuscateId } = require('@src/shared/util');
 
 const { handleCreateProfile, registerCreateProfileRoute } = require('..');
 
@@ -16,15 +15,15 @@ const PROFILE = {
 };
 const REQUEST = {
   name: PROFILE.name,
-  obfuscatedAccountIds: PROFILE.accountIds.map(obfuscateId),
+  accountIds: PROFILE.accountIds,
 };
-      const RESPONSE = {
-        profile: {
-          obfuscatedId: obfuscateId(PROFILE.id),
-          name: PROFILE.name,
-          obfuscatedAccountIds: PROFILE.accountIds.map(obfuscateId),
-        },
-      };
+const RESPONSE = {
+  profile: {
+    id: PROFILE.id,
+    name: PROFILE.name,
+    accountIds: PROFILE.accountIds,
+  },
+};
 
 // Mocks
 jest.mock('../validator', () => () => {});
@@ -82,7 +81,9 @@ describe('CreateProfile', () => {
         raw: CreateProfileRequest.encode(REQUEST).finish(),
       };
       const res = { send: jest.fn() };
-      const expectedResponseBuffer = CreateProfileResponse.encode(RESPONSE).finish();
+      const expectedResponseBuffer = CreateProfileResponse.encode(
+        RESPONSE,
+      ).finish();
 
       // Act
       registerCreateProfileRoute(app);

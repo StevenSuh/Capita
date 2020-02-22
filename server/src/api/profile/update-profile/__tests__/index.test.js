@@ -1,6 +1,5 @@
 const { Profile } = require('@src/db/models');
 const { DatabaseError } = require('@src/shared/error');
-const { obfuscateId } = require('@src/shared/util');
 
 const { handleUpdateProfile, registerUpdateProfileRoute } = require('..');
 
@@ -36,9 +35,9 @@ describe('UpdateProfile', () => {
 
       // Act
       const response = await handleUpdateProfile({
-        obfuscatedId: obfuscateId(123),
+        id: 123,
         name: 'Steven',
-        obfuscatedAccountIds: [obfuscateId(456)],
+        accountIds: [456],
       });
 
       // Assert
@@ -48,7 +47,7 @@ describe('UpdateProfile', () => {
 
     test('throws if failed to update', async () => {
       // Arrange
-      const request = { obfuscatedId: obfuscateId(123) };
+      const request = { id: 123 };
       setUpProfileUpdate(0);
 
       // Act & Assert
@@ -74,7 +73,7 @@ describe('UpdateProfile', () => {
 
         // Act
         await handleUpdateProfile({
-          obfuscatedId: obfuscateId(profileId),
+          id: profileId,
           name,
         });
 
@@ -94,8 +93,8 @@ describe('UpdateProfile', () => {
 
         // Act
         await handleUpdateProfile({
-          obfuscatedId: obfuscateId(profileId),
-          obfuscatedAccountIds: [obfuscateId(accountId)],
+          id: profileId,
+          accountIds: [accountId],
         });
 
         // Assert

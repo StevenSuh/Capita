@@ -1,7 +1,5 @@
 const { Profile } = require('shared/proto').shared;
 
-const { obfuscateId } = require('@src/shared/util');
-
 /**
  * Convert profile object to client-consumable profile proto.
  *
@@ -10,9 +8,9 @@ const { obfuscateId } = require('@src/shared/util');
  */
 function convertProfileToProto(profile) {
   return Profile.create({
-    obfuscatedId: obfuscateId(profile.id),
+    id: profile.id,
     name: profile.name,
-    obfuscatedAccountIds: profile.accountIds.map(obfuscateId),
+    accountIds: profile.accountIds,
   });
 }
 

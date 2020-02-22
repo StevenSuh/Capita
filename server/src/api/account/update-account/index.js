@@ -6,7 +6,6 @@ const {
 const { Account } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
 const { DatabaseError } = require('@src/shared/error');
-const { unobfuscateId } = require('@src/shared/util');
 
 const { convertAccountTypeToString } = require('../util');
 const validate = require('./validator');
@@ -38,7 +37,7 @@ async function handleUpdateAccount(request) {
   }
 
   const [affectedRows] = await Account.update(updatingAccount, {
-    where: { id: unobfuscateId(request.obfuscatedId) },
+    where: { id: request.id },
   });
   if (!affectedRows) {
     throw new DatabaseError(

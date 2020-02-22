@@ -6,10 +6,10 @@ import "shared/transaction.proto";
 
 message GetTransactionsRequest {
   // If provided, returns results associated with the account_ids.
-  repeated string obfuscated_account_ids = 1;
+  repeated int32 account_ids = 1;
 
   // If provided, returns results associated with the transaction_ids.
-  repeated string obfuscated_transaction_ids = 2;
+  repeated int32 transaction_ids = 2;
 }
 
 message GetTransactionsResponse {

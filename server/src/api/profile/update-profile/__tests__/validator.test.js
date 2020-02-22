@@ -1,6 +1,4 @@
-const {
-  UpdateProfileRequest,
-} = require('shared/proto').server.profile;
+const { UpdateProfileRequest } = require('shared/proto').server.profile;
 
 const { ValidationError } = require('@src/shared/error');
 const {
@@ -49,7 +47,7 @@ describe('UpdateProfile validator', () => {
     // Assert
     const [actualRequest, actualFields] = validateRequiredFields.mock.calls[0];
     expect(actualRequest).toEqual(request);
-    expect(actualFields).toEqual(['obfuscatedId']);
+    expect(actualFields).toEqual(['id']);
   });
 
   test('one of required fields', () => {

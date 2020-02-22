@@ -18,7 +18,7 @@ function validate(request) {
       )} is not an instance of DeleteTransactionsRequest`,
     );
   }
-  validateRequiredFields(request, ['obfuscatedIds']);
+  validateRequiredFields(request, ['ids']);
 }
 
 module.exports = validate;

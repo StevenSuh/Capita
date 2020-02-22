@@ -1,6 +1,4 @@
-const {
-  GetProfilesRequest,
-} = require('shared/proto').server.profile;
+const { GetProfilesRequest } = require('shared/proto').server.profile;
 
 const { ValidationError } = require('@src/shared/error');
 

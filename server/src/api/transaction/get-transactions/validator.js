@@ -1,6 +1,4 @@
-const {
-  GetTransactionsRequest,
-} = require('shared/proto').server.transaction;
+const { GetTransactionsRequest } = require('shared/proto').server.transaction;
 
 const { ValidationError } = require('@src/shared/error');
 
