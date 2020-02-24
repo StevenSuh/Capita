@@ -37,30 +37,6 @@ function convertTransactionToProto(transaction) {
 }
 
 /**
- * Creates a map of transactions sorted by date in ascending order and mapped by
- * account id.
- *
- * @param {object[]} transactions - List of transactions
- * @returns {object} - Map of transactions.
- */
-function createDateSortedTransactionMapByAccountId(transactions) {
-  const map = {};
-
-  (transactions || []).forEach(transaction => {
-    if (!map[transaction.accountId]) {
-      map[transaction.accountId] = [];
-    }
-    map[transaction.accountId].push(transaction);
-  });
-  // Sorted from oldest date to most recent.
-  Object.keys(map).forEach(key =>
-    map[key].sort((a, b) => (a.date > b.date ? 1 : -1)),
-  );
-
-  return map;
-}
-
-/**
  * Checks date and return one year ago date as that is the oldest we are
  * concerned about.
  *
@@ -71,69 +47,158 @@ function normalizeToOneYearMax(date) {
   const oneYearAgo = moment()
     .subtract(1, 'year')
     .format('YYYY-MM-DD');
+
+  if (!date) {
+    return oneYearAgo;
+  }
   return date < oneYearAgo ? oneYearAgo : date;
+}
+
+/**
+ * Create missing account balance histories within one year span in given histories.
+ *
+ * @param {object[]} histories - Existing account balance histories.
+ * @param {number} accountId - The target account's id in question.
+ * @returns {object[]} - Updated account balance histories list.
+ */
+function createMissingHistoriesWithinOneYear(histories, accountId) {
+  const now = moment();
+  const oneYearAgo = now.subtract(1, 'year');
+  let diff = now.diff(oneYearAgo, 'days');
+
+  const newestHistory =
+    histories.length > 0 ? histories[histories.length - 1] : null;
+
+  const newHistories = [];
+  let deltaAmount = 0;
+
+  if (!newestHistory) {
+    for (let i = 1; i <= diff; i += 1) {
+      newHistories.push({
+        accountId,
+        deltaAmount,
+        date: oneYearAgo.add(i, 'days').format('YYYY-MM-DD'),
+      });
+    }
+    return newHistories;
+  }
+
+  const newestDate = moment(newestHistory.date, 'YYYY-MM-DD');
+  diff = now.diff(newestDate, 'days');
+
+  if (diff) {
+    deltaAmount = newestHistory.deltaAmount;
+    for (let i = 1; i <= diff; i += 1) {
+      newHistories.push({
+        accountId,
+        deltaAmount,
+        date: newestDate.add(diff, 'days').format('YYYY-MM-DD'),
+      });
+    }
+    return histories.concat(newHistories);
+  }
+
+  return histories;
+}
+
+/**
+ * Function factory for updating account balance histories from transactions.
+ *
+ * @param {object} accountBalanceHistoriesMap - Account balance history map by account ids.
+ * @param {boolean} isDeleting - Is deleting transactions or not.
+ * @returns {Function} - Function.
+ */
+function calculateHistoriesFromTransactions(
+  accountBalanceHistoriesMap,
+  isDeleting,
+) {
+  return transaction => {
+    if (!accountBalanceHistoriesMap[transaction.accountId]) {
+      accountBalanceHistoriesMap[
+        transaction.accountId
+      ] = createMissingHistoriesWithinOneYear([], transaction.accountId);
+    }
+    const currAccountBalanceHistories =
+      accountBalanceHistoriesMap[transaction.accountId];
+
+    let index = currAccountBalanceHistories.findIndex(
+      item => item.date === transaction.date,
+    );
+    index = index === -1 ? 0 : index;
+
+    while (index < currAccountBalanceHistories.length) {
+      currAccountBalanceHistories[index].deltaAmount = isDeleting
+        ? currAccountBalanceHistories[index].deltaAmount - transaction.amount
+        : currAccountBalanceHistories[index].deltaAmount + transaction.amount;
+      index += 1;
+    }
+  };
 }
 
 /**
  * Calculates and returns histories by account id.
  *
- * @param {object} oldTransactionMap - Map of old transactions by account id.
- * @param {object} newTransactionMap - Map of new transactions by account id.
- * @returns {object} - Map of histories by account id.
+ * @param {object[]} oldTransactions - List of old transactions.
+ * @param {object[]} newTransactions - List of new transactions.
+ * @returns {object[]} - Calculated histories.
  */
-async function calculateAccountBalanceHistoriesByAccountId(
-  oldTransactionMap,
-  newTransactionMap,
+async function calculateAccountBalanceHistories(
+  oldTransactions,
+  newTransactions,
 ) {
-  const accountBalanceHistoriesMap = {};
-
-  await Promise.all(
-    Object.keys(newTransactionMap).map(async key => {
-      const oldTransactions = oldTransactionMap[key] || [];
-      const newTransactions = newTransactionMap[key] || [];
-      const minDate =
-        oldTransactions[0].date < newTransactions[0].date
-          ? oldTransactions[0].date
-          : newTransactions[0].date;
-
-      const request = GetAccountBalanceHistoriesRequest.create({
-        accountIds: [key],
-        startDate: normalizeToOneYearMax(minDate),
-      });
-      const response = await handleGetAccountBalanceHistories(request);
-      const { accountBalanceHistories } = response;
-
-      // Subtract old transaction balances from fetched histories.
-      oldTransactions.forEach(transaction => {
-        let index = accountBalanceHistories.findIndex(
-          item => item.date === transaction.date,
-        );
-        index = index === -1 ? 0 : index;
-
-        while (index < accountBalanceHistories.length) {
-          accountBalanceHistories[index].amount -= transaction.amount;
-          index += 1;
-        }
-      });
-
-      // Add new transaction balances to fetched histories.
-      newTransactions.forEach(transaction => {
-        let index = accountBalanceHistories.findIndex(
-          item => item.date === transaction.date,
-        );
-        index = index === -1 ? 0 : index;
-
-        while (index < accountBalanceHistories.length) {
-          accountBalanceHistories[index].amount += transaction.amount;
-          index += 1;
-        }
-      });
-
-      accountBalanceHistoriesMap[key] = accountBalanceHistories;
-    }),
+  const accountIds = Array.from(
+    new Set(
+      oldTransactions.concat(newTransactions).map(({ accountId }) => accountId),
+    ),
   );
 
-  return accountBalanceHistoriesMap;
+  const minDate = oldTransactions
+    .concat(newTransactions)
+    .reduce((accumulatingDate, transaction) => {
+      const currMinDate = normalizeToOneYearMax(transaction.date);
+      return currMinDate < accumulatingDate ? currMinDate : accumulatingDate;
+    }, normalizeToOneYearMax(null));
+
+  const request = GetAccountBalanceHistoriesRequest.create({
+    accountIds,
+    startDate: minDate,
+  });
+
+  // Gets histories from oldest to most recent.
+  const { accountBalanceHistories } = await handleGetAccountBalanceHistories(
+    request,
+  );
+  const accountBalanceHistoriesMap = {};
+  accountBalanceHistories.forEach(item => {
+    if (!accountBalanceHistoriesMap[item.accountId]) {
+      accountBalanceHistoriesMap[item.accountId] = [];
+    }
+    accountBalanceHistoriesMap[item.accountId].push(item);
+  });
+
+  // Create empty histories within one year if missing.
+  Object.keys(accountBalanceHistoriesMap).forEach(accountId => {
+    accountBalanceHistoriesMap[accountId] = createMissingHistoriesWithinOneYear(
+      accountBalanceHistoriesMap[accountId],
+      accountId,
+    );
+  });
+
+  // Update the fetched/created account balance histories.
+  oldTransactions.forEach(
+    calculateHistoriesFromTransactions(
+      accountBalanceHistoriesMap,
+      /* isDeleting= */ true,
+    ),
+  );
+  newTransactions.forEach(
+    calculateHistoriesFromTransactions(
+      accountBalanceHistoriesMap,
+      /* isDeleting= */ false,
+    ),
+  );
+
+  return accountBalanceHistories;
 }
 
 /**
@@ -150,30 +215,18 @@ async function createUpsertAccountBalanceHistoriesRequest(
   oldTransactions,
   newTransactions,
 ) {
-  const oldTransactionMap = createDateSortedTransactionMapByAccountId(
+  const accountBalanceHistories = await calculateAccountBalanceHistories(
     oldTransactions,
-  );
-  const newTransactionMap = createDateSortedTransactionMapByAccountId(
     newTransactions,
   );
-  const accountBalanceHistoriesMap = await calculateAccountBalanceHistoriesByAccountId(
-    oldTransactionMap,
-    newTransactionMap,
-  );
 
-  const upsertingItems = Object.keys(accountBalanceHistoriesMap).reduce(
-    (accumulator, key) =>
-      accumulator.concat(
-        accountBalanceHistoriesMap[key].map(item =>
-          UpsertAccountBalanceHistoriesRequest.UpsertingItem.create({
-            id: item.id,
-            accountId: item.accountId,
-            amount: item.amount,
-            date: item.date,
-          }),
-        ),
-      ),
-    [],
+  const upsertingItems = accountBalanceHistories.map(item =>
+    UpsertAccountBalanceHistoriesRequest.UpsertingItem.create({
+      id: item.id,
+      accountId: item.accountId,
+      deltaAmount: item.deltaAmount,
+      date: item.date,
+    }),
   );
 
   return UpsertAccountBalanceHistoriesRequest.create({ items: upsertingItems });

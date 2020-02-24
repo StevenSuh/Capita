@@ -24,7 +24,7 @@ module.exports = {
           key: 'id',
         },
       },
-      amount: {
+      deltaAmount: {
         type: Sequelize.DECIMAL,
       },
       date: {

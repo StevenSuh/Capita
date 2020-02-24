@@ -10,7 +10,7 @@ message UpsertAccountBalanceHistoriesRequest {
 
     int32 account_id = 2;
 
-    float amount = 3;
+    float delta_amount = 3;
 
     string date = 4;
   }

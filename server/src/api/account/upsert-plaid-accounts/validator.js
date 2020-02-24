@@ -18,20 +18,7 @@ function validate(request) {
   }
   validateRequiredFields(request, ['accounts']);
   request.accounts.forEach(account =>
-    validateRequiredFields(account, [
-      'userId',
-      'linkId',
-      'plaidAccountId',
-      'name',
-      'subtype',
-      'type',
-      'verificationStatus',
-      'balanceAvailable',
-      'balanceCurrent',
-      'balanceLimit',
-      'balanceIsoCurrencyCode',
-      'balanceUnofficialCurrencyCode',
-    ]),
+    validateRequiredFields(account, ['userId', 'plaidAccountId']),
   );
 }
 

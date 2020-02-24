@@ -3,7 +3,7 @@ const {
   UpdateTransactionResponse,
 } = require('shared/proto').server.transaction;
 
-const { Transaction } = require('@sr/db/models');
+const { Transaction } = require('@src/db/models');
 const { verifyAuth } = require('@src/middleware');
 const { BadRequestError, DatabaseError } = require('@src/shared/error');
 
@@ -67,7 +67,8 @@ async function getUpdatingValues(request) {
 
 /**
  * UpdateTransaction endpoint.
- * Updates transaction and AccountBalanceHistory if relevant. The balance history becomes relevant if we modify the transaction's amount or date.
+ * Updates transaction and AccountBalanceHistory if relevant. The balance history becomes relevant
+ * if we modify the transaction's amount or date.
  *
  * @param {UpdateTransactionRequest} request - request proto.
  * @returns {UpdateTransactionResponse} - response proto.

@@ -9,7 +9,7 @@ const { AccountBalanceHistory } = require('shared/proto').shared;
 function convertAccountBalanceHistoryToProto(accountBalanceHistory) {
   return AccountBalanceHistory.create({
     accountId: accountBalanceHistory.accountId,
-    amount: accountBalanceHistory.amount,
+    deltaAmount: accountBalanceHistory.deltaAmount,
     date: accountBalanceHistory.date,
   });
 }

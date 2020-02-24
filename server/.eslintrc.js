@@ -15,5 +15,6 @@ module.exports = {
     'node/no-missing-require': 'off',
     'max-classes-per-file': 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+    'no-param-reassign': 'off',
   },
 };

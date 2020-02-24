@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: DataTypes.INTEGER,
       accountId: DataTypes.INTEGER,
-      amount: DataTypes.DECIMAL,
+      deltaAmount: DataTypes.DECIMAL,
       date: DataTypes.STRING,
     },
     {},

@@ -9,31 +9,31 @@ message UpsertPlaidAccountsRequest {
   message PlaidAccount {
     int32 user_id = 1; // required
 
-    int32 link_id = 2; // required
+    int32 link_id = 2;
 
     string plaid_account_id = 3; // required
 
     string mask = 4;
 
-    string name = 5; // required
+    string name = 5;
 
     string official_name = 6;
 
-    string subtype = 7; // required
+    string subtype = 7;
 
-    string type = 8; // required
+    string type = 8;
 
-    string verification_status = 9; // required
+    string verification_status = 9;
 
-    float balance_available = 10; // required
+    float balance_available = 10;
 
-    float balance_current = 11; // required
+    float balance_current = 11;
 
-    float balance_limit = 12; // required
+    float balance_limit = 12;
 
-    string balance_iso_currency_code = 13; // required
+    string balance_iso_currency_code = 13;
 
-    string balance_unofficial_currency_code = 14; // required
+    string balance_unofficial_currency_code = 14;
 
     bool manually_created = 15;
 

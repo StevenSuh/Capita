@@ -9,6 +9,8 @@ const {
   BadRequestError,
   InvalidLoginError,
   ValidationError,
+  DatabaseError,
+  PlaidError,
 } = require('@src/shared/error');
 
 /**
@@ -66,6 +68,12 @@ function errorHandler(err, req, res, next) {
       break;
     case ValidationError:
       errCode = 400;
+      break;
+    case DatabaseError:
+      errCode = 500;
+      break;
+    case PlaidError:
+      errCode = 500;
       break;
     default:
       errCode = 500; // server error by default

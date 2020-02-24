@@ -110,12 +110,12 @@ async function getAccounts(itemId) {
 /**
  * Get account balances requested.
  *
- * @param {string[]} accountIds - List of plaid account ids.
+ * @param {string[]} plaidAccountIds - List of plaid account ids.
  * @returns {Promise<object[]>} - List of account balance results by items.
  */
-async function getAccountBalances(accountIds) {
+async function getAccountBalances(plaidAccountIds) {
   const accounts = await Account.findAll({
-    where: { plaidAccountId: accountIds },
+    where: { plaidAccountId: plaidAccountIds },
   });
   const uniqueLinkIds = Array.from(
     new Set(accounts.map(account => account.linkId)),
@@ -127,8 +127,8 @@ async function getAccountBalances(accountIds) {
     links.map(({ accessToken }) => {
       return new Promise((resolve, reject) => {
         const options = {};
-        if (accountIds) {
-          options.account_ids = accountIds;
+        if (plaidAccountIds) {
+          options.account_ids = plaidAccountIds;
         }
 
         plaidClient.getBalance(accessToken, options, (err, res) => {
@@ -149,20 +149,26 @@ async function getAccountBalances(accountIds) {
  * Get all transactions associated to item.
  *
  * @param {string} itemId - Plaid item id.
- * @param {string?} startDate - Optional date field to note when the transactions should start. In YYYY-MM-DD format.
- * @param {string?} endDate - Optional date field to note when the transactions should end. In YYYY-MM-DD format.
- * @param {Array<string>?} accountIds - List of plaid account ids. Account id/s not associated to `itemId` will be ignored.
+ * @param {string} startDate - Optional date field to note when the transactions should start. In YYYY-MM-DD format.
+ * @param {string} endDate - Optional date field to note when the transactions should end. In YYYY-MM-DD format.
+ * @param {Array<string>?} plaidAccountIds - List of plaid account ids. Account id/s not associated to `itemId` will be ignored.
  * @param {number?} count - Optional number to limit the number of transactions to get.
  */
-async function getTransactions(itemId, startDate, endDate, accountIds, count) {
+async function getTransactions(
+  itemId,
+  startDate,
+  endDate,
+  plaidAccountIds,
+  count,
+) {
   const { accessToken } = await Link.findOne({
     where: { plaidItemId: itemId },
   });
 
   return new Promise((resolve, reject) => {
     const options = {};
-    if (accountIds) {
-      options.account_ids = accountIds;
+    if (plaidAccountIds) {
+      options.account_ids = plaidAccountIds;
     }
     const callback = (err, res) => {
       if (err) {

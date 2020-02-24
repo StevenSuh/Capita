@@ -64,6 +64,8 @@ async function handleUpsertPlaidTransactions(request) {
     updateOnDuplicate: true,
   });
 
+  // TODO: Call UpsertAccountBalanceHistories
+
   const results = newTransactions.map(({ plaidTransactionId }) => {
     const successfulTransaction = successfulTransactions.find(
       transaction => plaidTransactionId === transaction.plaidTransactionId,

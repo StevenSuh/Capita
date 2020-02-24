@@ -23,8 +23,8 @@ function convertAccountBalanceHistoryToObject(item) {
   if (item.accountId) {
     updatingItem.accountId = item.accountId;
   }
-  if (item.amount) {
-    updatingItem.amount = item.amount;
+  if (item.deltaAmount) {
+    updatingItem.deltaAmount = item.deltaAmount;
   }
   if (item.date) {
     updatingItem.date = item.date;
@@ -48,6 +48,8 @@ async function handleUpsertAccountBalanceHistories(request) {
     returning: true,
     updateOnDuplicate: true,
   });
+
+  // TODO: Delete histories older than one year.
 
   const results = requestItems.map(({ id }) => {
     const isSuccess = Boolean(successfulItems.find(item => item.id === id));

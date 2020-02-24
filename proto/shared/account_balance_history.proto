@@ -5,7 +5,7 @@ package shared;
 message AccountBalanceHistory {
   int32 account_id = 1;
 
-  float amount = 2;
+  float delta_amount = 2;
 
   string date = 3;
 }

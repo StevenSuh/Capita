@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package server.account;
+
+import "shared/error_type.proto";
+
+message SyncAccountsRequest {
+  repeated int32 account_ids = 1; // required
+
+  string since_date = 2;
+}
+
+message SyncAccountsResponse {
+  message Result {
+    int32 account_id = 1;
+
+    // If unset, successful.
+    shared.ErrorType error_type = 2;
+  }
+  repeated Result results = 1;
+}

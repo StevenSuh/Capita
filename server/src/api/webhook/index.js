@@ -1,5 +1,5 @@
-const { registerPlaidWebhooks } = require('./plaid');
+const { registerPlaidWebhook } = require('./plaid');
 
 module.exports = app => {
-  registerPlaidWebhooks(app);
+  registerPlaidWebhook(app);
 };
