@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package server.link;
+
+message UpdateLinkRequest {
+  // One of following fields is required.
+  string plaid_item_id = 1;
+
+  int32 link_id = 2;
+
+  int32 account_id = 3;
+}
+
+message UpdateLinkResponse {
+  string plaid_public_token = 1;
+}
+

@@ -24,7 +24,7 @@ async function handleDeleteTransactions(request, session) {
   const deletingIds = request.ids;
   const query = `DELETE FROM "${Transaction.getTableName()}" WHERE id IN (${deletingIds.join(
     ', ',
-  )}) AND userId = ${session.userId} RETURNING *`;
+  )}) AND "userId" = ${session.userId} RETURNING *`;
   const [deletedTransactions] = await sequelize.query(query);
 
   const results = deletingIds.map(id =>

@@ -25,6 +25,23 @@ const plaidClient = new plaid.Client(
 );
 
 /**
+ * Creates a public token (expiring in ~30 minutes) to renew Plaid Link.
+ *
+ * @param {string} accessToken - Plaid access token.
+ * @returns {string} - Plaid public token.
+ */
+function createPublicToken(accessToken) {
+  return new Promise((resolve, reject) => {
+    plaidClient.createPublicToken(accessToken, (err, res) => {
+      if (err) {
+        reject(convertPlaidError(err));
+      }
+      resolve(res.public_token);
+    });
+  });
+}
+
+/**
  * Get plaid link based on public token.
  *
  * @param {string} publicToken - Validated token given after successful link by user.
@@ -204,6 +221,7 @@ async function getTransactions(
 }
 
 module.exports = {
+  createPublicToken,
   getAccounts,
   getAccountBalances,
   getLink,
