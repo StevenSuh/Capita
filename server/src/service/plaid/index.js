@@ -220,6 +220,23 @@ async function getTransactions(
   });
 }
 
+/**
+ * Get webhook verification key when webhook endpoint is hit by Plaid.
+ *
+ * @param {string} keyId - Plaid obfuscated key id.
+ * @returns {Promise<object>} - Key object.
+ */
+async function getWebhookVerificationKey(keyId) {
+  return new Promise((resolve, reject) => {
+    plaidClient.getWebhookVerificationKey(keyId, (err, res) => {
+      if (err) {
+        reject(convertPlaidError(err));
+      }
+      resolve(res.key);
+    });
+  });
+}
+
 module.exports = {
   createPublicToken,
   getAccounts,
@@ -227,5 +244,6 @@ module.exports = {
   getLink,
   getInstitution,
   getTransactions,
+  getWebhookVerificationKey,
   invalidateAccessToken,
 };
