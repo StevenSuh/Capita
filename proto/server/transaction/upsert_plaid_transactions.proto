@@ -5,7 +5,7 @@ package server.transaction;
 import "shared/error_type.proto";
 
 // Endpoint not exposed to client.
-message UpsertPlaidTransactionRequest {
+message UpsertPlaidTransactionsRequest {
   message PlaidTransaction {
     int32 user_id = 1; // required
 
@@ -40,7 +40,7 @@ message UpsertPlaidTransactionRequest {
   repeated PlaidTransaction transactions = 1; // required
 }
 
-message UpsertPlaidTransactionResponse {
+message UpsertPlaidTransactionsResponse {
   message Result {
     string plaid_transaction_id = 1;
 

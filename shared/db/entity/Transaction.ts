@@ -17,9 +17,17 @@ export class Transaction {
   @JoinColumn()
   user: User;
 
+  // Foreign key
+  @Column()
+  userId: number;
+
   @ManyToOne(() => Account, { onDelete: 'CASCADE' })
   @JoinColumn()
   account: Account;
+
+  // Foreign key
+  @Column()
+  accountId: number;
 
   @Column({ unique: true, nullable: true })
   plaidTransactionId: string;

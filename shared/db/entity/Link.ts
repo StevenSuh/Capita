@@ -16,6 +16,10 @@ export class Link {
   @JoinColumn()
   user: User;
 
+  // Foreign key
+  @Column()
+  userId: number;
+
   @Column()
   accessToken: string;
 

@@ -1,21 +1,21 @@
-start: proto-force
+start: compile-proto
 	cd client; yarn start &
 	cd server; yarn run watch
 compile-proto:
 	cd proto; yarn run generate
 lint:
-	cd server; yarn run lint
+	cd server; yarn run lint;
+	cd shared; yarn run lint
 test:
-	cd server; yarn run test
+	cd server; yarn run test;
+	cd shared; yarn run test
 
 psql:
 	psql -d capita -U stevenesuh
 
-migrate-create:
-	cd server; npx sequelize-cli model:create --name
 migrate-up:
-	cd server; npx sequelize-cli db:migrate
+	cd shared; yarn migrate-up
 migrate-down:
-	cd server; npx sequelize-cli db:migrate:undo
+	cd shared; yarn migrate-down
 migrate-status:
-	cd server; npx sequelize-cli db:migrate:status
+	cd shared; yarn migrate-status

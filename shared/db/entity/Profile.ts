@@ -16,6 +16,10 @@ export class Profile {
   @JoinColumn()
   user: User;
 
+  // Foreign key
+  @Column()
+  userId: number;
+
   // Field of number[] joined by ',' into string.
   @Column()
   accountIdsStr: string;
