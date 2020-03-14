@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier --write \"**/*.ts\" && eslint --fix \"**/*.ts\"",
+    "lint": "prettier --write \"**/*.ts\" && eslint --fix .",
     "test": "jest --collectCoverage --verbose=false",
     "migrate-up": "ts-node ./node_modules/typeorm/cli.js migration:run",
     "migrate-down": "ts-node ./node_modules/typeorm/cli.js migration:revert",
