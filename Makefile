@@ -1,3 +1,9 @@
+install: clean
+	cd client; yarn;
+	cd proto; yarn;
+	cd shared; yarn;
+	make compile-proto;
+	cd server; yarn;
 start: compile-proto
 	cd client; yarn start &
 	cd server; yarn run watch
@@ -9,6 +15,11 @@ lint:
 test:
 	cd server; yarn run test;
 	cd shared; yarn run test
+clean:
+	cd client; rm -rf node_modules;
+	cd proto; rm -rf node_modules;
+	cd shared; rm -rf node_modules;
+	cd server; rm -rf node_modules;
 
 psql:
 	psql -d capita -U stevenesuh
