@@ -63,7 +63,6 @@ export async function handleUpdateTransaction(
     );
   }
 
-  // TODO: Need to also update account_balance_history
   return UpdateTransactionResponse.create();
 }
 
@@ -119,7 +118,6 @@ async function getUpdatingValues(
         'Amount can only be modified for manually created transactions',
       );
     }
-    // TODO: Need to also update account_balance_history
     updatingTransaction.amount = request.amount;
   }
   if (request.date) {
@@ -128,7 +126,6 @@ async function getUpdatingValues(
         'Date can only be modified for manually created transactions',
       );
     }
-    // TODO: Need to also update account_balance_history
     updatingTransaction.date = request.date;
   }
 

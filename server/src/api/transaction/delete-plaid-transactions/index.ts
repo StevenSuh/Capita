@@ -33,8 +33,6 @@ export async function handleDeletePlaidTransactions(
     ({ plaidTransactionId }) => plaidTransactionId,
   );
 
-  // TODO: Update account_balance_history accordingly.
-
   const results = deletingIds.map(id =>
     DeletePlaidTransactionsResponse.Result.create({
       plaidTransactionId: id,

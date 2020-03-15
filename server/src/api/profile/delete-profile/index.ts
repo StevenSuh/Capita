@@ -3,6 +3,7 @@ import connect from 'shared/db';
 import proto from 'shared/proto';
 
 import { verifyAuth } from '@src/middleware';
+import { DatabaseError } from '@src/shared/error';
 import { CustomRequest } from '@src/types/request';
 
 import validate from './validator';
@@ -45,10 +46,15 @@ export async function handleDeleteProfile(
   validate(request);
 
   const { Profile } = await connect();
-  await Profile.delete({
+  const deleteResult = await Profile.delete({
     id: request.id,
     userId: session.userId,
   });
+  if (!deleteResult.affected) {
+    throw new DatabaseError(
+      `An error has occurred while deleting profile ${JSON.stringify(request)}`,
+    );
+  }
 
   return DeleteProfileResponse.create();
 }

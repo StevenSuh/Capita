@@ -1,8 +1,11 @@
 import connect from 'shared/db';
+import { Account as AccountEntity } from 'shared/db/entity/Account';
 import proto from 'shared/proto';
 
+import { handleDeleteLink } from '@src/api/link/delete-link';
 import { handleGetProfiles } from '@src/api/profile/get-profiles';
 import { verifyAuth } from '@src/middleware';
+import { DatabaseError } from '@src/shared/error';
 import { createExcludedKeys } from '@src/shared/util';
 import { CustomRequest } from '@src/types/request';
 
@@ -11,6 +14,7 @@ import { Application } from 'express';
 import { encodeArrayIdsToStr } from 'shared/db/util';
 
 const { DeleteAccountRequest, DeleteAccountResponse } = proto.server.account;
+const { DeleteLinkRequest } = proto.server.link;
 const { GetProfilesRequest } = proto.server.profile;
 
 /**
@@ -60,7 +64,7 @@ export async function handleDeleteAccount(
     createAccountIdFilteredProfileObject(profile, accountId),
   );
 
-  const { Account, Profile } = await connect();
+  const { Link, Account, Profile } = await connect();
   // Remove the deleting account id from Profile.
   // Because accountIds is an array field, ON DELETE CASCADE becomes nontrivial.
   if (profiles.length) {
@@ -71,9 +75,26 @@ export async function handleDeleteAccount(
       .onConflict(`("id") DO UPDATE SET ${excludedKeys}`)
       .execute();
   }
-  await Account.delete({ id: accountId, userId: session.userId });
+  const deleteResult = await Account.createQueryBuilder()
+    .delete()
+    .where('id = :id', { id: accountId })
+    .andWhere('userId = :userId', { userId: session.userId })
+    .returning('*')
+    .execute();
 
-  // TODO: Remove link as well if this account is the last one.
+  const deletedAccounts = deleteResult.raw as AccountEntity[];
+  if (!deletedAccounts || !deletedAccounts.length) {
+    throw new DatabaseError(
+      `Error occurred while deleting account ${JSON.stringify(request)}`,
+    );
+  }
+
+  const { linkId } = deletedAccounts[0];
+  const accountCount = await Account.count({ where: { linkId } });
+  if (!accountCount) {
+    const deleteLinkRequest = DeleteLinkRequest.create({ linkId });
+    await handleDeleteLink(deleteLinkRequest, session);
+  }
 
   return DeleteAccountResponse.create();
 }

@@ -11,7 +11,6 @@ import registerRoutes from '@src/api';
 import { routes as webhookRoutes } from '@src/api/webhook/defs';
 import { arrayBufferParser, errorHandler } from '@src/middleware';
 import logger from '@src/service/logger';
-import { BadRequestError } from '@src/shared/error';
 
 // To initialize connection with plaid service.
 import '@src/service/plaid';
@@ -32,9 +31,8 @@ app.use(errorHandler);
 app.use(arrayBufferParser(/* routesToExclude= */ [...webhookRoutes]));
 // Disables http cache.
 app.disable('etag');
-// Capture to unimplemented endpoint.
-app.all('*', (req, _res) => {
-  throw new BadRequestError(`Request not implemented ${req.toString()}`);
-});
+
+// Register routes.
 registerRoutes(app);
+
 app.listen(PORT, () => logger.log('Started at port:', PORT));
