@@ -21,6 +21,7 @@ clean:
 	cd shared; rm -rf node_modules;
 	cd server; rm -rf node_modules;
 
+
 psql:
 	psql -d capita -U stevenesuh
 
@@ -30,3 +31,7 @@ migrate-down:
 	cd shared; yarn migrate-down
 migrate-status:
 	cd shared; yarn migrate-status
+
+
+server-shared: compile-proto
+	cd server; yarn add ../shared

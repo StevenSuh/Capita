@@ -38,6 +38,8 @@ message UpsertPlaidAccountsRequest {
     bool manually_created = 15;
 
     bool hidden = 16;
+
+    bool needs_update = 17;
   }
   repeated PlaidAccount accounts = 1; // required
 }

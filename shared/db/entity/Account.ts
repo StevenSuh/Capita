@@ -70,4 +70,7 @@ export class Account {
 
   @Column({ default: false })
   hidden: boolean;
+
+  @Column({ default: false })
+  needsUpdate: boolean;
 }

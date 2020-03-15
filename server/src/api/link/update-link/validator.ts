@@ -20,5 +20,6 @@ export default function validate(
       )} is not an instance of UpdateLinkRequest`,
     );
   }
-  validateOneOfFields(request, ['plaidItemId', 'linkId', 'accountId']);
+  validateOneOfFields(request, ['id', 'plaidItemId']);
+  validateOneOfFields(request, ['needsUpdate']);
 }

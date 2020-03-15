@@ -24,6 +24,8 @@ message Account {
   bool manually_created = 10;
 
   bool hidden = 11;
+
+  bool needs_update = 12;
 }
 
 message Balance {

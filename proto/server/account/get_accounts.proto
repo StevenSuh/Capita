@@ -10,6 +10,12 @@ message GetAccountsRequest {
 
   // If provided, returns results associated with the account_ids.
   repeated int32 account_ids = 2;
+
+  // If provided, returns results associated with the plaid_account_ids.
+  repeated string plaid_account_ids = 3;
+
+  // If provided, returns results associated with the plaid_item_ids.
+  repeated string plaid_item_ids = 4;
 }
 
 message GetAccountsResponse {

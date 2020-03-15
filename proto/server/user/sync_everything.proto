@@ -3,7 +3,9 @@ syntax = "proto3";
 package server.user;
 
 message SyncEverythingRequest {
-  string since_date = 1; // Optional
+  string since_date = 1;
+
+  int32 count = 2;
 }
 
 message SyncEverythingResponse {

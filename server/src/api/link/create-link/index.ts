@@ -52,6 +52,7 @@ function convertAccountToPlaidAccount(
     balanceUnofficialCurrencyCode: account.balances.unofficialCurrencyCode,
     manuallyCreated: false,
     hidden: false,
+    needsUpdate: false,
   });
 }
 

@@ -155,5 +155,6 @@ export function convertAccountToProto(account: Account) {
     balance: createBalanceProtoFromAccount(account),
     manuallyCreated: account.manuallyCreated,
     hidden: account.hidden,
+    needsUpdate: account.needsUpdate,
   });
 }

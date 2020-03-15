@@ -167,6 +167,7 @@ async function upsertTransactions(
 async function upsertAndDeleteTransactions(
   accounts: Account[],
   sinceDate: string,
+  count: number,
   session: proto.server.ISessionToken,
 ) {
   const linkIds = Array.from(new Set(accounts.map(({ linkId }) => linkId)));
@@ -186,7 +187,7 @@ async function upsertAndDeleteTransactions(
   const startDate = sinceDate || twoYearsAgo;
   const getTransactionsResponses = await Promise.all(
     links.map(link =>
-      getTransactions(link.plaidItemId, startDate, now, plaidAccountIds),
+      getTransactions(link.plaidItemId, startDate, now, plaidAccountIds, count),
     ),
   );
 
@@ -245,7 +246,16 @@ export async function handleSyncAccounts(
     );
   }
 
-  await upsertAndDeleteTransactions(accounts, request.sinceDate, session);
+  if (request.onlyBalance) {
+    return SyncAccountsResponse.create({ results: resultErrors });
+  }
+
+  await upsertAndDeleteTransactions(
+    accounts,
+    request.sinceDate,
+    request.count,
+    session,
+  );
 
   const results = resultErrors.concat(
     accounts.map(account =>

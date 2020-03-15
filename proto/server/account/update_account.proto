@@ -17,6 +17,8 @@ message UpdateAccountRequest {
   shared.AccountType type = 5;
 
   bool hidden = 6;
+
+  bool needs_update = 7;
 }
 
 message UpdateAccountResponse {}

@@ -85,6 +85,11 @@ export class CreateAccount1583274422159 implements MigrationInterface {
             name: 'hidden',
             type: 'boolean',
           },
+          {
+            name: 'needsUpdate',
+            type: 'boolean',
+            default: false,
+          },
         ],
         foreignKeys: [
           {

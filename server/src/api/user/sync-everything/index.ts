@@ -27,6 +27,7 @@ export async function handleSyncEverything(
   const syncAccountsRequest = SyncAccountsRequest.create({
     accountIds: accounts.map(({ id }) => id),
     sinceDate: request.sinceDate,
+    count: request.count,
   });
   const syncAccountsResponse = await handleSyncAccounts(
     syncAccountsRequest,

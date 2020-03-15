@@ -30,6 +30,7 @@ export async function handleUpdateAccount(
     subtype?: string;
     type?: string;
     hidden?: boolean;
+    needsUpdate?: boolean;
   } = {};
   if (request.mask) {
     updatingAccount.mask = request.mask;
@@ -45,6 +46,9 @@ export async function handleUpdateAccount(
   }
   if (request.hidden) {
     updatingAccount.hidden = request.hidden;
+  }
+  if (request.needsUpdate) {
+    updatingAccount.needsUpdate = request.needsUpdate;
   }
 
   const { Account } = await connect();

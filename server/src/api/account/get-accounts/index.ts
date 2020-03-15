@@ -58,11 +58,18 @@ export async function handleGetAccounts(
     accountIds = Array.from(new Set(accountIds.concat(accountIdsFromProfiles)));
   }
 
-  const whereQuery: { id?: FindOperator<number[]>; userId: number } = {
+  const whereQuery: {
+    id?: FindOperator<number[]>;
+    plaidAccountId?: FindOperator<string[]>;
+    userId: number;
+  } = {
     userId: session.userId,
   };
   if (accountIds.length) {
     whereQuery.id = In(accountIds);
+  }
+  if (request.plaidAccountIds) {
+    whereQuery.plaidAccountId = In(request.plaidAccountIds);
   }
 
   const { Account } = await connect();

@@ -4,14 +4,13 @@ package server.link;
 
 message UpdateLinkRequest {
   // One of following fields is required.
-  string plaid_item_id = 1;
+  int32 id = 1;
 
-  int32 link_id = 2;
+  string plaid_item_id = 2;
 
-  int32 account_id = 3;
+  // One of following fields is required.
+  bool needs_update = 3;
 }
 
-message UpdateLinkResponse {
-  string plaid_public_token = 1;
-}
+message UpdateLinkResponse {}
 

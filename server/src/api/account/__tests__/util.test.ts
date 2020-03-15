@@ -23,6 +23,8 @@ Object.assign(ACCOUNT, {
   balanceIsoCurrencyCode: 'USD',
   balanceUnofficialCurrencyCode: null,
   manuallyCreated: true,
+  hidden: false,
+  needsUpdate: false,
 });
 
 describe('Account util', () => {
@@ -42,6 +44,7 @@ describe('Account util', () => {
       balance: createBalanceProtoFromAccount(ACCOUNT),
       manuallyCreated: ACCOUNT.manuallyCreated,
       hidden: ACCOUNT.hidden,
+      needsUpdate: ACCOUNT.needsUpdate,
     };
 
     // Act

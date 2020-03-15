@@ -8,6 +8,10 @@ message SyncAccountsRequest {
   repeated int32 account_ids = 1; // required
 
   string since_date = 2;
+
+  int32 count = 3;
+
+  bool only_balance = 4;
 }
 
 message SyncAccountsResponse {

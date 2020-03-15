@@ -38,6 +38,8 @@ export async function handleCreateAccount(
     officialName: request.name,
     balanceUnofficialCurrencyCode: request.balance.isoCurrencyCode,
     manuallyCreated: true,
+    hidden: false,
+    needsUpdate: false,
   });
   account = await Account.save(account);
 

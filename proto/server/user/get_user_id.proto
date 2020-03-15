@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package server.user;
+
+message GetUserIdRequest {
+  // one of the following is required.
+  int32 link_id = 1;
+
+  int32 account_id = 2;
+
+  int32 transaction_id = 3;
+
+  string plaid_item_id = 4;
+
+  string plaid_account_id = 5;
+
+  string plaid_transaction_id = 6;
+
+  string email = 7;
+}
+
+message GetUserIdResponse {
+  int32 user_id = 1;
+}
+

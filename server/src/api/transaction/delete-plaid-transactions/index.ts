@@ -14,7 +14,7 @@ const { ErrorType, ErrorTypeEnum } = proto.shared;
  * @param request - request proto.
  * @returns - response proto.
  */
-export default async function handleDeletePlaidTransactions(
+export async function handleDeletePlaidTransactions(
   request: proto.server.transaction.IDeletePlaidTransactionsRequest,
 ) {
   validate(request);
