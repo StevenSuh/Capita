@@ -8,47 +8,6 @@ const { UpsertPlaidTransactionsResponse } = proto.server.transaction;
 const { ErrorType, ErrorTypeEnum } = proto.shared;
 
 /**
- * Converts PlaidTransaction protos to object for query.
- *
- * @param transactions - List of transaction protos.
- * @returns - Promise that resolves to list of transaction query objects.
- */
-function convertPlaidTransactionsToObject(
-  transactions: proto.server.transaction.UpsertPlaidTransactionsRequest.IPlaidTransaction[],
-) {
-  return Promise.all(
-    transactions.map(async transaction => {
-      const { Account } = await connect();
-      const account = await Account.findOne({
-        where: { plaidAccountId: transaction.plaidAccountId },
-      });
-      if (!account) {
-        // Invalid plaid transaction.
-        return null;
-      }
-
-      return {
-        userId: transaction.userId,
-        accountId: account.id,
-        plaidTransactionId: transaction.plaidTransactionId,
-        name: transaction.name,
-        category: transaction.category,
-        type: transaction.type,
-        amount: transaction.amount,
-        isoCurrencyCode: transaction.isoCurrencyCode,
-        unofficialCurrencyCode: transaction.unofficialCurrencyCode,
-        date: transaction.date,
-        note: transaction.note,
-        pending: transaction.pending,
-        recurring: transaction.recurring,
-        manuallyCreated: transaction.manuallyCreated,
-        hidden: transaction.hidden,
-      };
-    }),
-  );
-}
-
-/**
  * UpsertPlaidTransactions endpoint.
  * Upserts and returns a new transaction.
  *
@@ -94,4 +53,45 @@ export async function handleUpsertPlaidTransactions(
   });
 
   return UpsertPlaidTransactionsResponse.create({ results });
+}
+
+/**
+ * Converts PlaidTransaction protos to object for query.
+ *
+ * @param transactions - List of transaction protos.
+ * @returns - Promise that resolves to list of transaction query objects.
+ */
+function convertPlaidTransactionsToObject(
+  transactions: proto.server.transaction.UpsertPlaidTransactionsRequest.IPlaidTransaction[],
+) {
+  return Promise.all(
+    transactions.map(async transaction => {
+      const { Account } = await connect();
+      const account = await Account.findOne({
+        where: { plaidAccountId: transaction.plaidAccountId },
+      });
+      if (!account) {
+        // Invalid plaid transaction.
+        return null;
+      }
+
+      return {
+        userId: transaction.userId,
+        accountId: account.id,
+        plaidTransactionId: transaction.plaidTransactionId,
+        name: transaction.name,
+        category: transaction.category,
+        type: transaction.type,
+        amount: transaction.amount,
+        isoCurrencyCode: transaction.isoCurrencyCode,
+        unofficialCurrencyCode: transaction.unofficialCurrencyCode,
+        date: transaction.date,
+        note: transaction.note,
+        pending: transaction.pending,
+        recurring: transaction.recurring,
+        manuallyCreated: transaction.manuallyCreated,
+        hidden: transaction.hidden,
+      };
+    }),
+  );
 }

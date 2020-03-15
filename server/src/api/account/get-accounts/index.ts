@@ -14,17 +14,22 @@ const { GetAccountsRequest, GetAccountsResponse } = proto.server.account;
 const { GetProfilesRequest } = proto.server.profile;
 
 /**
- * Reduces profiles' account ids into a single list.
+ * Registers and exposes GetAccounts endpoint.
  *
- * @param profiles - List of profile query results.
- * @returns - List of account ids associated with the profiles.
+ * @param app - given.
  */
-function reduceProfilesToAccountIds(
-  profiles: proto.shared.IProfile[],
-): number[] {
-  return profiles.reduce(
-    (accumulator, profile) => accumulator.concat(profile.accountIds),
-    [],
+export function registerGetAccountsRoute(app: Application) {
+  app.post(
+    '/api/account/get-accounts',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = GetAccountsRequest.decode(req.raw);
+
+      const response = await handleGetAccounts(request, req.session);
+      const responseBuffer = GetAccountsResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
   );
 }
 
@@ -81,21 +86,16 @@ export async function handleGetAccounts(
 }
 
 /**
- * Registers and exposes GetAccounts endpoint.
+ * Reduces profiles' account ids into a single list.
  *
- * @param app - given.
+ * @param profiles - List of profile query results.
+ * @returns - List of account ids associated with the profiles.
  */
-export function registerGetAccountsRoute(app: Application) {
-  app.post(
-    '/api/account/get-accounts',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = GetAccountsRequest.decode(req.raw);
-
-      const response = await handleGetAccounts(request, req.session);
-      const responseBuffer = GetAccountsResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
+function reduceProfilesToAccountIds(
+  profiles: proto.shared.IProfile[],
+): number[] {
+  return profiles.reduce(
+    (accumulator, profile) => accumulator.concat(profile.accountIds),
+    [],
   );
 }

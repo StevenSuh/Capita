@@ -15,6 +15,26 @@ const {
 } = proto.server.transaction;
 
 /**
+ * Registers and exposes GetTransactions endpoint.
+ *
+ * @param app - given.
+ */
+export function registerGetTransactionsRoute(app: Application) {
+  app.post(
+    '/api/transaction/get-transactions',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = GetTransactionsRequest.decode(req.raw);
+
+      const response = await handleGetTransactions(request, req.session);
+      const responseBuffer = GetTransactionsResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * GetTransactions endpoint.
  * Could filter results by matching accountIds or transactioinIds in the query if supplied in request.
  *
@@ -52,24 +72,4 @@ export async function handleGetTransactions(
   }).then(results => results.map(convertTransactionToProto));
 
   return GetTransactionsResponse.create({ transactions });
-}
-
-/**
- * Registers and exposes GetTransactions endpoint.
- *
- * @param app - given.
- */
-export function registerGetTransactionsRoute(app: Application) {
-  app.post(
-    '/api/transaction/get-transactions',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = GetTransactionsRequest.decode(req.raw);
-
-      const response = await handleGetTransactions(request, req.session);
-      const responseBuffer = GetTransactionsResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

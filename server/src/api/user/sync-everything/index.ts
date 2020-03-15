@@ -10,6 +10,26 @@ const { GetAccountsRequest, SyncAccountsRequest } = proto.server.account;
 const { SyncEverythingRequest, SyncEverythingResponse } = proto.server.user;
 
 /**
+ * Registers and exposes SyncEverything endpoint.
+ *
+ * @param app - given.
+ */
+export function registerSyncEverythingRoute(app: Application) {
+  app.post(
+    '/api/user/sync-everything',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = SyncEverythingRequest.decode(req.raw);
+
+      const response = await handleSyncEverything(request, req.session);
+      const responseBuffer = SyncEverythingResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * SyncEverything endpoint.
  * Calls SyncAccounts for all accounts related to user.
  *
@@ -37,24 +57,4 @@ export async function handleSyncEverything(
   return SyncEverythingResponse.create({
     results: syncAccountsResponse.results,
   });
-}
-
-/**
- * Registers and exposes SyncEverything endpoint.
- *
- * @param app - given.
- */
-export function registerSyncEverythingRoute(app: Application) {
-  app.post(
-    '/api/user/sync-everything',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = SyncEverythingRequest.decode(req.raw);
-
-      const response = await handleSyncEverything(request, req.session);
-      const responseBuffer = SyncEverythingResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

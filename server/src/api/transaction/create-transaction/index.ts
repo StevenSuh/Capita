@@ -17,6 +17,28 @@ const {
 const { GetAccountsRequest } = proto.server.account;
 
 /**
+ * Registers and exposes CreateTransaction endpoint.
+ *
+ * @param app - given.
+ */
+export function registerCreateTransactionRoute(app: Application) {
+  app.post(
+    '/api/transaction/create-transaction',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = CreateTransactionRequest.decode(req.raw);
+
+      const response = await handleCreateTransaction(request, req.session);
+      const responseBuffer = CreateTransactionResponse.encode(
+        response,
+      ).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * CreateTransaction endpoint.
  * Creates and returns a new transaction.
  *
@@ -67,26 +89,4 @@ export async function handleCreateTransaction(
   return CreateTransactionResponse.create({
     transaction: convertTransactionToProto(transaction),
   });
-}
-
-/**
- * Registers and exposes CreateTransaction endpoint.
- *
- * @param app - given.
- */
-export function registerCreateTransactionRoute(app: Application) {
-  app.post(
-    '/api/transaction/create-transaction',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = CreateTransactionRequest.decode(req.raw);
-
-      const response = await handleCreateTransaction(request, req.session);
-      const responseBuffer = CreateTransactionResponse.encode(
-        response,
-      ).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

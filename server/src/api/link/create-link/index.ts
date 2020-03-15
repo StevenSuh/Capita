@@ -23,69 +23,23 @@ const { UpsertPlaidAccountsRequest } = proto.server.account;
 const { SessionToken } = proto.server;
 
 /**
- * Convert account object to UpsertPlaidAccountsRequest.PlaidAccount.
+ * Registers and exposes CreateLink endpoint.
  *
- * @param account - Plaid account object.
- * @param link - Link query object.
- * @param session - session token proto.
- * @returns - PlaidAccount proto.
+ * @param app - given.
  */
-function convertAccountToPlaidAccount(
-  account: PlaidAccount,
-  link: LinkEntity,
-  session: proto.server.ISessionToken,
-) {
-  return UpsertPlaidAccountsRequest.PlaidAccount.create({
-    userId: session.userId,
-    linkId: link.id,
-    plaidAccountId: account.id,
-    mask: account.mask,
-    name: account.name,
-    officialName: account.officialName,
-    subtype: account.subtype,
-    type: account.type,
-    verificationStatus: account.verificationStatus,
-    balanceAvailable: account.balances.available,
-    balanceCurrent: account.balances.current,
-    balanceLimit: account.balances.limit,
-    balanceIsoCurrencyCode: account.balances.isoCurrencyCode,
-    balanceUnofficialCurrencyCode: account.balances.unofficialCurrencyCode,
-    manuallyCreated: false,
-    hidden: false,
-    needsUpdate: false,
-  });
-}
+export function registerCreateLinkRoute(app: Application) {
+  app.post(
+    '/api/link/create-link',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = CreateLinkRequest.decode(req.raw);
 
-/**
- * Call UpsertPlaidAccountsRequest.
- *
- * @param itemId - Plaid item id.
- * @param link - Link query object.
- * @param session - session token proto.
- */
-async function upsertPlaidAccounts(
-  itemId: string,
-  link: LinkEntity,
-  session: proto.server.ISessionToken,
-) {
-  const { accounts } = await getAccounts(itemId);
+      const response = await handleCreateLink(request, req.session);
+      const responseBuffer = CreateLinkResponse.encode(response).finish();
 
-  const request = UpsertPlaidAccountsRequest.create({
-    accounts: accounts.map(account =>
-      convertAccountToPlaidAccount(account, link, session),
-    ),
-  });
-
-  const response = await handleUpsertPlaidAccounts(request);
-  response.results.forEach(result => {
-    if (result.errorType) {
-      throw new DatabaseError(
-        `Error while upserting plaid account ${
-          result.plaidAccountId
-        } under request ${JSON.stringify(request)}`,
-      );
-    }
-  });
+      return res.send(responseBuffer);
+    },
+  );
 }
 
 /**
@@ -147,21 +101,67 @@ export async function handleCreateLink(
 }
 
 /**
- * Registers and exposes CreateLink endpoint.
+ * Call UpsertPlaidAccountsRequest.
  *
- * @param app - given.
+ * @param itemId - Plaid item id.
+ * @param link - Link query object.
+ * @param session - session token proto.
  */
-export function registerCreateLinkRoute(app: Application) {
-  app.post(
-    '/api/link/create-link',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = CreateLinkRequest.decode(req.raw);
+async function upsertPlaidAccounts(
+  itemId: string,
+  link: LinkEntity,
+  session: proto.server.ISessionToken,
+) {
+  const { accounts } = await getAccounts(itemId);
 
-      const response = await handleCreateLink(request, req.session);
-      const responseBuffer = CreateLinkResponse.encode(response).finish();
+  const request = UpsertPlaidAccountsRequest.create({
+    accounts: accounts.map(account =>
+      convertAccountToPlaidAccount(account, link, session),
+    ),
+  });
 
-      return res.send(responseBuffer);
-    },
-  );
+  const response = await handleUpsertPlaidAccounts(request);
+  response.results.forEach(result => {
+    if (result.errorType) {
+      throw new DatabaseError(
+        `Error while upserting plaid account ${
+          result.plaidAccountId
+        } under request ${JSON.stringify(request)}`,
+      );
+    }
+  });
+}
+
+/**
+ * Convert account object to UpsertPlaidAccountsRequest.PlaidAccount.
+ *
+ * @param account - Plaid account object.
+ * @param link - Link query object.
+ * @param session - session token proto.
+ * @returns - PlaidAccount proto.
+ */
+function convertAccountToPlaidAccount(
+  account: PlaidAccount,
+  link: LinkEntity,
+  session: proto.server.ISessionToken,
+) {
+  return UpsertPlaidAccountsRequest.PlaidAccount.create({
+    userId: session.userId,
+    linkId: link.id,
+    plaidAccountId: account.id,
+    mask: account.mask,
+    name: account.name,
+    officialName: account.officialName,
+    subtype: account.subtype,
+    type: account.type,
+    verificationStatus: account.verificationStatus,
+    balanceAvailable: account.balances.available,
+    balanceCurrent: account.balances.current,
+    balanceLimit: account.balances.limit,
+    balanceIsoCurrencyCode: account.balances.isoCurrencyCode,
+    balanceUnofficialCurrencyCode: account.balances.unofficialCurrencyCode,
+    manuallyCreated: false,
+    hidden: false,
+    needsUpdate: false,
+  });
 }

@@ -58,6 +58,7 @@ export function registerPlaidWebhook(app: Application) {
     async (req: WebhookRequest, res) => {
       const decodedHeader = await decodePlaidHeader(req.header(PLAID_HEADER));
       const bodyStr = JSON.stringify(req.body);
+
       if (!verifyPlaidBody(bodyStr, decodedHeader.request_body_sha256)) {
         throw new PlaidError('Invalid plaid webhook request');
       }

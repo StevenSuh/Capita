@@ -13,6 +13,26 @@ const { CreateProfileRequest, CreateProfileResponse } = proto.server.profile;
 const { SessionToken } = proto.server;
 
 /**
+ * Registers and exposes CreateProfile endpoint.
+ *
+ * @param app - given.
+ */
+export function registerCreateProfileRoute(app: Application) {
+  app.post(
+    '/api/profile/create-profile',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = CreateProfileRequest.decode(req.raw);
+
+      const response = await handleCreateProfile(request, req.session);
+      const responseBuffer = CreateProfileResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * CreateProfile endpoint.
  * Creates and returns a new profile.
  *
@@ -37,24 +57,4 @@ export async function handleCreateProfile(
   return CreateProfileResponse.create({
     profile: convertProfileToProto(profile),
   });
-}
-
-/**
- * Registers and exposes CreateProfile endpoint.
- *
- * @param app - given.
- */
-export function registerCreateProfileRoute(app: Application) {
-  app.post(
-    '/api/profile/create-profile',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = CreateProfileRequest.decode(req.raw);
-
-      const response = await handleCreateProfile(request, req.session);
-      const responseBuffer = CreateProfileResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

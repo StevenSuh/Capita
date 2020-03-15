@@ -20,21 +20,6 @@ jest.mock('shared/db', () => {
 jest.mock('@src/middleware', () => ({ verifyAuth: 'verifyAuth' }));
 
 describe('UpdateProfile', () => {
-  /**
-   * Setup Profile.update
-   *
-   * @param rowCount - Number of rows affected.
-   */
-  async function setUpProfileUpdate(rowCount: number) {
-    const { Profile } = await connect();
-    (Profile.update as jest.Mock).mockResolvedValue({ affected: rowCount });
-  }
-
-  async function getUpdateMockFunction() {
-    const { Profile } = await connect();
-    return Profile.update as jest.Mock;
-  }
-
   describe('handleUpdateProfile', () => {
     beforeEach(async () => {
       await setUpProfileUpdate(0);
@@ -172,3 +157,18 @@ describe('UpdateProfile', () => {
     });
   });
 });
+
+/**
+ * Setup Profile.update
+ *
+ * @param rowCount - Number of rows affected.
+ */
+async function setUpProfileUpdate(rowCount: number) {
+  const { Profile } = await connect();
+  (Profile.update as jest.Mock).mockResolvedValue({ affected: rowCount });
+}
+
+async function getUpdateMockFunction() {
+  const { Profile } = await connect();
+  return Profile.update as jest.Mock;
+}

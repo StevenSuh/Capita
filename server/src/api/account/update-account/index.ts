@@ -12,6 +12,26 @@ import validate from './validator';
 const { UpdateAccountRequest, UpdateAccountResponse } = proto.server.account;
 
 /**
+ * Registes and exposes UpdateAccount endpoint.
+ *
+ * @param app - given.
+ */
+export function registerUpdateAccountRoute(app: Application) {
+  app.post(
+    '/api/account/update-account',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = UpdateAccountRequest.decode(req.raw);
+
+      const response = await handleUpdateAccount(request, req.session);
+      const responseBuffer = UpdateAccountResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * UpdateAccount endpoint.
  *
  * @param request - request proto.
@@ -66,24 +86,4 @@ export async function handleUpdateAccount(
   }
 
   return UpdateAccountResponse.create();
-}
-
-/**
- * Registes and exposes UpdateAccount endpoint.
- *
- * @param app - given.
- */
-export function registerUpdateAccountRoute(app: Application) {
-  app.post(
-    '/api/account/update-account',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = UpdateAccountRequest.decode(req.raw);
-
-      const response = await handleUpdateAccount(request, req.session);
-      const responseBuffer = UpdateAccountResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

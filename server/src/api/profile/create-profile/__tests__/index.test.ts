@@ -37,17 +37,6 @@ jest.mock('shared/db', () => {
 jest.mock('@src/middleware', () => ({ verifyAuth: 'verifyAuth' }));
 
 describe('CreateProfile', () => {
-  /**
-   * Setup Profile.create
-   *
-   * @param profile - Profile object to return.
-   */
-  async function setUpProfileCreate(profile: Profile) {
-    const { Profile } = await connect();
-    (Profile.create as jest.Mock).mockReturnValue(profile);
-    (Profile.save as jest.Mock).mockResolvedValue(profile);
-  }
-
   describe('handleCreateProfile', () => {
     beforeEach(async () => {
       await setUpProfileCreate(PROFILE);
@@ -105,3 +94,14 @@ describe('CreateProfile', () => {
     });
   });
 });
+
+/**
+ * Setup Profile.create
+ *
+ * @param profile - Profile object to return.
+ */
+async function setUpProfileCreate(profile: Profile) {
+  const { Profile } = await connect();
+  (Profile.create as jest.Mock).mockReturnValue(profile);
+  (Profile.save as jest.Mock).mockResolvedValue(profile);
+}

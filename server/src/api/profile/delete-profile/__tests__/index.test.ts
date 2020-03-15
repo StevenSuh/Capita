@@ -18,16 +18,6 @@ jest.mock('shared/db', () => {
 jest.mock('@src/middleware', () => ({ verifyAuth: 'verifyAuth' }));
 
 describe('DeleteProfile', () => {
-  /**
-   * Gets the first argument of most recent call to Profile.destroy.
-   *
-   * @returns - query called to Profile.destroy.
-   */
-  async function getProfileDestroyArg() {
-    const { Profile } = await connect();
-    return (Profile.delete as jest.Mock).mock.calls[0][0];
-  }
-
   beforeAll(async () => {
     const { Profile } = await connect();
     (Profile.delete as jest.Mock).mockReturnValue(Promise.resolve());
@@ -103,3 +93,13 @@ describe('DeleteProfile', () => {
     });
   });
 });
+
+/**
+ * Gets the first argument of most recent call to Profile.destroy.
+ *
+ * @returns - query called to Profile.destroy.
+ */
+async function getProfileDestroyArg() {
+  const { Profile } = await connect();
+  return (Profile.delete as jest.Mock).mock.calls[0][0];
+}

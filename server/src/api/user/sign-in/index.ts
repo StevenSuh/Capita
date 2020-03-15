@@ -9,6 +9,23 @@ import { confirmPassword, createSessionToken } from '../util';
 import validate from './validator';
 
 const { SignInRequest, SignInResponse } = proto.server.user;
+const { SessionToken } = proto.server;
+
+/**
+ * Registers and exposes SignIn endpoint.
+ *
+ * @param app - given.
+ */
+export function registerSignInRoute(app: Application) {
+  app.post('/api/user/sign-in', async (req: CustomRequest, res) => {
+    const request = SignInRequest.decode(req.raw);
+
+    const response = await handleSignIn(request);
+    const responseBuffer = SignInResponse.encode(response).finish();
+
+    return res.send(responseBuffer);
+  });
+}
 
 /**
  * SignIn endpoint.
@@ -35,22 +52,6 @@ export async function handleSignIn(request: proto.server.user.ISignInRequest) {
   }
 
   return SignInResponse.create({
-    sessionToken: createSessionToken(user.id),
-  });
-}
-
-/**
- * Registers and exposes SignIn endpoint.
- *
- * @param app - given.
- */
-export function registerSignInRoute(app: Application) {
-  app.post('/api/user/sign-in', async (req: CustomRequest, res) => {
-    const request = SignInRequest.decode(req.raw);
-
-    const response = await handleSignIn(request);
-    const responseBuffer = SignInResponse.encode(response).finish();
-
-    return res.send(responseBuffer);
+    sessionToken: createSessionToken(SessionToken.create({ userId: user.id })),
   });
 }

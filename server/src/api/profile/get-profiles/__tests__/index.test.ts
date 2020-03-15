@@ -22,21 +22,6 @@ jest.mock('shared/db', () => {
 jest.mock('@src/middleware', () => ({ verifyAuth: 'verifyAuth' }));
 
 describe('GetProfiles', () => {
-  /**
-   * Setup Profile.findAll
-   *
-   * @param profiles - List of queried profiles.
-   */
-  async function setUpProfileFindAll(profiles: Profile[]) {
-    const { Profile } = await connect();
-    (Profile.find as jest.Mock).mockResolvedValue(profiles);
-  }
-
-  async function getProfileFindMock() {
-    const { Profile } = await connect();
-    return Profile.find as jest.Mock;
-  }
-
   beforeEach(async () => {
     await setUpProfileFindAll([]);
   });
@@ -173,3 +158,18 @@ describe('GetProfiles', () => {
     });
   });
 });
+
+/**
+ * Setup Profile.findAll
+ *
+ * @param profiles - List of queried profiles.
+ */
+async function setUpProfileFindAll(profiles: Profile[]) {
+  const { Profile } = await connect();
+  (Profile.find as jest.Mock).mockResolvedValue(profiles);
+}
+
+async function getProfileFindMock() {
+  const { Profile } = await connect();
+  return Profile.find as jest.Mock;
+}

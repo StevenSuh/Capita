@@ -13,6 +13,26 @@ const { UpdateProfileRequest, UpdateProfileResponse } = proto.server.profile;
 const { SessionToken } = proto.server;
 
 /**
+ * Registers and exposes UpdateProfile endpoint.
+ *
+ * @param app - given.
+ */
+export function registerUpdateProfileRoute(app: Application) {
+  app.post(
+    '/api/profile/update-profile',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = UpdateProfileRequest.decode(req.raw);
+
+      const response = await handleUpdateProfile(request, req.session);
+      const responseBuffer = UpdateProfileResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * UpdateProfile endpoint.
  *
  * @param request - request proto.
@@ -45,24 +65,4 @@ export async function handleUpdateProfile(
   }
 
   return UpdateProfileResponse.create();
-}
-
-/**
- * Registers and exposes UpdateProfile endpoint.
- *
- * @param app - given.
- */
-export function registerUpdateProfileRoute(app: Application) {
-  app.post(
-    '/api/profile/update-profile',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = UpdateProfileRequest.decode(req.raw);
-
-      const response = await handleUpdateProfile(request, req.session);
-      const responseBuffer = UpdateProfileResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

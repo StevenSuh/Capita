@@ -11,6 +11,26 @@ import { Application } from 'express';
 const { CreateAccountRequest, CreateAccountResponse } = proto.server.account;
 
 /**
+ * Registers and exposes CreateAccount endpoint.
+ *
+ * @param app - given.
+ */
+export function registerCreateAccountRoute(app: Application) {
+  app.post(
+    '/api/account/create-account',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = CreateAccountRequest.decode(req.raw);
+
+      const response = await handleCreateAccount(request, req.session);
+      const responseBuffer = CreateAccountResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * CreateAccount endpoint.
  *
  * @param request - request proto.
@@ -46,24 +66,4 @@ export async function handleCreateAccount(
   return CreateAccountResponse.create({
     account: convertAccountToProto(account),
   });
-}
-
-/**
- * Registers and exposes CreateAccount endpoint.
- *
- * @param app - given.
- */
-export function registerCreateAccountRoute(app: Application) {
-  app.post(
-    '/api/account/create-account',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = CreateAccountRequest.decode(req.raw);
-
-      const response = await handleCreateAccount(request, req.session);
-      const responseBuffer = CreateAccountResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

@@ -12,6 +12,26 @@ import validate from './validator';
 const { GetProfilesRequest, GetProfilesResponse } = proto.server.profile;
 
 /**
+ * Registers and exposes GetProfiles endpoint.
+ *
+ * @param app - given.
+ */
+export function registerGetProfilesRoute(app: Application) {
+  app.post(
+    '/api/profile/get-profiles',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = GetProfilesRequest.decode(req.raw);
+
+      const response = await handleGetProfiles(request, req.session);
+      const responseBuffer = GetProfilesResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * GetProfiles endpoint.
  * Fetches all profiles related to requesting user.
  *
@@ -57,24 +77,4 @@ export async function handleGetProfiles(
   );
 
   return GetProfilesResponse.create({ profiles });
-}
-
-/**
- * Registers and exposes GetProfiles endpoint.
- *
- * @param app - given.
- */
-export function registerGetProfilesRoute(app: Application) {
-  app.post(
-    '/api/profile/get-profiles',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = GetProfilesRequest.decode(req.raw);
-
-      const response = await handleGetProfiles(request, req.session);
-      const responseBuffer = GetProfilesResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

@@ -46,17 +46,6 @@ jest.mock('shared/db', () => {
 jest.mock('@src/middleware', () => ({ verifyAuth: 'verifyAuth' }));
 
 describe('CreateAccount', () => {
-  /**
-   * Setup Account.create
-   *
-   * @param {object} account - Account object to return.
-   */
-  async function setUpAccountCreate(account: any) {
-    const { Account } = await connect();
-    (Account.create as jest.Mock).mockReturnValue(account);
-    (Account.save as jest.Mock).mockResolvedValue(account);
-  }
-
   describe('handleCreateAccount', () => {
     beforeEach(async () => {
       await setUpAccountCreate(ACCOUNT);
@@ -123,3 +112,14 @@ describe('CreateAccount', () => {
     });
   });
 });
+
+/**
+ * Setup Account.create
+ *
+ * @param {object} account - Account object to return.
+ */
+async function setUpAccountCreate(account: any) {
+  const { Account } = await connect();
+  (Account.create as jest.Mock).mockReturnValue(account);
+  (Account.save as jest.Mock).mockResolvedValue(account);
+}

@@ -15,6 +15,28 @@ const {
 const { SessionToken } = proto.server;
 
 /**
+ * Registers and exposes GetLinksPublicToken endpoint.
+ *
+ * @param app - given.
+ */
+export function registerGetLinksPublicTokenRoute(app: Application) {
+  app.post(
+    '/api/link/get-links-public-token',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = GetLinksPublicTokenRequest.decode(req.raw);
+
+      const response = await handleGetLinksPublicToken(request, req.session);
+      const responseBuffer = GetLinksPublicTokenResponse.encode(
+        response,
+      ).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * GetLinksPublicToken endpoint.
  *
  * @param request - request proto.
@@ -53,26 +75,4 @@ export async function handleGetLinksPublicToken(
   const publicToken = await createPublicToken(link.accessToken);
 
   return GetLinksPublicTokenResponse.create({ plaidPublicToken: publicToken });
-}
-
-/**
- * Registers and exposes GetLinksPublicToken endpoint.
- *
- * @param app - given.
- */
-export function registerGetLinksPublicTokenRoute(app: Application) {
-  app.post(
-    '/api/link/get-links-public-token',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = GetLinksPublicTokenRequest.decode(req.raw);
-
-      const response = await handleGetLinksPublicToken(request, req.session);
-      const responseBuffer = GetLinksPublicTokenResponse.encode(
-        response,
-      ).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

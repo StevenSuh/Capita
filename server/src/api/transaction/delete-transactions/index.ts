@@ -15,6 +15,28 @@ const {
 const { ErrorType, ErrorTypeEnum } = proto.shared;
 
 /**
+ * Registers and exposes DeleteTransactions endpoint.
+ *
+ * @param app - given.
+ */
+export function registerDeleteTransactionsRoute(app: Application) {
+  app.post(
+    '/api/transaction/delete-transactions',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = DeleteTransactionsRequest.decode(req.raw);
+
+      const response = await handleDeleteTransactions(request, req.session);
+      const responseBuffer = DeleteTransactionsResponse.encode(
+        response,
+      ).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * DeleteTransactions endpoint.
  * Deletes transactions and returns individual results.
  *
@@ -51,26 +73,4 @@ export async function handleDeleteTransactions(
   );
 
   return DeleteTransactionsResponse.create({ results });
-}
-
-/**
- * Registers and exposes DeleteTransactions endpoint.
- *
- * @param app - given.
- */
-export function registerDeleteTransactionsRoute(app: Application) {
-  app.post(
-    '/api/transaction/delete-transactions',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = DeleteTransactionsRequest.decode(req.raw);
-
-      const response = await handleDeleteTransactions(request, req.session);
-      const responseBuffer = DeleteTransactionsResponse.encode(
-        response,
-      ).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

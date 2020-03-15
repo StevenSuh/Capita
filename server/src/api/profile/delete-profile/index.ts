@@ -11,6 +11,26 @@ const { DeleteProfileRequest, DeleteProfileResponse } = proto.server.profile;
 const { SessionToken } = proto.server;
 
 /**
+ * Registers and exposes DeleteProfile endpoint.
+ *
+ * @param {object} app - given.
+ */
+export function registerDeleteProfileRoute(app: Application) {
+  app.post(
+    '/api/profile/delete-profile',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = DeleteProfileRequest.decode(req.raw);
+
+      const response = await handleDeleteProfile(request, req.session);
+      const responseBuffer = DeleteProfileResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
+}
+
+/**
  * DeleteProfile endpoint.
  * Deletes a profile.
  *
@@ -31,24 +51,4 @@ export async function handleDeleteProfile(
   });
 
   return DeleteProfileResponse.create();
-}
-
-/**
- * Registers and exposes DeleteProfile endpoint.
- *
- * @param {object} app - given.
- */
-export function registerDeleteProfileRoute(app: Application) {
-  app.post(
-    '/api/profile/delete-profile',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = DeleteProfileRequest.decode(req.raw);
-
-      const response = await handleDeleteProfile(request, req.session);
-      const responseBuffer = DeleteProfileResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
 }

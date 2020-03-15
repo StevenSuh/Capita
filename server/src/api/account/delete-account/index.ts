@@ -14,22 +14,23 @@ const { DeleteAccountRequest, DeleteAccountResponse } = proto.server.account;
 const { GetProfilesRequest } = proto.server.profile;
 
 /**
- * Create profile update object without accountId in its accountIds field.
+ * Registers and exposes DeleteAccount endpoint.
  *
- * @param profile - profile proto.
- * @param accountId - account id.
- * @returns - Profile update object.
+ * @param app - given.
  */
-function createAccountIdFilteredProfileObject(
-  profile: proto.shared.IProfile,
-  accountId: number,
-) {
-  return {
-    id: profile.id,
-    accountIdsStr: encodeArrayIdsToStr(
-      profile.accountIds.filter(id => id !== accountId),
-    ),
-  };
+export function registerDeleteAccountRoute(app: Application) {
+  app.post(
+    '/api/account/delete-account',
+    verifyAuth,
+    async (req: CustomRequest, res) => {
+      const request = DeleteAccountRequest.decode(req.raw);
+
+      const response = await handleDeleteAccount(request, req.session);
+      const responseBuffer = DeleteAccountResponse.encode(response).finish();
+
+      return res.send(responseBuffer);
+    },
+  );
 }
 
 /**
@@ -49,7 +50,10 @@ export async function handleDeleteAccount(
   const getProfilesRequest = GetProfilesRequest.create({
     accountIds: [request.id],
   });
-  const getProfilesResponse = await handleGetProfiles(getProfilesRequest);
+  const getProfilesResponse = await handleGetProfiles(
+    getProfilesRequest,
+    session,
+  );
 
   const accountId = request.id;
   const profiles = getProfilesResponse.profiles.map(profile =>
@@ -75,21 +79,20 @@ export async function handleDeleteAccount(
 }
 
 /**
- * Registers and exposes DeleteAccount endpoint.
+ * Create profile update object without accountId in its accountIds field.
  *
- * @param app - given.
+ * @param profile - profile proto.
+ * @param accountId - account id.
+ * @returns - Profile update object.
  */
-export function registerDeleteAccountRoute(app: Application) {
-  app.post(
-    '/api/account/delete-account',
-    verifyAuth,
-    async (req: CustomRequest, res) => {
-      const request = DeleteAccountRequest.decode(req.raw);
-
-      const response = await handleDeleteAccount(request, req.session);
-      const responseBuffer = DeleteAccountResponse.encode(response).finish();
-
-      return res.send(responseBuffer);
-    },
-  );
+function createAccountIdFilteredProfileObject(
+  profile: proto.shared.IProfile,
+  accountId: number,
+) {
+  return {
+    id: profile.id,
+    accountIdsStr: encodeArrayIdsToStr(
+      profile.accountIds.filter(id => id !== accountId),
+    ),
+  };
 }
