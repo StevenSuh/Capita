@@ -21,7 +21,7 @@
     "plaid": "^4.8.0",
     "protobufjs": "^6.8.8",
     "shared": "../shared",
-    "typeorm": "^0.2.24"
+    "typeorm": "^0.2.25"
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
