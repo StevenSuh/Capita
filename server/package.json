@@ -19,7 +19,7 @@
     "morgan": "^1.9.1",
     "pg": "^7.17.1",
     "plaid": "^4.8.0",
-    "protobufjs": "^6.8.8",
+    "protobufjs": "^6.11.3",
     "shared": "../shared",
     "typeorm": "^0.2.24"
   },
